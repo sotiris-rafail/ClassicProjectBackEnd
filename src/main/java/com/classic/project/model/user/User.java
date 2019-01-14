@@ -1,9 +1,10 @@
 package com.classic.project.model.user;
 
-import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.character.Character;
+import com.classic.project.model.constantParty.ConstantParty;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class User {
     private String memberOfCP;
     @Column
     private TypeOfUser typeOfUser;
-    /*@OneToMany(mappedBy = "characterId", cascade = CascadeType.ALL)
-    private List<Character> characters = new ArrayList<>();*/
+    @OneToMany(mappedBy = "characterId", cascade = CascadeType.ALL)
+    private List<Character> characters = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "cpId")
     private ConstantParty cp;
@@ -53,13 +54,13 @@ public class User {
         this.memberOfCP = memberOfCP;
     }
 
-    /*public List<Character> getCharacters() {
+    public List<Character> getCharacters() {
         return characters;
     }
 
     public void setCharacters(List<Character> characters) {
         this.characters = characters;
-    }*/
+    }
 
     public String getPassword() {
         return password;

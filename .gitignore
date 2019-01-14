@@ -1,5 +1,3 @@
-*.class
-
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -18,7 +16,6 @@ hs_err_pid*
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/
 
@@ -29,11 +26,7 @@ hs_err_pid*
 .idea/**/dataSources.local.xml
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/
-
 # Gradle:
-.idea/**/gradle.xml
 .idea/**/libraries
 .gradle/
 # Mongo Explorer plugin:
@@ -68,3 +61,6 @@ fabric.properties
  *.ipr
 
 # End of https://www.gitignore.io/api/intellij
+/.idea/gradle.xml
+/src/test/test.iml
+src/test/test.iml

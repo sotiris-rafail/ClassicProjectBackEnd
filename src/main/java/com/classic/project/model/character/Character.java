@@ -2,6 +2,7 @@ package com.classic.project.model.character;
 
 
 import com.classic.project.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -55,6 +56,7 @@ public class Character {
         this.level = level;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }

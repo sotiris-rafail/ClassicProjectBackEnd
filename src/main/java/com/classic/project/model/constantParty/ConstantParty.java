@@ -1,6 +1,7 @@
 package com.classic.project.model.constantParty;
 
 import com.classic.project.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class ConstantParty {
         this.numberOfBoxes = numberOfBoxes;
     }
 
+    @JsonIgnore
     public List<User> getMembers() {
         return members;
     }
