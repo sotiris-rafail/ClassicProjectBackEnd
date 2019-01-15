@@ -1,5 +1,11 @@
 package com.classic.project.model.clan;
 
+
+import com.classic.project.model.character.Character;
+import com.classic.project.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.util.List;
 

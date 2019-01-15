@@ -25,6 +25,8 @@ public class ConstantParty {
     private int corePoints;
     @Column
     private int aqPoints;
+    @Column
+    private String cpName;
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
 
@@ -83,5 +85,13 @@ public class ConstantParty {
 
     public void setAqPoints(int aqPoints) {
         this.aqPoints = aqPoints;
+    }
+
+    public String getCpName() {
+        return cpName;
+    }
+
+    public void setCpName(String cpName) {
+        this.cpName = cpName;
     }
 }

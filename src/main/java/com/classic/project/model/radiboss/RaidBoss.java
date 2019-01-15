@@ -25,6 +25,10 @@ public class RaidBoss {
     private TypeOfRaidBoss typeOfRaidBoss;
     @Column
     private int epicBossPoints;
+    @Column
+    private int windowStarts;
+    @Column
+    private int windowEnds;
 
     public int getRaidBossId() {
         return raidBossId;
@@ -88,5 +92,21 @@ public class RaidBoss {
 
     public void setEpicBossPoints(int epicBossPoints) {
         this.epicBossPoints = epicBossPoints;
+    }
+
+    public int getWindowStarts() {
+        return windowStarts;
+    }
+
+    public void setWindowStarts(int windowStarts) {
+        this.windowStarts = windowStarts;
+    }
+
+    public int getWindowEnds() {
+        return windowEnds;
+    }
+
+    public void setWindowEnds(int windowEnds) {
+        this.windowEnds = windowEnds;
     }
 }

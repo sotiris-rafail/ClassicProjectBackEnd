@@ -2,6 +2,8 @@ package com.classic.project.model.user;
 
 import com.classic.project.model.character.Character;
 import com.classic.project.model.constantParty.ConstantParty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 
@@ -20,8 +22,6 @@ public class User {
     private String email;
     @Column
     private String password;
-    @Column
-    private String memberOfCP;
     @Column
     private TypeOfUser typeOfUser;
     @OneToMany(mappedBy = "characterId", cascade = CascadeType.ALL)
@@ -44,14 +44,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getMemberOfCP() {
-        return memberOfCP;
-    }
-
-    public void setMemberOfCP(String memberOfCP) {
-        this.memberOfCP = memberOfCP;
     }
 
     public List<Character> getCharacters() {

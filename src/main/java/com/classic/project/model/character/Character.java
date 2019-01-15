@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Char")
+@Table
 public class Character {
 
     @Id
@@ -18,9 +18,9 @@ public class Character {
     @Column
     private String inGameName;
     @Column
-    private String inGameClass;
-    @Column
     private int level;
+    @Column
+    private ClassOfCharacter classOfCharacter;
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
@@ -44,14 +44,6 @@ public class Character {
         this.inGameName = inGameName;
     }
 
-    public String getInGameClass() {
-        return inGameClass;
-    }
-
-    public void setInGameClass(String inGameClass) {
-        this.inGameClass = inGameClass;
-    }
-
     public int getLevel() {
         return level;
     }
@@ -69,11 +61,20 @@ public class Character {
         this.user = user;
     }
 
+    @JsonIgnore
     public Clan getClan() {
         return clan;
     }
 
     public void setClan(Clan clan) {
         this.clan = clan;
+    }
+
+    public ClassOfCharacter getClassOfCharacter() {
+        return classOfCharacter;
+    }
+
+    public void setClassOfCharacter(ClassOfCharacter classOfCharacter) {
+        this.classOfCharacter = classOfCharacter;
     }
 }
