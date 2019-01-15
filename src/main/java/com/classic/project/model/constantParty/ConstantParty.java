@@ -19,6 +19,12 @@ public class ConstantParty {
     private int numberOfActivePlayers;
     @Column
     private int numberOfBoxes;
+    @Column
+    private int orfenPoints;
+    @Column
+    private int corePoints;
+    @Column
+    private int aqPoints;
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
 
@@ -53,5 +59,29 @@ public class ConstantParty {
 
     public void setMembers(List<User> members) {
         this.members = members;
+    }
+
+    public int getOrfenPoints() {
+        return orfenPoints;
+    }
+
+    public void setOrfenPoints(int orfenPoints) {
+        this.orfenPoints = orfenPoints;
+    }
+
+    public int getCorePoints() {
+        return corePoints;
+    }
+
+    public void setCorePoints(int corePoints) {
+        this.corePoints = corePoints;
+    }
+
+    public int getAqPoints() {
+        return aqPoints;
+    }
+
+    public void setAqPoints(int aqPoints) {
+        this.aqPoints = aqPoints;
     }
 }

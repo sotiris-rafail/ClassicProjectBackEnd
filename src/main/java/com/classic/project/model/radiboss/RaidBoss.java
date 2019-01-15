@@ -23,6 +23,8 @@ public class RaidBoss {
     private String whereItLives;
     @Column
     private TypeOfRaidBoss typeOfRaidBoss;
+    @Column
+    private int epicBossPoints;
 
     public int getRaidBossId() {
         return raidBossId;
@@ -78,5 +80,13 @@ public class RaidBoss {
 
     public void setTypeOfRaidBoss(TypeOfRaidBoss typeOfRaidBoss) {
         this.typeOfRaidBoss = typeOfRaidBoss;
+    }
+
+    public int getEpicBossPoints() {
+        return epicBossPoints;
+    }
+
+    public void setEpicBossPoints(int epicBossPoints) {
+        this.epicBossPoints = epicBossPoints;
     }
 }

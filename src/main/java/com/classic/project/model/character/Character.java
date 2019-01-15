@@ -1,6 +1,7 @@
 package com.classic.project.model.character;
 
 
+import com.classic.project.model.clan.Clan;
 import com.classic.project.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,6 +24,9 @@ public class Character {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "clanId")
+    private Clan clan;
 
     public int getCharacterId() {
         return characterId;
@@ -63,5 +67,13 @@ public class Character {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Clan getClan() {
+        return clan;
+    }
+
+    public void setClan(Clan clan) {
+        this.clan = clan;
     }
 }
