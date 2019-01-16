@@ -17,7 +17,7 @@ public class ClanServiceImpl implements ClanService {
 
     @Override
     public ResponseEntity<List<ClanResponseEntity>> getAllClanInfo() {
-        List<ClanResponseEntity> responceMembers = ClanResponseEntity.convertAll(clanRepository.findAll());
-        return new ResponseEntity<>(responceMembers, HttpStatus.OK);
+        List<ClanResponseEntity> responseMembers = ClanResponseEntity.convertAll(clanRepository.findAll());
+        return new ResponseEntity<>(responseMembers, HttpStatus.OK);
     }
 }

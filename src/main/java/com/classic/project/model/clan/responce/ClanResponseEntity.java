@@ -10,12 +10,12 @@ public class ClanResponseEntity {
 
     private String name;
     private int numberOfMembers;
-    private List<ResponseCharacter> member;
+    private List<ResponseCharacter> members;
 
-    public ClanResponseEntity(String name, int numberOfMembers, List<ResponseCharacter> member) {
+    public ClanResponseEntity(String name, int numberOfMembers, List<ResponseCharacter> members) {
         this.name = name;
         this.numberOfMembers = numberOfMembers;
-        this.member = member;
+        this.members = members;
     }
 
     public String getName() {
@@ -34,17 +34,17 @@ public class ClanResponseEntity {
         this.numberOfMembers = numberOfMembers;
     }
 
-    public List<ResponseCharacter> getMember() {
-        return member;
+    public List<ResponseCharacter> getMembers() {
+        return members;
     }
 
-    public void setMember(List<ResponseCharacter> member) {
-        this.member = member;
+    public void setMembers(List<ResponseCharacter> members) {
+        this.members = members;
     }
 
     public static List<ClanResponseEntity> convertAll(List<Clan> all) {
-        List<ClanResponseEntity> responce = new ArrayList<>();
-        all.forEach(clan -> responce.add(new ClanResponseEntity(clan.getName(), clan.getClanMembers().size(), ResponseCharacter.convert(clan.getClanMembers()))));
-        return responce;
+        List<ClanResponseEntity> response = new ArrayList<>();
+        all.forEach(clan -> response.add(new ClanResponseEntity(clan.getName(), clan.getClanMembers().size(), ResponseCharacter.convert(clan.getClanMembers()))));
+        return response;
     }
 }

@@ -24,7 +24,7 @@ public class User {
     private String password;
     @Column
     private TypeOfUser typeOfUser;
-    @OneToMany(mappedBy = "characterId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Character> characters = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "cpId")

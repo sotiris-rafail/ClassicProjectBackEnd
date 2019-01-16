@@ -19,7 +19,7 @@ public class Clan {
     private int clanId;
     @Column
     private String name;
-    @OneToMany(mappedBy = "characterId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "clan", cascade = CascadeType.ALL)
     private List<Character> clanMembers;
 
     public int getClanId() {

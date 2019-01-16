@@ -27,7 +27,7 @@ public class ConstantParty {
     private int aqPoints;
     @Column
     private String cpName;
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cp", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
 
     public int getCpId() {

@@ -21,12 +21,14 @@ public class Character {
     private int level;
     @Column
     private ClassOfCharacter classOfCharacter;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     private User user;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "clanId")
     private Clan clan;
+    @Column
+    private TypeOfCharacter typeOfCharacter;
 
     public int getCharacterId() {
         return characterId;
@@ -76,5 +78,13 @@ public class Character {
 
     public void setClassOfCharacter(ClassOfCharacter classOfCharacter) {
         this.classOfCharacter = classOfCharacter;
+    }
+
+    public TypeOfCharacter getTypeOfCharacter() {
+	return typeOfCharacter;
+    }
+
+    public void setTypeOfCharacter(TypeOfCharacter typeOfCharacter) {
+	this.typeOfCharacter = typeOfCharacter;
     }
 }
