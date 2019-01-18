@@ -5,7 +5,14 @@ insert into constant_party(cp_Id,number_of_active_players,number_of_boxes,orfen_
 insert into clan(clan_id, name) values (1,"Perkunas1");
 insert into clan(clan_id, name) values (2,"Perkunas2");
 insert into clan(clan_id, name) values (3,"Perkunas3");
-insert into user(user_id, email, password, type_of_user, cp_id)  values (1,"e@e.e","asd",1,1);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (1, "e@e1.e","asd",1,1);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (2, "e@e2.e","asd",1,1);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (3, "e@e3.e","asd",1,1);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (4, "e@e4.e","asd",2,2);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (5, "e@e5.e","asd",2,2);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (6, "e@e6.e","asd",2,2);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (7, "e@e7.e","asd",3,3);
+insert into user(user_id, email, password, type_of_user, cp_id)  values (8, "e@e8.e","asd",3,3);
 insert into `character`(character_id, class_of_character, in_game_name, level, clan_id, user_id, type_of_character) VALUES (1,0, "DrEnigma", 77, 1, 1, 1);
 insert into `character`(character_id, class_of_character, in_game_name, level, clan_id, user_id, type_of_character) VALUES (2,0, "DrEnigma", 77, 1, 1, 0);
 insert into `character`(character_id, class_of_character, in_game_name, level, clan_id, user_id, type_of_character) VALUES (3,0, "DrEnigma", 77, 1, 1, 0);

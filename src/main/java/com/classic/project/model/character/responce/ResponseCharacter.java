@@ -1,9 +1,11 @@
 package com.classic.project.model.character.responce;
 
 import com.classic.project.model.character.Character;
+import com.classic.project.model.character.TypeOfCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResponseCharacter {
 
@@ -82,8 +84,17 @@ public class ResponseCharacter {
     }
 
     public static List<ResponseCharacter> convert(List<Character> all) {
-        List<ResponseCharacter> response = new ArrayList<>();
-        all.forEach(member -> response.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getUser().getCp().getCpName(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
-        return response;
+        return returnNewList(all);
+    }
+
+    public static List<ResponseCharacter> convertForCP(List<Character> characters) {
+        characters = characters.stream().filter(character -> character.getTypeOfCharacter().name().equals(TypeOfCharacter.MAIN.name())).collect(Collectors.toList());
+        return returnNewList(characters);
+    }
+
+    private static List<ResponseCharacter> returnNewList(List<Character> characters){
+        List<ResponseCharacter> cpMembers = new ArrayList<>();
+        characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getUser().getCp().getCpName(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
+        return cpMembers;
     }
 }
