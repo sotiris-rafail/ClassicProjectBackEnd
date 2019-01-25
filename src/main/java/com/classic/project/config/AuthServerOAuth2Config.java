@@ -32,8 +32,8 @@ import java.util.Map;
 @EnableAuthorizationServer
 public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
-    private static final int tokenValiditySec = 300;
-    private static final int refreshTokenValiditySec = 900;
+    private static final int tokenValiditySec = 3600;
+    private static final int refreshTokenValiditySec = 36000;
 
     @Autowired
     private AuthenticationManager authenticationManager;

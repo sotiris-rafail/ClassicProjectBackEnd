@@ -2,11 +2,8 @@ package com.classic.project.model.user;
 
 import com.classic.project.model.character.Character;
 import com.classic.project.model.constantParty.ConstantParty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +12,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private int userId;
     @Column

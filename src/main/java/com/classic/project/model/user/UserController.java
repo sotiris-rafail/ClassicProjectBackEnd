@@ -20,13 +20,13 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<HttpHeaders> getStoresByLocation(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
 	return userService.registerUser(user);
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ResponseUser> getStoresByLocation(@PathVariable(name = "userId") int userId) {
+    public ResponseEntity<ResponseUser> getUserById(@PathVariable(name = "userId") int userId) {
 	return userService.getUserById(userId);
     }
 }

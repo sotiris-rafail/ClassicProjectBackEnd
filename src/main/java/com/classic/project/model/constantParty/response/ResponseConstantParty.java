@@ -99,6 +99,6 @@ public class ResponseConstantParty {
     }
 
     public static ResponseConstantParty convertForUser(ConstantParty cp) {
-        return new ResponseConstantParty(cp.getCpName());
+        return new ResponseConstantParty(cp == null ? "" : cp.getCpName());
     }
 }
