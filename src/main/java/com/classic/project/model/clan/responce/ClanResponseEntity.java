@@ -8,6 +8,7 @@ import java.util.List;
 
 public class ClanResponseEntity {
 
+    private int clanId;
     private String name;
     private int numberOfMembers;
     private List<ResponseCharacter> members;
@@ -16,6 +17,19 @@ public class ClanResponseEntity {
         this.name = name;
         this.numberOfMembers = numberOfMembers;
         this.members = members;
+    }
+
+    public ClanResponseEntity(int clanId, String name) {
+	this.clanId = clanId;
+	this.name = name;
+    }
+
+    public int getClanId() {
+	return clanId;
+    }
+
+    public void setClanId(int clanId) {
+	this.clanId = clanId;
     }
 
     public String getName() {
@@ -46,5 +60,11 @@ public class ClanResponseEntity {
         List<ClanResponseEntity> response = new ArrayList<>();
         all.forEach(clan -> response.add(new ClanResponseEntity(clan.getName(), clan.getClanMembers().size(), ResponseCharacter.convert(clan.getClanMembers()))));
         return response;
+    }
+
+    public static List<ClanResponseEntity> convertForCharRegister(List<Clan> all) {
+	List<ClanResponseEntity> response = new ArrayList<>();
+	all.forEach(clan -> response.add(new ClanResponseEntity(clan.getClanId(), clan.getName())));
+	return response;
     }
 }

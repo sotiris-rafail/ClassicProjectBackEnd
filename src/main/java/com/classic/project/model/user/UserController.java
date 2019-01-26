@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ResponseUser> getUserById(@PathVariable(name = "userId") int userId) {
 	return userService.getUserById(userId);
     }
