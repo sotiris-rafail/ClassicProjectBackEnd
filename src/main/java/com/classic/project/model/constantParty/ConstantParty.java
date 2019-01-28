@@ -12,7 +12,7 @@ import java.util.List;
 public class ConstantParty {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private int cpId;
     @Column

@@ -14,7 +14,7 @@ import java.util.List;
 public class Clan {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private int clanId;
     @Column

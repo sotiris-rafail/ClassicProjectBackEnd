@@ -12,8 +12,7 @@ import javax.persistence.*;
 public class Character {
 
     @Id
-    @GeneratedValue
-    @Column(name = "characterId")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int characterId;
     @Column
     private String inGameName;
@@ -29,6 +28,16 @@ public class Character {
     private Clan clan;
     @Column
     private TypeOfCharacter typeOfCharacter;
+
+    public Character(String inGameName, int level, ClassOfCharacter classOfCharacter,
+	TypeOfCharacter typeOfCharacter) {
+	this.inGameName = inGameName;
+	this.level = level;
+	this.classOfCharacter = classOfCharacter;
+	this.typeOfCharacter = typeOfCharacter;
+    }
+
+    public Character() {}
 
     public int getCharacterId() {
         return characterId;

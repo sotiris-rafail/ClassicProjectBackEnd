@@ -8,7 +8,7 @@ import java.util.Date;
 public class RaidBoss {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column
     private int raidBossId;
     @Column

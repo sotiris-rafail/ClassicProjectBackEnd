@@ -1,14 +1,16 @@
 package com.classic.project.model.character;
 
+import com.classic.project.model.character.responce.RegisterCharacter;
 import com.classic.project.model.clan.Clan;
 import com.classic.project.model.clan.ClanRepository;
 import com.classic.project.model.clan.responce.ClanResponseEntity;
+import com.classic.project.model.user.User;
+import com.classic.project.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 @Component
@@ -19,6 +21,8 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Autowired
     private ClanRepository clanRepository;
+
+    @Autowired UserRepository userRepository;
 
     @Override
     public ResponseEntity<Map<String, Object[]>> getInfoForRegister(int userId) {
@@ -44,6 +48,16 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 	response.put("Classes", getAllNames());
  	return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public void registerCharacter(RegisterCharacter registerCharacter) {
+        Character character = RegisterCharacter.convertToDBObject(registerCharacter);
+	Optional<Clan> clan = clanRepository.findById(registerCharacter.getClanId());
+	Optional<User> user = userRepository.findById(registerCharacter.getUserId());
+	character.setUser(user.get());
+	character.setClan(clan.get());
+	characterRepository.save(character);
     }
 
     private static String[] getAllNames(){
