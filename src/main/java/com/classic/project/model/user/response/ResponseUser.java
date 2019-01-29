@@ -61,11 +61,11 @@ public class ResponseUser {
         this.responseConstantParty = responseConstantParty;
     }
 
-    public static ResponseUser convert(Optional<User> user){
+    public static ResponseUser convertForUser(Optional<User> user){
         if(!user.isPresent()) {
             throw new UserNotFoundException();
         }
-        return new ResponseUser(user.get().getEmail(), user.get().getTypeOfUser().name(), ResponseCharacter.convert(user.get().getCharacters()), ResponseConstantParty.convertForUser(user.get().getCp()));
+        return new ResponseUser(user.get().getEmail(), user.get().getTypeOfUser().name(), ResponseCharacter.convertForUser(user.get().getCharacters()), ResponseConstantParty.convertForUser(user.get().getCp()));
     }
 
     public static  List<ResponseUser> convertForCp(List<User> users){
