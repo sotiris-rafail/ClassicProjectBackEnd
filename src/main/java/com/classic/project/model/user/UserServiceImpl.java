@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<ResponseUser> getUserById(int userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
         userAuthConfirm.isTheAuthUser(userFromDb.get());
-        ResponseUser responseUser =  ResponseUser.convert(userFromDb);
+        ResponseUser responseUser =  ResponseUser.convertForUser(userFromDb);
         return new ResponseEntity<>(responseUser, HttpStatus.OK);
     }
 }

@@ -58,7 +58,7 @@ public class ClanResponseEntity {
 
     public static List<ClanResponseEntity> convertAll(List<Clan> all) {
         List<ClanResponseEntity> response = new ArrayList<>();
-        all.forEach(clan -> response.add(new ClanResponseEntity(clan.getName(), clan.getClanMembers().size(), ResponseCharacter.convert(clan.getClanMembers()))));
+        all.forEach(clan -> response.add(new ClanResponseEntity(clan.getName(), clan.getClanMembers().size(), ResponseCharacter.convertForClan(clan.getClanMembers()))));
         return response;
     }
 

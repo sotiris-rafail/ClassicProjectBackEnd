@@ -29,7 +29,7 @@ public class CharacterServiceImpl implements CharacterService {
 	Map<String, Object[]> response = new HashMap<>();
 	List<Clan> clanRepositoryAll = clanRepository.findAll();
 	response.put("Clan", ClanResponseEntity.convertForCharRegister(clanRepositoryAll).toArray());
-	List<Character> characterFromDb = characterRepository.findAllById(Collections.singleton(userId));
+	List<Character> characterFromDb = characterRepository.findByUserId(userId);
 	if (characterFromDb.isEmpty()) {
 	    response.put("HasMain", TypeOfCharacter.values());
 	} else {

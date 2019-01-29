@@ -1,9 +1,7 @@
 package com.classic.project.model.constantParty.response;
 
-import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.CpNotFoundException;
-import com.classic.project.model.user.User;
 import com.classic.project.model.user.response.ResponseUser;
 
 import java.util.List;
@@ -11,6 +9,7 @@ import java.util.Optional;
 
 public class ResponseConstantParty {
 
+    private int cpId;
     private String cpName;
     private int numberOfActives;
     private int numberOfBoxes;
@@ -19,7 +18,7 @@ public class ResponseConstantParty {
     private int aqPoints;
     private List<ResponseUser> members;
 
-    public ResponseConstantParty(String cpName, int numberOfActives, int numberOfBoxes, int orfenPoints, int corePoints, int aqPoints, List<ResponseUser> members) {
+    public ResponseConstantParty(String cpName, int numberOfActives, int numberOfBoxes, int orfenPoints, int corePoints, int aqPoints, List<ResponseUser> members, int cpId) {
         this.cpName = cpName;
         this.numberOfActives = numberOfActives;
         this.numberOfBoxes = numberOfBoxes;
@@ -27,10 +26,20 @@ public class ResponseConstantParty {
         this.corePoints = corePoints;
         this.aqPoints = aqPoints;
         this.members = members;
+        this.cpId = cpId;
     }
 
-    public ResponseConstantParty(String cpName) {
+    public ResponseConstantParty(String cpName, int cpId) {
+        this.cpId = cpId;
         this.cpName = cpName;
+    }
+
+    public int getCpId() {
+        return cpId;
+    }
+
+    public void setCpId(int cpId) {
+        this.cpId = cpId;
     }
 
     public String getCpName() {
@@ -95,10 +104,13 @@ public class ResponseConstantParty {
             throw new CpNotFoundException();
         }
         cp = cpFromDB.get();
-        return new ResponseConstantParty(cp.getCpName(), cp.getNumberOfActivePlayers(), cp.getNumberOfBoxes(), cp.getOrfenPoints(), cp.getCorePoints(), cp.getAqPoints(), ResponseUser.convertForCp(cp.getMembers()));
+        return new ResponseConstantParty(cp.getCpName(), cp.getNumberOfActivePlayers(), cp.getNumberOfBoxes(), cp.getOrfenPoints(), cp.getCorePoints(), cp.getAqPoints(), ResponseUser.convertForCp(cp.getMembers()), cp.getCpId());
     }
 
     public static ResponseConstantParty convertForUser(ConstantParty cp) {
-        return new ResponseConstantParty(cp == null ? "" : cp.getCpName());
+        if(cp == null){
+            return new ResponseConstantParty("", -1);
+        }
+        return new ResponseConstantParty(cp.getCpName(), cp.getCpId());
     }
 }

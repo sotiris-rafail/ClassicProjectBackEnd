@@ -27,6 +27,15 @@ public class ResponseCharacter {
         this.typeOfUser = typeOfUser;
     }
 
+    public ResponseCharacter(String name, int level, String classOfCharacter, String clanName, String typeOfCharacter, String typeOfUser) {
+        this.name = name;
+        this.level = level;
+        this.classOfCharacter = classOfCharacter;
+        this.clanName = clanName;
+        this.typeOfCharacter = typeOfCharacter;
+        this.typeOfUser = typeOfUser;
+    }
+
     public String getName() {
         return name;
     }
@@ -83,7 +92,7 @@ public class ResponseCharacter {
 	this.typeOfUser = typeOfUser;
     }
 
-    public static List<ResponseCharacter> convert(List<Character> all) {
+    public static List<ResponseCharacter> convertForClan(List<Character> all) {
         return returnNewList(all);
     }
 
@@ -96,5 +105,11 @@ public class ResponseCharacter {
         List<ResponseCharacter> cpMembers = new ArrayList<>();
         characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getUser().getCp().getCpName(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
         return cpMembers;
+    }
+
+    public static List<ResponseCharacter> convertForUser(List<Character> characters) {
+        List<ResponseCharacter> ownCharacters = new ArrayList<>();
+        characters.forEach(member -> ownCharacters.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
+        return ownCharacters;
     }
 }
