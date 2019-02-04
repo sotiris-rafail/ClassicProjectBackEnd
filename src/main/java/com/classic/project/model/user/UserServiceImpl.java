@@ -1,5 +1,8 @@
 package com.classic.project.model.user;
 
+import com.classic.project.model.character.TypeOfCharacter;
+import com.classic.project.model.constantParty.ConstantParty;
+import com.classic.project.model.constantParty.ConstantPartyRepository;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
@@ -23,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ConstantPartyRepository constantPartyRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -57,6 +63,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserToCp(AddUserToCP userIds) {
-        System.out.println(userIds.toString());
+        Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(userIds.getCpId());
+	int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + userIds.getUsersToUpdate().length;
+	int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
+	for (int i = 0; i < userIds.getUsersToUpdate().length; i++) {
+	    Optional<User> userFromDb = userRepository.findById(userIds.getUsersToUpdate()[i]);
+	    numberOfBoxes += userFromDb.get().getCharacters().stream().filter(character -> character.getTypeOfCharacter().name().equals(
+		TypeOfCharacter.BOX)).count();
+	    userRepository.addUsersToCP(userIds.getCpId(),userIds.getUsersToUpdate()[i]);
+	}
+	constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
     }
 }

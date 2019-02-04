@@ -1,15 +1,22 @@
 package com.classic.project.model.user.response;
 
-import java.util.Map;
-
 public class AddUserToCP {
-    private Map<String, String[]> updatableObject;
+    private int cpId;
+    private int[] usersToUpdate;
 
-    public Map<String, String[]> getUpdatableObject() {
-        return updatableObject;
+    public int getCpId() {
+	return cpId;
     }
 
-    public void setUpdatableObject(Map<String, String[]> updatableObject) {
-        this.updatableObject = updatableObject;
+    public void setCpId(int cpId) {
+	this.cpId = cpId;
+    }
+
+    public int[] getUsersToUpdate() {
+	return usersToUpdate;
+    }
+
+    public void setUsersToUpdate(int[] usersToUpdate) {
+	this.usersToUpdate = usersToUpdate;
     }
 }
