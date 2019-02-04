@@ -5,4 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface ConstantPartyService {
     ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId);
+
+    ResponseEntity<ResponseConstantParty> getCp(int cpId);
 }

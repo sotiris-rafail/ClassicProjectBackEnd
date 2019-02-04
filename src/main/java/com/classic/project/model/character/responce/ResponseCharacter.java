@@ -36,6 +36,13 @@ public class ResponseCharacter {
         this.typeOfUser = typeOfUser;
     }
 
+    public ResponseCharacter(String inGameName, int level, String classOfCharacter, String clanName) {
+        this.name = inGameName;
+        this.level = level;
+        this.classOfCharacter = classOfCharacter;
+        this.clanName = clanName;
+    }
+
     public String getName() {
         return name;
     }
@@ -111,5 +118,12 @@ public class ResponseCharacter {
         List<ResponseCharacter> ownCharacters = new ArrayList<>();
         characters.forEach(member -> ownCharacters.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
         return ownCharacters;
+    }
+
+    public static List<ResponseCharacter> convertForUsersWithoutCP(List<Character> characters) {
+        List<ResponseCharacter> cpMembers = new ArrayList<>();
+        characters = characters.stream().filter(character -> character.getTypeOfCharacter().name().equals(TypeOfCharacter.MAIN.name())).collect(Collectors.toList());
+        characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName())));
+        return cpMembers;
     }
 }

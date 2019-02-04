@@ -18,9 +18,9 @@ public class ConstantPartyController {
         this.constantPartyService = constantPartyService;
     }
 
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{cpId}", method = RequestMethod.GET, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ResponseConstantParty> getStoresByLocation(@PathVariable(name = "userId") int userId) {
-        return constantPartyService.getCpByLeaderId(userId);
+    public ResponseEntity<ResponseConstantParty> getCpById(@PathVariable(name = "cpId") int cpId) {
+        return constantPartyService.getCp(cpId);
     }
 }

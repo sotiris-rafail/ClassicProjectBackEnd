@@ -1,5 +1,6 @@
 package com.classic.project.model.user;
 
+import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -45,5 +47,16 @@ public class UserServiceImpl implements UserService {
         userAuthConfirm.isTheAuthUser(userFromDb.get());
         ResponseUser responseUser =  ResponseUser.convertForUser(userFromDb);
         return new ResponseEntity<>(responseUser, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseUser>> getCharsWithoutCp() {
+        List<ResponseUser> responseUser = ResponseUser.convertForUsersWithoutCp(userRepository.findUsersWithoutCP());
+        return new ResponseEntity<>(responseUser, HttpStatus.OK);
+    }
+
+    @Override
+    public void addUserToCp(AddUserToCP userIds) {
+        System.out.println(userIds.toString());
     }
 }

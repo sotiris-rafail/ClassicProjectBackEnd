@@ -1,11 +1,16 @@
 package com.classic.project.model.user;
 
+import com.classic.project.model.constantParty.response.ResponseConstantParty;
+import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -28,5 +33,17 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ResponseUser> getUserById(@PathVariable(name = "userId") int userId) {
 	return userService.getUserById(userId);
+    }
+
+    @RequestMapping(value = "/noCpPeople", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ResponseUser>> getCharsWithoutCp() {
+        return userService.getCharsWithoutCp();
+    }
+
+    @RequestMapping(value = "/addPeopleToCp", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void addUserToCp(@RequestBody AddUserToCP userIds) {
+        userService.addUserToCp(userIds);
     }
 }

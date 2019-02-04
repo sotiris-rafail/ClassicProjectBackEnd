@@ -14,7 +14,13 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId) {
-        ResponseConstantParty responceCP = ResponseConstantParty.convertForLeader(constantPartyRepository.findByLeaderId(userId));
-        return new ResponseEntity<>(responceCP, HttpStatus.OK);
+        ResponseConstantParty responseCP = ResponseConstantParty.convertForLeader(constantPartyRepository.findByLeaderId(userId));
+        return new ResponseEntity<>(responseCP, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ResponseConstantParty> getCp(int cpId) {
+        ResponseConstantParty responseCP = ResponseConstantParty.convertForLeader(constantPartyRepository.findById(cpId));
+        return new ResponseEntity<>(responseCP, HttpStatus.OK);
     }
 }
