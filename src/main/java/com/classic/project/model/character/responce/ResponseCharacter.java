@@ -100,6 +100,9 @@ public class ResponseCharacter {
     }
 
     public static List<ResponseCharacter> convertForClan(List<Character> all) {
+        if(all.isEmpty()) {
+            return new ArrayList<>();
+        }
         return returnNewList(all);
     }
 
