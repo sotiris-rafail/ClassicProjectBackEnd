@@ -16,8 +16,6 @@ public class RaidBoss {
     @Column
     private Date timeOfDeath;
     @Column
-    private Date timeOfReSpawn;
-    @Column
     private int level;
     @Column
     private String whereItLives;
@@ -26,9 +24,9 @@ public class RaidBoss {
     @Column
     private int epicBossPoints;
     @Column
-    private int windowStarts;
+    private String windowStarts;
     @Column
-    private int windowEnds;
+    private String windowEnds;
 
     public int getRaidBossId() {
         return raidBossId;
@@ -52,14 +50,6 @@ public class RaidBoss {
 
     public void setTimeOfDeath(Date timeOfDeath) {
         this.timeOfDeath = timeOfDeath;
-    }
-
-    public Date getTimeOfReSpawn() {
-        return timeOfReSpawn;
-    }
-
-    public void setTimeOfReSpawn(Date timeOfReSpawn) {
-        this.timeOfReSpawn = timeOfReSpawn;
     }
 
     public int getLevel() {
@@ -94,19 +84,19 @@ public class RaidBoss {
         this.epicBossPoints = epicBossPoints;
     }
 
-    public int getWindowStarts() {
+    public String getWindowStarts() {
         return windowStarts;
     }
 
-    public void setWindowStarts(int windowStarts) {
+    public void setWindowStarts(String windowStarts) {
         this.windowStarts = windowStarts;
     }
 
-    public int getWindowEnds() {
+    public String getWindowEnds() {
         return windowEnds;
     }
 
-    public void setWindowEnds(int windowEnds) {
+    public void setWindowEnds(String windowEnds) {
         this.windowEnds = windowEnds;
     }
 }

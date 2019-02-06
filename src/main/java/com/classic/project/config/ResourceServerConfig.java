@@ -26,6 +26,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 	    .antMatchers("/user/register").permitAll()
+                .antMatchers("/raidboss/*").permitAll()
 	    .anyRequest().access("#oauth2.hasScope('read')");
     }
 
