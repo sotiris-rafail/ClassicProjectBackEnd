@@ -15,7 +15,7 @@ public class ResponseRaidBoss {
     private boolean isALive;
     private Date windowStartsJP;
     private Date windowEndsJP;
-    public ResponseRaidBoss(int raidBossId, String name, int level, Date windowStarts, Date windowEnds, String whereItLives, boolean isALive, Date windowStartsJP, Date windowEndsJP) {
+    public ResponseRaidBoss(int raidBossId, String name, int level, Date windowStarts, Date windowEnds, String whereItLives, boolean isALive) {
         this.raidBossId = raidBossId;
         this.name = name;
         this.level = level;
@@ -23,8 +23,6 @@ public class ResponseRaidBoss {
         this.windowEnds = windowEnds;
         this.whereItLives = whereItLives;
         this.isALive = isALive;
-        this.windowStartsJP = windowStartsJP;
-        this.windowEndsJP = windowEndsJP;
     }
 
     public int getRaidBossId() {
@@ -99,8 +97,8 @@ public class ResponseRaidBoss {
         this.windowEndsJP = windowEndsJP;
     }
 
-    public static ResponseRaidBoss convertForRaidBossTable(RaidBoss raidboss, Date windowStarts, Date windowEnds, Date windowStartsJP, Date windowEndsJP) {
-        return new ResponseRaidBoss(raidboss.getRaidBossId(), raidboss.getName(), raidboss.getLevel(), windowStarts, windowEnds, raidboss.getWhereItLives(), isAlive(windowEnds), windowStartsJP, windowEndsJP);
+    public static ResponseRaidBoss convertForRaidBossTable(RaidBoss raidboss, Date windowStarts, Date windowEnds) {
+        return new ResponseRaidBoss(raidboss.getRaidBossId(), raidboss.getName(), raidboss.getLevel(), windowStarts, windowEnds, raidboss.getWhereItLives(), isAlive(windowEnds));
     }
 
     private static boolean isAlive(Date windowEnds) {

@@ -35,15 +35,11 @@ public class RaidBossServiceImpl implements RaidBossService {
             calendar2.setTime(rb.getTimeOfDeath());
             if(rb.getWindowStarts().equals(rb.getWindowEnds())){
                 Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
-                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowStarts,
-                        getKoreanwindowStart(windowStarts),
-                        getKoreanwindowStart(windowStarts)));
+                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowStarts));
             } else {
                 Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
                 Date windowEnds = getWindowEnds(calendar2, rb.getWindowEnds().split(":")).getTime();
-                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowEnds,
-                        getKoreanwindowStart(windowStarts),
-                        getKoreanwindowEnd(windowEnds)));
+                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowEnds));
             }
         }
         response.sort(Comparator.comparing(ResponseRaidBoss::getWindowStarts));

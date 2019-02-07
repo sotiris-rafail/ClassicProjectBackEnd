@@ -64,3 +64,4 @@ fabric.properties
 /.idea/gradle.xml
 /src/test/test.iml
 src/test/test.iml
+build/*
