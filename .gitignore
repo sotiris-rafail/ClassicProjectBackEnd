@@ -65,3 +65,4 @@ fabric.properties
 /src/test/test.iml
 src/test/test.iml
 build/*
+logging/*
