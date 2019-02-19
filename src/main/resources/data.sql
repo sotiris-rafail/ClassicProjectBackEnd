@@ -32,7 +32,7 @@ VALUES (3,52,'Orfen','2019-02-05 12:13:00',0,'Sea Of Spores', '01:06', '01:12');
 insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
 VALUES (1,40,'Queen Ant','2019-02-05 12:13:00',0,'Ant Nest', '00:21', '01:03');
 insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (3,52,'Core','2019-02-05 12:13:00',0,'Cruma Tower', '01:06', '01:12');
+VALUES (3,52,'Core','2019-02-05 12:13:00',0,'Cruma Tower', '01:12', '02:00');
 insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
 VALUES (0,75,'Decar','2019-02-05 12:13:00',2,'Cruma Tower', '01:06', '01:06');
 insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
