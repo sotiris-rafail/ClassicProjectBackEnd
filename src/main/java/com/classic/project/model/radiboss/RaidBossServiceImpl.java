@@ -46,6 +46,13 @@ public class RaidBossServiceImpl implements RaidBossService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Override
+    public void addNewRaid(RaidBoss raidBoss) {
+        raidBoss.setEpicBossPoints(0);
+        raidBoss.setTimeOfDeath(new Date());
+	raidBossRepository.save(raidBoss);
+    }
+
     private static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {
         calendar.add(Calendar.DATE, Integer.parseInt(windowStartsTime[0]));
         calendar.add(Calendar.HOUR, Integer.parseInt(windowStartsTime[1]));

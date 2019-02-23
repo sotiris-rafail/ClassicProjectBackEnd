@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class ResponseCharacter {
 
+    private int characterId;
     private String name;
     private int level;
     private String cpName;
@@ -17,7 +18,8 @@ public class ResponseCharacter {
     private String typeOfCharacter;
     private String typeOfUser;
 
-    public ResponseCharacter(String name, int level, String cpName, String classOfCharacter, String clanName,String typeOfCharacter, String typeOfUser) {
+    public ResponseCharacter(int characterId, String name, int level, String cpName, String classOfCharacter, String clanName,String typeOfCharacter, String typeOfUser) {
+        this.characterId = characterId;
         this.name = name;
         this.level = level;
         this.cpName = cpName;
@@ -41,6 +43,14 @@ public class ResponseCharacter {
         this.level = level;
         this.classOfCharacter = classOfCharacter;
         this.clanName = clanName;
+    }
+
+    public int getCharacterId() {
+	return characterId;
+    }
+
+    public void setCharacterId(int characterId) {
+	this.characterId = characterId;
     }
 
     public String getName() {
@@ -113,7 +123,7 @@ public class ResponseCharacter {
 
     private static List<ResponseCharacter> returnNewList(List<Character> characters){
         List<ResponseCharacter> cpMembers = new ArrayList<>();
-        characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getUser().getCp().getCpName(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
+        characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getCharacterId(), member.getInGameName(), member.getLevel(), member.getUser().getCp() == null ? "Not a CP member" : member.getUser().getCp().getCpName(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
         return cpMembers;
     }
 

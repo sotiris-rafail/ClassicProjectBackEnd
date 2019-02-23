@@ -10,4 +10,6 @@ public interface RaidBossService {
     void updateDeathTimer(int raidId, Date timer);
 
     ResponseEntity<List<ResponseRaidBoss>> getAllBosses();
+
+    void addNewRaid(RaidBoss raidBoss);
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ClanService {
     ResponseEntity<List<ClanResponseEntity>> getAllClanInfo();
+
+    void addNewClan(Clan registerClan);
 }

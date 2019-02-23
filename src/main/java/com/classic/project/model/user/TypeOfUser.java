@@ -4,5 +4,6 @@ public enum TypeOfUser {
 
     CPLEADER,
     CPMEMBER,
-    SUPERUSER
+    SUPERUSER,
+    RAIDBOSSER
 }

@@ -36,4 +36,10 @@ public class RaidBossController {
         return raidBossService.getAllBosses();
     }
 
+    @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void addNewRaidBoss(@RequestBody RaidBoss raidBoss){
+	raidBossService.addNewRaid(raidBoss);
+    }
+
 }

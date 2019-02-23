@@ -1,5 +1,6 @@
 package com.classic.project.model.user;
 
+import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CharacterRepository characterRepository;
 
     @Override
     public ResponseEntity<String> registerUser(User user) {
@@ -73,5 +77,16 @@ public class UserServiceImpl implements UserService {
 	    userRepository.addUsersToCP(userIds.getCpId(),userIds.getUsersToUpdate()[i]);
 	}
 	constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
+    }
+
+    @Override
+    public ResponseEntity<TypeOfUser> getTypeOfUser(int userId) {
+	return new ResponseEntity<>(userRepository.getTypeOfUser(userId), HttpStatus.OK);
+    }
+
+    @Override
+    public void updateUserRole(int characterId, String typeOfUser) {
+        int userId = userRepository.getUserByCharacterId(characterId);
+	userRepository.updateUserRole(userId, TypeOfUser.values()[Integer.parseInt(typeOfUser)]);
     }
 }
