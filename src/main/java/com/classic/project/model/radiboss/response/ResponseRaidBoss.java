@@ -1,6 +1,7 @@
 package com.classic.project.model.radiboss.response;
 
 import com.classic.project.model.radiboss.RaidBoss;
+import com.classic.project.model.radiboss.RaidBossState;
 
 import java.util.Date;
 
@@ -12,17 +13,15 @@ public class ResponseRaidBoss {
     private Date windowStarts;
     private Date windowEnds;
     private String whereItLives;
-    private boolean isALive;
-    private Date windowStartsJP;
-    private Date windowEndsJP;
-    public ResponseRaidBoss(int raidBossId, String name, int level, Date windowStarts, Date windowEnds, String whereItLives, boolean isALive) {
+    private String raidBossState;
+    public ResponseRaidBoss(int raidBossId, String name, int level, Date windowStarts, Date windowEnds, String whereItLives, String raidBossState) {
         this.raidBossId = raidBossId;
         this.name = name;
         this.level = level;
         this.windowStarts = windowStarts;
         this.windowEnds = windowEnds;
         this.whereItLives = whereItLives;
-        this.isALive = isALive;
+        this.raidBossState = raidBossState;
     }
 
     public int getRaidBossId() {
@@ -73,35 +72,28 @@ public class ResponseRaidBoss {
         this.whereItLives = whereItLives;
     }
 
-    public boolean isALive() {
-        return isALive;
+    public String getRaidBossState() {
+        return raidBossState;
     }
 
-    public void setALive(boolean ALive) {
-        isALive = ALive;
-    }
-
-    public Date getWindowStartsJP() {
-        return windowStartsJP;
-    }
-
-    public void setWindowStartsJP(Date windowStartsJP) {
-        this.windowStartsJP = windowStartsJP;
-    }
-
-    public Date getWindowEndsJP() {
-        return windowEndsJP;
-    }
-
-    public void setWindowEndsJP(Date windowEndsJP) {
-        this.windowEndsJP = windowEndsJP;
+    public void setRaidBossState(String raidBossState) {
+        this.raidBossState = raidBossState;
     }
 
     public static ResponseRaidBoss convertForRaidBossTable(RaidBoss raidboss, Date windowStarts, Date windowEnds) {
-        return new ResponseRaidBoss(raidboss.getRaidBossId(), raidboss.getName(), raidboss.getLevel(), windowStarts, windowEnds, raidboss.getWhereItLives(), isAlive(windowEnds));
+        return new ResponseRaidBoss(raidboss.getRaidBossId(), raidboss.getName(), raidboss.getLevel(), windowStarts, windowEnds, raidboss.getWhereItLives(), raidBossState(windowStarts, windowEnds));
     }
 
-    private static boolean isAlive(Date windowEnds) {
-        return windowEnds.before(new Date());
+    private static String raidBossState(Date windowStarts, Date windowEnds) {
+        if(windowStarts.after(new Date())) {
+            if(windowEnds.before(new Date())){
+                return RaidBossState.ONWINDOW.name();
+            } else {
+                return RaidBossState.DEAD.name();
+            }
+        } else {
+            return RaidBossState.ALIVE.name();
+        }
+
     }
 }

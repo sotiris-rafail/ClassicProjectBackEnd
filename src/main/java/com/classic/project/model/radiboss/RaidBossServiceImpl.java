@@ -42,7 +42,7 @@ public class RaidBossServiceImpl implements RaidBossService {
                 response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowEnds));
             }
         }
-        response.sort(Comparator.comparing(ResponseRaidBoss::getWindowStarts));
+        //response.sort(Comparator.comparing(ResponseRaidBoss::getWindowStarts));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
