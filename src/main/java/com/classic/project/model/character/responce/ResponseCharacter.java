@@ -29,7 +29,8 @@ public class ResponseCharacter {
         this.typeOfUser = typeOfUser;
     }
 
-    public ResponseCharacter(String name, int level, String classOfCharacter, String clanName, String typeOfCharacter, String typeOfUser) {
+    public ResponseCharacter(int characterId, String name, int level, String classOfCharacter, String clanName, String typeOfCharacter, String typeOfUser) {
+        this.characterId = characterId;
         this.name = name;
         this.level = level;
         this.classOfCharacter = classOfCharacter;
@@ -38,7 +39,8 @@ public class ResponseCharacter {
         this.typeOfUser = typeOfUser;
     }
 
-    public ResponseCharacter(String inGameName, int level, String classOfCharacter, String clanName) {
+    public ResponseCharacter(int characterId, String inGameName, int level, String classOfCharacter, String clanName) {
+        this.characterId = characterId;
         this.name = inGameName;
         this.level = level;
         this.classOfCharacter = classOfCharacter;
@@ -129,14 +131,14 @@ public class ResponseCharacter {
 
     public static List<ResponseCharacter> convertForUser(List<Character> characters) {
         List<ResponseCharacter> ownCharacters = new ArrayList<>();
-        characters.forEach(member -> ownCharacters.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
+        characters.forEach(member -> ownCharacters.add(new ResponseCharacter(member.getCharacterId(), member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName(), member.getTypeOfCharacter().name(), member.getUser().getTypeOfUser().name())));
         return ownCharacters;
     }
 
     public static List<ResponseCharacter> convertForUsersWithoutCP(List<Character> characters) {
         List<ResponseCharacter> cpMembers = new ArrayList<>();
         characters = characters.stream().filter(character -> character.getTypeOfCharacter().name().equals(TypeOfCharacter.MAIN.name())).collect(Collectors.toList());
-        characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName())));
+        characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getCharacterId(), member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName())));
         return cpMembers;
     }
 }
