@@ -7,4 +7,6 @@ public interface ConstantPartyService {
     ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId);
 
     ResponseEntity<ResponseConstantParty> getCp(int cpId, int userId);
+
+    void deleteMember(int characterId);
 }

@@ -48,9 +48,13 @@ public class RaidBossServiceImpl implements RaidBossService {
 
     @Override
     public void addNewRaid(RaidBoss raidBoss) {
+        Optional<RaidBoss> raidFromDB = raidBossRepository.findBossByName(raidBoss.getName());
+        if(raidFromDB.isPresent()) {
+            throw new RaidBossExistException(raidFromDB.get().getName());
+        }
         raidBoss.setEpicBossPoints(0);
         raidBoss.setTimeOfDeath(new Date());
-	raidBossRepository.save(raidBoss);
+	    raidBossRepository.save(raidBoss);
     }
 
     private static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {

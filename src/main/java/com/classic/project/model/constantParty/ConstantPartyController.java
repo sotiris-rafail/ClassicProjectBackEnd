@@ -22,4 +22,11 @@ public class ConstantPartyController {
     public ResponseEntity<ResponseConstantParty> getCpById(@PathVariable(name = "cpId") int cpId, @PathVariable(name = "userId") int userId) {
         return constantPartyService.getCp(cpId, userId);
     }
+
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCharacter(@RequestParam(name = "characterId")int characterId){
+        constantPartyService.deleteMember(characterId);
+    }
 }

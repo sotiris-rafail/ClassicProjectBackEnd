@@ -1,6 +1,7 @@
 package com.classic.project.model.character;
 
 import com.classic.project.model.character.responce.RegisterCharacter;
+import com.classic.project.model.character.responce.UpdateCharacter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,17 @@ public class CharacterController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<String, Object[]>> getInfoForRegister(@PathVariable(name = "userId") int userId){
         return characterService.getInfoForRegister(userId);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateCharacter(@RequestBody UpdateCharacter character){
+        characterService.updateCharacter(character);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCharacter(@RequestParam(name = "characterId")int characterId){
+        characterService.deleteCharacter(characterId);
     }
 }

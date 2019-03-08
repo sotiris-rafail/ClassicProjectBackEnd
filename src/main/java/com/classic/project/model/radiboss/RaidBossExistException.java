@@ -1,7 +1,7 @@
 package com.classic.project.model.radiboss;
 
 public class RaidBossExistException extends  RuntimeException{
-    public RaidBossExistException(String email){
-        super("User " +email +" exist");
+    public RaidBossExistException(String name){
+        super("Raidboss " + name +" already exists");
     }
 }

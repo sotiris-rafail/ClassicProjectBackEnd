@@ -1,6 +1,7 @@
 package com.classic.project.model.character;
 
 import com.classic.project.model.character.responce.RegisterCharacter;
+import com.classic.project.model.character.responce.UpdateCharacter;
 import com.classic.project.model.clan.Clan;
 import com.classic.project.model.clan.ClanRepository;
 import com.classic.project.model.clan.responce.ClanResponseEntity;
@@ -60,7 +61,23 @@ public class CharacterServiceImpl implements CharacterService {
 	characterRepository.save(character);
     }
 
-    private static String[] getAllNames(){
+	@Override
+	public void updateCharacter(UpdateCharacter character) {
+		Optional<Character> characterFromDB = characterRepository.findById(character.getCharId());
+		String inGameName = character.getInGameName() == null ? characterFromDB.get().getInGameName() : character.getInGameName();
+		int level = character.getLevel() == 0 ? characterFromDB.get().getLevel() : character.getLevel();
+		int clanId = character.getClanId() == 0 ? characterFromDB.get().getClan().getClanId() : character.getClanId();
+		int classOfCharacter = character.getClassOfCharacter() == 0 ? characterFromDB.get().getClassOfCharacter().ordinal() : character.getClassOfCharacter();
+		int typeOfCharacter = character.getTypeOfCharacter() == 0 ? characterFromDB.get().getTypeOfCharacter().ordinal() : character.getTypeOfCharacter();
+		characterRepository.updateCharacter(character.getCharId(),inGameName, level, clanId, classOfCharacter, typeOfCharacter);
+	}
+
+	@Override
+	public void deleteCharacter(int characterId) {
+		characterRepository.deleteById(characterId);
+	}
+
+	private static String[] getAllNames(){
 	String[] names = new String[ClassOfCharacter.values().length];
 	for (int i = 0; i < ClassOfCharacter.values().length; i++) {
 	    names[i] = ClassOfCharacter.values()[i].getName();

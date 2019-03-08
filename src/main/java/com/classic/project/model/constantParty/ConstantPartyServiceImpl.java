@@ -36,6 +36,11 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
+    @Override
+    public void deleteMember(int characterId) {
+        userRepository.deleteMemberById(characterId);
+    }
+
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {
         return  userRepository.isUserMemberOfCP(cpId, userId).isPresent();

@@ -18,4 +18,9 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
 
     @Query("select character from Character character where character.user.userId = ?1")
     List<Character> findByUserId(int userId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Character character set character.inGameName = ?2 , character.level = ?3, character.clan.clanId = ?4, character.classOfCharacter = ?5, character.typeOfCharacter = ?6 where character.characterId = ?1")
+    void updateCharacter(int charId, String inGameName, int level, int clanId, int classOfCharacter, int typeOfCharacter);
 }
