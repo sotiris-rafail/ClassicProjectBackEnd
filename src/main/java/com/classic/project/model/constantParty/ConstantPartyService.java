@@ -9,4 +9,6 @@ public interface ConstantPartyService {
     ResponseEntity<ResponseConstantParty> getCp(int cpId, int userId);
 
     void deleteMember(int characterId);
+
+    void updateEpicPoints(String rbName, int pointsToAdd, int cpId);
 }

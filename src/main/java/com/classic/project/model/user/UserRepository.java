@@ -38,6 +38,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update User user set user.cp.cpId = null where user.userId = ?1")
-    void deleteMemberById(int memebrId);
+    @Query("update User user set user.cp = null where user.userId = ?1")
+    void deleteMemberByCharacterIdId(int characterId);
 }

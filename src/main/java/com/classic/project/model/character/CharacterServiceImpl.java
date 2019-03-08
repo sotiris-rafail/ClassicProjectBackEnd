@@ -64,17 +64,17 @@ public class CharacterServiceImpl implements CharacterService {
 	@Override
 	public void updateCharacter(UpdateCharacter character) {
 		Optional<Character> characterFromDB = characterRepository.findById(character.getCharId());
-		String inGameName = character.getInGameName() == null ? characterFromDB.get().getInGameName() : character.getInGameName();
-		int level = character.getLevel() == 0 ? characterFromDB.get().getLevel() : character.getLevel();
-		int clanId = character.getClanId() == 0 ? characterFromDB.get().getClan().getClanId() : character.getClanId();
-		int classOfCharacter = character.getClassOfCharacter() == 0 ? characterFromDB.get().getClassOfCharacter().ordinal() : character.getClassOfCharacter();
-		int typeOfCharacter = character.getTypeOfCharacter() == 0 ? characterFromDB.get().getTypeOfCharacter().ordinal() : character.getTypeOfCharacter();
+		String inGameName = (character.getInGameName() == null || character.getInGameName().equals("")) ? characterFromDB.get().getInGameName() : character.getInGameName();
+		int level = character.getLevel() == -1 ? characterFromDB.get().getLevel() : character.getLevel();
+		int clanId = character.getClanId() == -1 ? characterFromDB.get().getClan().getClanId() : character.getClanId();
+		int classOfCharacter = character.getClassOfCharacter() == -1 ? characterFromDB.get().getClassOfCharacter().ordinal() : character.getClassOfCharacter();
+		int typeOfCharacter = character.getTypeOfCharacter() == -1 ? characterFromDB.get().getTypeOfCharacter().ordinal() : character.getTypeOfCharacter();
 		characterRepository.updateCharacter(character.getCharId(),inGameName, level, clanId, classOfCharacter, typeOfCharacter);
 	}
 
 	@Override
 	public void deleteCharacter(int characterId) {
-		characterRepository.deleteById(characterId);
+		characterRepository.deleteByCharacterId(characterId);
 	}
 
 	private static String[] getAllNames(){

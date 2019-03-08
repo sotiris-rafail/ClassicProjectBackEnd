@@ -29,4 +29,10 @@ public class ConstantPartyController {
     public void deleteCharacter(@RequestParam(name = "characterId")int characterId){
         constantPartyService.deleteMember(characterId);
     }
+
+    @RequestMapping(value = "/updateEpicPoints", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateEpicPoints(@RequestParam(name = "rbName")String rbName, @RequestParam(name = "pointsToAdd")int pointsToAdd, @RequestParam(name = "cpId")int cpId ){
+	constantPartyService.updateEpicPoints(rbName, pointsToAdd, cpId);
+    }
 }

@@ -9,50 +9,27 @@ public class UpdateCharacter {
     private int typeOfCharacter;
 
     public int getCharId() {
-        return charId;
-    }
-
-    public void setCharId(int charId) {
-        this.charId = charId;
+	return charId;
     }
 
     public String getInGameName() {
-        return inGameName;
-    }
-
-    public void setInGameName(String inGameName) {
-        this.inGameName = inGameName;
+	return inGameName;
     }
 
     public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
+	return level;
     }
 
     public int getClanId() {
-        return clanId;
-    }
-
-    public void setClanId(int clanId) {
-        this.clanId = clanId;
+	return clanId;
     }
 
     public int getClassOfCharacter() {
-        return classOfCharacter;
-    }
-
-    public void setClassOfCharacter(int classOfCharacter) {
-        this.classOfCharacter = classOfCharacter;
+	return classOfCharacter;
     }
 
     public int getTypeOfCharacter() {
-        return typeOfCharacter;
+	return typeOfCharacter;
     }
 
-    public void setTypeOfCharacter(int typeOfCharacter) {
-        this.typeOfCharacter = typeOfCharacter;
-    }
 }
