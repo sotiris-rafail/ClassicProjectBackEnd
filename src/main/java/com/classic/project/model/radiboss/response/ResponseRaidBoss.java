@@ -85,15 +85,14 @@ public class ResponseRaidBoss {
     }
 
     private static String raidBossState(Date windowStarts, Date windowEnds) {
-        if(windowStarts.after(new Date())) {
-            if(windowEnds.before(new Date())){
-                return RaidBossState.ONWINDOW.name();
-            } else {
-                return RaidBossState.DEAD.name();
-            }
-        } else {
-            return RaidBossState.ALIVE.name();
-        }
-
+	if(windowEnds.before(new Date())){
+	    return RaidBossState.ALIVE.name();
+	} else {
+	    if(windowStarts.after(new Date())){
+	        return RaidBossState.DEAD.name();
+	    }
+	    return RaidBossState.ONWINDOW.name();
+	}
     }
+
 }
