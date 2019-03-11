@@ -22,7 +22,7 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
     @Modifying
     @Transactional
     @Query("UPDATE Character character set character.inGameName = ?2 , character.level = ?3, character.clan.clanId = ?4, character.classOfCharacter = ?5, character.typeOfCharacter = ?6 where character.characterId = ?1")
-    void updateCharacter(int charId, String inGameName, int level, int clanId, int classOfCharacter, int typeOfCharacter);
+    void updateCharacter(int charId, String inGameName, int level, int clanId, ClassOfCharacter classOfCharacter, TypeOfCharacter typeOfCharacter);
 
     @Modifying
     @Transactional
