@@ -67,8 +67,8 @@ public class CharacterServiceImpl implements CharacterService {
 		String inGameName = (character.getInGameName() == null || character.getInGameName().equals("")) ? characterFromDB.get().getInGameName() : character.getInGameName();
 		int level = character.getLevel() == -1 ? characterFromDB.get().getLevel() : character.getLevel();
 		int clanId = character.getClanId() == -1 ? characterFromDB.get().getClan().getClanId() : character.getClanId();
-		int classOfCharacter = character.getClassOfCharacter() == -1 ? characterFromDB.get().getClassOfCharacter().ordinal() : character.getClassOfCharacter();
-		int typeOfCharacter = character.getTypeOfCharacter() == -1 ? characterFromDB.get().getTypeOfCharacter().ordinal() : character.getTypeOfCharacter();
+		int classOfCharacter = character.getClassOfCharacter() == -1 ? characterFromDB.get().getClassOfCharacter().ordinal() : ClassOfCharacter.values()[character.getClassOfCharacter()].ordinal();
+		int typeOfCharacter = character.getTypeOfCharacter() == -1 ? characterFromDB.get().getTypeOfCharacter().ordinal() : TypeOfCharacter.values()[character.getTypeOfCharacter()].ordinal();
 		characterRepository.updateCharacter(character.getCharId(),inGameName, level, clanId, classOfCharacter, typeOfCharacter);
 	}
 
