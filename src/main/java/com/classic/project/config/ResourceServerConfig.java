@@ -25,7 +25,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-	    .antMatchers("/user/register").permitAll()
+	    .antMatchers("/user/register").permitAll().antMatchers("/unsold/*").permitAll()
+                .antMatchers("/sold/*").permitAll()
 	    .anyRequest().access("#oauth2.hasScope('read')");
     }
 
