@@ -14,15 +14,15 @@ import javax.persistence.Table;
 public class SoldItem extends Item {
 
     @Column
-    private int maxPrice;
+    private double maxPrice;
     @Column
-    private int boughtPrice;
+    private double boughtPrice;
     @Column
     private String whoBoughtIt;
     @Column
     private boolean isDelivered;
 
-    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, int maxPrice, int boughtPrice, String whoBoughtIt, boolean isDelivered) {
+    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered) {
         super(grade, itemType, photoPath, itemName, stateOfItem);
         this.maxPrice = maxPrice;
         this.boughtPrice = boughtPrice;
@@ -30,7 +30,7 @@ public class SoldItem extends Item {
         this.isDelivered = isDelivered;
     }
 
-    public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, int maxPrice, int boughtPrice, String whoBoughtIt, boolean isDelivered) {
+    public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered) {
         super(itemId, grade, itemType, photoPath, itemName, stateOfItem);
         this.maxPrice = maxPrice;
         this.boughtPrice = boughtPrice;
@@ -42,7 +42,7 @@ public class SoldItem extends Item {
         super();
     }
 
-    public int getMaxPrice() {
+    public double getMaxPrice() {
         return maxPrice;
     }
 
@@ -50,7 +50,7 @@ public class SoldItem extends Item {
         this.maxPrice = maxPrice;
     }
 
-    public int getBoughtPrice() {
+    public double getBoughtPrice() {
         return boughtPrice;
     }
 

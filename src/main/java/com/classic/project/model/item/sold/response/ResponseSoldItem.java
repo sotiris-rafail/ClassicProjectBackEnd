@@ -7,14 +7,14 @@ public class ResponseSoldItem {
     private int itemId;
     private String grade;
     private String typeOfItem;
-    private int price;
+    private double price;
     private String stateOfItem;
     private String whoBoughtIt;
     private String name;
     private boolean delivered;
     private String photoPath;
 
-    public ResponseSoldItem(int itemId, String grade, String typeOfItem, int price, String stateOfItem, String whoBoughtIt, String name, boolean delivered, String photoPath) {
+    public ResponseSoldItem(int itemId, String grade, String typeOfItem, double price, String stateOfItem, String whoBoughtIt, String name, boolean delivered, String photoPath) {
         this.itemId = itemId;
         this.grade = grade;
         this.typeOfItem = typeOfItem;
@@ -50,11 +50,11 @@ public class ResponseSoldItem {
         this.typeOfItem = typeOfItem;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

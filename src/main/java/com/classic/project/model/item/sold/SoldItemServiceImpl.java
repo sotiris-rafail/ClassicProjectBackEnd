@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class SoldItemServiceImpl implements SoldItemService {
@@ -28,6 +29,9 @@ public class SoldItemServiceImpl implements SoldItemService {
 
     @Override
     public void deliverSoldItem(int itemId, boolean isDelivered) {
-        soldItemRepository.deliverSoldItem(itemId, isDelivered);
+	int howManyChanged = soldItemRepository.deliverSoldItem(itemId, isDelivered);
+	if(howManyChanged == 0){
+	    throw new SoldItemNotFoundException(itemId);
+	}
     }
 }

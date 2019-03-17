@@ -7,34 +7,35 @@ import com.classic.project.model.item.unSold.UnSoldItem;
 
 public class NewUnSoldItem {
     private int itemdId;
-    private int startingPrice;
-    private int maxPrice;
-    private int currentValue;
-    private int bidStep;
+    private double startingPrice;
+    private double maxPrice;
+    private double currentValue;
+    private double bidStep;
     private String photoPath;
     private String lastBidder;
     private String grade;
     private String typeOfItem;
     private String name;
     private String stateOfItem;
+    private int numberOfDays;
 
     public int getItemdId() {
         return itemdId;
     }
 
-    public int getStartingPrice() {
+    public double getStartingPrice() {
         return startingPrice;
     }
 
-    public int getMaxPrice() {
+    public double getMaxPrice() {
         return maxPrice;
     }
 
-    public int getCurrentValue() {
+    public double getCurrentValue() {
         return currentValue;
     }
 
-    public int getBidStep() {
+    public double getBidStep() {
         return bidStep;
     }
 
@@ -62,7 +63,11 @@ public class NewUnSoldItem {
         return stateOfItem;
     }
 
+    public int getNumberOfDays() {
+	return numberOfDays;
+    }
+
     public static UnSoldItem convertToUnSoldItem(NewUnSoldItem newUnSoldItem){
-        return new UnSoldItem(Grade.valueOf(newUnSoldItem.getGrade()), ItemType.valueOf(newUnSoldItem.getTypeOfItem()), newUnSoldItem.photoPath, newUnSoldItem.name, StateOfItem.getValueByState(newUnSoldItem.getStateOfItem()), newUnSoldItem.maxPrice, newUnSoldItem.startingPrice, newUnSoldItem.bidStep, newUnSoldItem.currentValue, newUnSoldItem.lastBidder, newUnSoldItem.bidStep);
+        return new UnSoldItem(Grade.valueOf(newUnSoldItem.getGrade()), ItemType.valueOf(newUnSoldItem.getTypeOfItem()), newUnSoldItem.photoPath, newUnSoldItem.name, StateOfItem.getValueByState(newUnSoldItem.getStateOfItem()), newUnSoldItem.maxPrice, newUnSoldItem.startingPrice, newUnSoldItem.numberOfDays, newUnSoldItem.currentValue, newUnSoldItem.lastBidder, newUnSoldItem.bidStep);
     }
 }

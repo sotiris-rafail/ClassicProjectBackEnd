@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 public interface SoldItemRepository extends JpaRepository<SoldItem, Integer> {
 
     @Modifying
     @Transactional
     @Query("update SoldItem soldItem set soldItem.isDelivered = ?2 where soldItem.itemId = ?1")
-    void deliverSoldItem(int itemId, boolean isDelivered);
+    int deliverSoldItem(int itemId, boolean isDelivered);
 }

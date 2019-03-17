@@ -15,21 +15,21 @@ import java.util.Date;
 public class UnSoldItem extends Item {
 
     @Column
-    private int maxPrice;
+    private double maxPrice;
     @Column
-    private int startingPrice;
+    private double startingPrice;
     @Column
     private int daysToStayUnSold;
     @Column
-    private int currentValue;
+    private double currentValue;
     @Column
     private String lastBidder;
     @Column
-    private int bidStep;
+    private double bidStep;
     @Column
     private Date expirationDate;
 
-    public UnSoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, int maxPrice, int startingPrice, int daysToStayUnSold, int currentValue, String lastBidder, int bidStep) {
+    public UnSoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice, int daysToStayUnSold, double currentValue, String lastBidder, double bidStep) {
         super(grade, itemType, photoPath, itemName, stateOfItem);
         this.maxPrice = maxPrice;
         this.startingPrice = startingPrice;
@@ -39,7 +39,7 @@ public class UnSoldItem extends Item {
         this.bidStep = bidStep;
     }
 
-    public UnSoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, int maxPrice, int startingPrice, int daysToStayUnSold, int currentValue, String lastBidder, int bidStep, Date expirationDate) {
+    public UnSoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice, int daysToStayUnSold, double currentValue, String lastBidder, double bidStep, Date expirationDate) {
         super(itemId, grade, itemType, photoPath, itemName, stateOfItem);
         this.maxPrice = maxPrice;
         this.startingPrice = startingPrice;
@@ -54,19 +54,19 @@ public class UnSoldItem extends Item {
         super();
     }
 
-    public int getMaxPrice() {
+    public double getMaxPrice() {
         return maxPrice;
     }
 
-    public void setMaxPrice(int maxPrice) {
+    public void setMaxPrice(double maxPrice) {
         this.maxPrice = maxPrice;
     }
 
-    public int getStartingPrice() {
+    public double getStartingPrice() {
         return startingPrice;
     }
 
-    public void setStartingPrice(int startingPrice) {
+    public void setStartingPrice(double startingPrice) {
         this.startingPrice = startingPrice;
     }
 
@@ -78,11 +78,11 @@ public class UnSoldItem extends Item {
         this.daysToStayUnSold = daysToStayUnSold;
     }
 
-    public int getCurrentValue() {
+    public double getCurrentValue() {
         return currentValue;
     }
 
-    public void setCurrentValue(int currentValue) {
+    public void setCurrentValue(double currentValue) {
         this.currentValue = currentValue;
     }
 
@@ -94,11 +94,11 @@ public class UnSoldItem extends Item {
         this.lastBidder = lastBidder;
     }
 
-    public int getBidStep() {
+    public double getBidStep() {
         return bidStep;
     }
 
-    public void setBidStep(int bidStep) {
+    public void setBidStep(double bidStep) {
         this.bidStep = bidStep;
     }
 
