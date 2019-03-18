@@ -19,7 +19,7 @@ public class SoldItemServiceImpl implements SoldItemService {
 
     @Override
     public ResponseEntity<List<ResponseSoldItem>> getSoldItems() {
-        List<SoldItem> soldItemsFromDb = soldItemRepository.findAll(new Sort(Sort.Direction.ASC, "itemId"));
+        List<SoldItem> soldItemsFromDb = soldItemRepository.findAll(new Sort(Sort.Direction.ASC, "delivered"));
         List<ResponseSoldItem> responseSoldItems = new ArrayList<>();
         for(SoldItem soldItem : soldItemsFromDb) {
             responseSoldItems.add(ResponseSoldItem.convertForDisplay(soldItem));
