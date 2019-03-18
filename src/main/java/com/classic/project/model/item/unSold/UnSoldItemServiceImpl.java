@@ -25,6 +25,10 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
     @Autowired
     private CharacterRepository characterRepository;
 
+    private static final String PHOTO_PATH ="../../assets/itemPhoto/";
+
+    private static final String JPG =".jpg";
+
     @Override
     public void addNewItemForSale(NewUnSoldItem newUnSoldItem, int amountOfItem) {
         for (int i = 0; i < amountOfItem; i++) {
@@ -35,6 +39,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
             unSoldItem.setBidStep(calculatePrices(unSoldItem.getBidStep()));
             unSoldItem.setCurrentValue(calculatePrices(unSoldItem.getCurrentValue()));
             unSoldItem.setStartingPrice(calculatePrices(unSoldItem.getStartingPrice()));
+            unSoldItem.setPhotoPath(createPhotoPath(unSoldItem.getItemName()));
             unSoldItemRepository.save(unSoldItem);
             unSoldItemRepository.flush();
         }
@@ -116,5 +121,18 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 
     private static double calculatePrices(double price) {
         return price * 1000000;
+    }
+
+    private static String createPhotoPath(String itemName) {
+        String[] splittedItemName = itemName.trim().split("\\s+");
+        if(splittedItemName.length == 1) {
+            return PHOTO_PATH+splittedItemName[0].toLowerCase()+JPG;
+	} else {
+            StringBuilder photoName = new StringBuilder();
+            for(String subString : splittedItemName){
+                photoName.append(subString.toLowerCase()).append("_");
+	    }
+	    return PHOTO_PATH+photoName.substring(0,photoName.length() - 1)+JPG;
+	}
     }
 }

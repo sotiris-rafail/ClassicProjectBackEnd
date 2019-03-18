@@ -21,10 +21,7 @@ public class CleanUnSoldItems {
     @Autowired
     private SoldItemRepository soldItemRepository;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
     @Scheduled(cron = "0 0 * * * *") //the top of every hour of every day.
-    //@Scheduled(cron = "*/30 * * * * *") // every ten seconds
     public void cleanUpTheSoldUnsoldItem() {
         List<UnSoldItem> unSoldItems = unSoldItemRepository.getSoldUnSoldItemsByStateOfItem();
 	for(UnSoldItem unSoldItem : unSoldItems){
@@ -34,7 +31,6 @@ public class CleanUnSoldItems {
     }
 
     @Scheduled(cron = "0 0 * * * *") //the top of every hour of every day.
-    //@Scheduled(cron = "*/30 * * * * *") // every ten seconds
     public void cleanUpExpiredUnSoldItems(){
 	List<UnSoldItem> unSoldItems = unSoldItemRepository.getUnSoldItemsByStateOfItem();
 	for(UnSoldItem unSoldItem : unSoldItems){
