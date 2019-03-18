@@ -1,5 +1,6 @@
 package com.classic.project.model.item.unSold;
 
+import com.classic.project.model.character.Character;
 import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.item.StateOfItem;
@@ -88,9 +89,17 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         return  calendar.getTime();
     }
 
-    private String getLastBidderName(int userId){
-	return characterRepository.findByUserId(userId).stream().filter(character -> character.getTypeOfCharacter().equals(
-	    TypeOfCharacter.MAIN)).findFirst().get().getInGameName();
+    private String getLastBidderName(int userId) {
+	Optional<Character> first = characterRepository.findByUserId(userId)
+	    .stream()
+	    .filter(character -> character.getTypeOfCharacter().equals(
+		TypeOfCharacter.MAIN))
+	    .findFirst();
+	if(first.isPresent()) {
+	    return first.get().getInGameName();
+	} else {
+	    throw new UnSoldItemsNotFoundException("Can not bid if you do not have a main character registered");
+	}
     }
 
     private static Date trimToZero(Date now){
