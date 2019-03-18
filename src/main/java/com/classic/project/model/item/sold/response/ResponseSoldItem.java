@@ -13,8 +13,9 @@ public class ResponseSoldItem {
     private String name;
     private boolean delivered;
     private String photoPath;
+    private double boughtPrice;
 
-    public ResponseSoldItem(int itemId, String grade, String typeOfItem, double price, String stateOfItem, String whoBoughtIt, String name, boolean delivered, String photoPath) {
+    public ResponseSoldItem(int itemId, String grade, String typeOfItem, double price, String stateOfItem, String whoBoughtIt, String name, boolean delivered, String photoPath, double boughtPrice) {
         this.itemId = itemId;
         this.grade = grade;
         this.typeOfItem = typeOfItem;
@@ -24,6 +25,7 @@ public class ResponseSoldItem {
         this.name = name;
         this.delivered = delivered;
         this.photoPath = photoPath;
+        this.boughtPrice = boughtPrice;
     }
 
     public int getItemId() {
@@ -98,7 +100,15 @@ public class ResponseSoldItem {
         this.photoPath = photoPath;
     }
 
+    public double getBoughtPrice() {
+        return boughtPrice;
+    }
+
+    public void setBoughtPrice(double boughtPrice) {
+        this.boughtPrice = boughtPrice;
+    }
+
     public static ResponseSoldItem convertForDisplay(SoldItem soldItem){
-        return new ResponseSoldItem(soldItem.getItemId(), soldItem.getGrade().getGrade(), soldItem.getItemType().getType(), soldItem.getMaxPrice(), soldItem.getStateOfItem().getState(), soldItem.getWhoBoughtIt(), soldItem.getItemName(), soldItem.isDelivered(), soldItem.getPhotoPath());
+        return new ResponseSoldItem(soldItem.getItemId(), soldItem.getGrade().getGrade(), soldItem.getItemType().getType(), soldItem.getMaxPrice(), soldItem.getStateOfItem().getState(), soldItem.getWhoBoughtIt(), soldItem.getItemName(), soldItem.isDelivered(), soldItem.getPhotoPath(), soldItem.getBoughtPrice());
     }
 }

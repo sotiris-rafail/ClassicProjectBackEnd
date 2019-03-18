@@ -34,6 +34,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
             unSoldItem.setMaxPrice(calculatePrices(unSoldItem.getMaxPrice()));
             unSoldItem.setBidStep(calculatePrices(unSoldItem.getBidStep()));
             unSoldItem.setCurrentValue(calculatePrices(unSoldItem.getCurrentValue()));
+            unSoldItem.setStartingPrice(calculatePrices(unSoldItem.getStartingPrice()));
             unSoldItemRepository.save(unSoldItem);
             unSoldItemRepository.flush();
         }
