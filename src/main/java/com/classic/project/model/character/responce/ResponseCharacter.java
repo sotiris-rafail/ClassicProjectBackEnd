@@ -137,8 +137,10 @@ public class ResponseCharacter {
 
     public static List<ResponseCharacter> convertForUsersWithoutCP(List<Character> characters) {
         List<ResponseCharacter> cpMembers = new ArrayList<>();
-        characters = characters.stream().filter(character -> character.getTypeOfCharacter().name().equals(TypeOfCharacter.MAIN.name())).collect(Collectors.toList());
-        characters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getCharacterId(), member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName())));
+        List<Character> mainCharacters = characters.stream().filter(character -> character.getTypeOfCharacter().name().equals(TypeOfCharacter.MAIN.name())).collect(Collectors.toList());
+        if(!mainCharacters.isEmpty()) {
+            mainCharacters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getCharacterId(), member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName())));
+        }
         return cpMembers;
     }
 }
