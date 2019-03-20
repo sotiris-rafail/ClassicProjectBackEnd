@@ -92,9 +92,9 @@ public class ResponseUser {
     }
 
     public static  List<ResponseUser> convertForUsersWithoutCp(List<User> users){
-        users = users.stream().filter(user -> !user.getCharacters().isEmpty() || user.getCharacters() != null).collect(Collectors.toList());
+        List<User> filterUsers = users.stream().filter(user -> !user.getCharacters().isEmpty()).collect(Collectors.toList());
         List<ResponseUser> members = new ArrayList<>();
-        users.forEach(user -> members.add(new ResponseUser(user.getUserId(), ResponseCharacter.convertForUsersWithoutCP(user.getCharacters()))));
+        filterUsers.forEach(user -> members.add(new ResponseUser(user.getUserId(), ResponseCharacter.convertForUsersWithoutCP(user.getCharacters()))));
         return members;
     }
 }
