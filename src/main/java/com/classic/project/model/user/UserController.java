@@ -44,7 +44,7 @@ public class UserController {
         userService.addUsersToCp(userIds);
     }
 
-    @RequestMapping(value = "/addUsersToCp", method = RequestMethod.PUT, consumes = "application/json")
+    @RequestMapping(value = "/addUserToCp", method = RequestMethod.PUT, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public void addUserToCp(@RequestParam(name = "characterId") int characterId, @RequestParam(name = "cpId") int cpId) {
         userService.addUserToCp(characterId, cpId);
