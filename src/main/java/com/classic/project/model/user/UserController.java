@@ -56,7 +56,7 @@ public class UserController {
 	return userService.getTypeOfUser(userId);
     }
 
-    @RequestMapping(value = "/addUserToCp", method = RequestMethod.PUT, consumes = "application/json")
+    @RequestMapping(value = "/updateRole", method = RequestMethod.PUT, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public void updateUserRole(@RequestParam(name = "characterId") int characterId, @RequestParam(name = "typeOfUser") String typeOfUser) {
 	userService.updateUserRole(characterId, typeOfUser);
