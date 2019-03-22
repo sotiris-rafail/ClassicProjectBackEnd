@@ -14,4 +14,6 @@ public interface UnSoldItemService {
     ResponseEntity<String> bidForUnSoldItem(int itemId, int bidStep, int userId);
 
     void buyNowUnSoldItem(int itemId, int userId);
+
+    ResponseEntity<Integer> getNumberOfUnsoldItems();
 }

@@ -82,7 +82,12 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 	unSoldItemRepository.buyNow(itemId, getLastBidderName(userId), unSoldItem.get().getMaxPrice() , StateOfItem.SOLD);
     }
 
-    private static Date getExpirationDate(Date registerDate, int daysToStayUnSold){
+	@Override
+	public ResponseEntity<Integer> getNumberOfUnsoldItems() {
+		return new ResponseEntity<>(unSoldItemRepository.countUnSoldItemByStateOfItem(StateOfItem.UNSOLD), HttpStatus.OK);
+	}
+
+	private static Date getExpirationDate(Date registerDate, int daysToStayUnSold){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(registerDate);
         calendar.add(Calendar.DATE, daysToStayUnSold);

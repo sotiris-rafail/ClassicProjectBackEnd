@@ -31,4 +31,6 @@ public interface UnSoldItemRepository extends JpaRepository<UnSoldItem, Integer>
     @Transactional
     @Query("delete from UnSoldItem where itemId = ?1")
     void deleteCleanUpUnSoldItems(int itemId);
+
+    int countUnSoldItemByStateOfItem(StateOfItem stateOfItem);
 }

@@ -45,4 +45,10 @@ public class UnSoldItemController {
     public void buyNowUnSoldItem(@PathParam("itemId") int itemId, @PathParam("userId") int userId){
 	unSoldItemService.buyNowUnSoldItem(itemId, userId);
     }
+
+    @RequestMapping(path = "/getNumberOfUnsoldItems", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Integer> getNumberOfUnsoldItems(){
+        return unSoldItemService.getNumberOfUnsoldItems();
+    }
 }
