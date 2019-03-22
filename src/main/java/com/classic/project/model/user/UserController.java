@@ -40,8 +40,14 @@ public class UserController {
 
     @RequestMapping(value = "/addPeopleToCp", method = RequestMethod.PUT, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void addUserToCp(@RequestBody AddUserToCP userIds) {
-        userService.addUserToCp(userIds);
+    public void addUsersToCp(@RequestBody AddUserToCP userIds) {
+        userService.addUsersToCp(userIds);
+    }
+
+    @RequestMapping(value = "/addUsersToCp", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void addUserToCp(@RequestParam(name = "characterId") int characterId, @RequestParam(name = "cpId") int cpId) {
+        userService.addUserToCp(characterId, cpId);
     }
 
     @RequestMapping(value = "/role/{userId}", method = RequestMethod.GET, produces = "application/json")
@@ -50,9 +56,9 @@ public class UserController {
 	return userService.getTypeOfUser(userId);
     }
 
-    @RequestMapping(value = "/updateRole", method = RequestMethod.PUT, consumes = "application/json")
+    @RequestMapping(value = "/addUserToCp", method = RequestMethod.PUT, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void addUserToCp(@RequestParam(name = "characterId") int characterId, @RequestParam(name = "typeOfUser") String typeOfUser) {
+    public void updateUserRole(@RequestParam(name = "characterId") int characterId, @RequestParam(name = "typeOfUser") String typeOfUser) {
 	userService.updateUserRole(characterId, typeOfUser);
     }
 }

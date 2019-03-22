@@ -13,9 +13,11 @@ public interface UserService {
 
     ResponseEntity<List<ResponseUser>> getCharsWithoutCp();
 
-    void addUserToCp(AddUserToCP userIds);
+    void addUsersToCp(AddUserToCP userIds);
 
     ResponseEntity<TypeOfUser> getTypeOfUser(int userId);
 
     void updateUserRole(int characterId, String typeOfUser);
+
+    void addUserToCp(int characterId, int cpId);
 }

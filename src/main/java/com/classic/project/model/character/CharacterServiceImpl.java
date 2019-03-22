@@ -1,5 +1,6 @@
 package com.classic.project.model.character;
 
+import com.classic.project.model.character.exception.CharacterExistException;
 import com.classic.project.model.character.responce.RegisterCharacter;
 import com.classic.project.model.character.responce.UpdateCharacter;
 import com.classic.project.model.clan.Clan;
@@ -53,6 +54,9 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public void registerCharacter(RegisterCharacter registerCharacter) {
+    	if(characterRepository.findByInGameNameContaining(registerCharacter.getInGameName()).isPresent()){
+    		throw new CharacterExistException(registerCharacter.getInGameName());
+		}
         Character character = RegisterCharacter.convertToDBObject(registerCharacter);
 	Optional<Clan> clan = clanRepository.findById(registerCharacter.getClanId());
 	Optional<User> user = userRepository.findById(registerCharacter.getUserId());
@@ -75,6 +79,11 @@ public class CharacterServiceImpl implements CharacterService {
 	@Override
 	public void deleteCharacter(int characterId) {
 		characterRepository.deleteByCharacterId(characterId);
+	}
+
+	@Override
+	public void removeCharacterFromClan(int characterId) {
+		characterRepository.removeCharacterFromClan(characterId);
 	}
 
 	private static String[] getAllNames(){

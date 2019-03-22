@@ -3,7 +3,7 @@ package com.classic.project.model.user.response;
 import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.user.User;
-import com.classic.project.model.user.UserNotFoundException;
+import com.classic.project.model.user.exception.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

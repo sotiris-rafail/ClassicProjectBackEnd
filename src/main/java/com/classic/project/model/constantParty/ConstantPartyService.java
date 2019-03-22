@@ -11,4 +11,6 @@ public interface ConstantPartyService {
     void deleteMember(int characterId);
 
     void updateEpicPoints(String rbName, int pointsToAdd, int cpId);
+
+    void addNewCP(ConstantParty newCp);
 }

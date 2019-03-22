@@ -4,6 +4,7 @@ import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
+import com.classic.project.model.user.exception.UserExistException;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUserToCp(AddUserToCP userIds) {
+    public void addUsersToCp(AddUserToCP userIds) {
         Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(userIds.getCpId());
 	int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + userIds.getUsersToUpdate().length;
 	int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
@@ -88,5 +89,11 @@ public class UserServiceImpl implements UserService {
     public void updateUserRole(int characterId, String typeOfUser) {
         int userId = userRepository.getUserByCharacterId(characterId);
 	userRepository.updateUserRole(userId, TypeOfUser.values()[Integer.parseInt(typeOfUser)]);
+    }
+
+    @Override
+    public void addUserToCp(int characterId, int cpId) {
+        int userId = characterRepository.findById(characterId).get().getUser().getUserId();
+        userRepository.addUsersToCP(cpId, userId);
     }
 }

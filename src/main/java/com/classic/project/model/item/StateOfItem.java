@@ -1,7 +1,5 @@
 package com.classic.project.model.item;
 
-import javassist.NotFoundException;
-
 public enum StateOfItem {
     SOLD("Sold"),
     UNSOLD("Un Sold");

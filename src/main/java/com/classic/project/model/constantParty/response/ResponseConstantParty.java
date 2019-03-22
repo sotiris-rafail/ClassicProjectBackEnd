@@ -1,7 +1,7 @@
 package com.classic.project.model.constantParty.response;
 
 import com.classic.project.model.constantParty.ConstantParty;
-import com.classic.project.model.constantParty.CpNotFoundException;
+import com.classic.project.model.constantParty.exception.CpNotFoundException;
 import com.classic.project.model.user.response.ResponseUser;
 
 import java.util.List;

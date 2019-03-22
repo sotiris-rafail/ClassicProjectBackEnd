@@ -1,7 +1,8 @@
 package com.classic.project.model.constantParty;
 
         import com.classic.project.model.character.CharacterRepository;
-	import com.classic.project.model.constantParty.response.ResponseConstantParty;
+        import com.classic.project.model.constantParty.exception.ConstantPartyExistException;
+        import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.user.UserRepository;
 import com.classic.project.security.UserAuthConfirm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-	import java.util.Optional;
+        import java.util.ArrayList;
+        import java.util.Optional;
 
 @Component
 public class ConstantPartyServiceImpl implements ConstantPartyService {
@@ -58,6 +60,20 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 	} else if(rbName.equals("Queen Ant")) {
 	    constantPartyRepository.updateAQPoints(cpId, cpFromDb.get().getAqPoints() + pointsToAdd);
 	}
+    }
+
+    @Override
+    public void addNewCP(ConstantParty newCp) {
+        if(constantPartyRepository.findByCpNameContaining(newCp.getCpName()).isPresent()){
+            throw new ConstantPartyExistException(newCp.getCpName());
+        }
+        newCp.setMembers(new ArrayList<>());
+        newCp.setAqPoints(0);
+        newCp.setCorePoints(0);
+        newCp.setOrfenPoints(0);
+        newCp.setNumberOfActivePlayers(0);
+        newCp.setNumberOfBoxes(0);
+        constantPartyRepository.save(newCp);
     }
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {

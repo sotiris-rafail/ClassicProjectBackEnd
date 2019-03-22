@@ -1,7 +1,7 @@
 package com.classic.project.security;
 
 import com.classic.project.model.user.User;
-import com.classic.project.model.user.UserNotFoundException;
+import com.classic.project.model.user.exception.UserNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

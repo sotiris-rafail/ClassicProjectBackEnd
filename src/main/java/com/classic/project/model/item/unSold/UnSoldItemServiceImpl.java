@@ -4,16 +4,14 @@ import com.classic.project.model.character.Character;
 import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.item.StateOfItem;
+import com.classic.project.model.item.unSold.exception.UnSoldItemsNotFoundException;
 import com.classic.project.model.item.unSold.response.NewUnSoldItem;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
-import com.classic.project.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component

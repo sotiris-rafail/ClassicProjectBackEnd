@@ -1,4 +1,4 @@
-package com.classic.project.model.item.sold;
+package com.classic.project.model.item.sold.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

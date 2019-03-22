@@ -1,5 +1,6 @@
 package com.classic.project.model.item.sold;
 
+import com.classic.project.model.item.sold.exception.SoldItemNotFoundException;
 import com.classic.project.model.item.sold.response.ResponseSoldItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class SoldItemServiceImpl implements SoldItemService {

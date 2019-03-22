@@ -1,5 +1,6 @@
 package com.classic.project.model.constantParty;
 
+import com.classic.project.model.clan.Clan;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,11 @@ public class ConstantPartyController {
     @ResponseStatus(HttpStatus.OK)
     public void updateEpicPoints(@RequestParam(name = "rbName")String rbName, @RequestParam(name = "pointsToAdd")int pointsToAdd, @RequestParam(name = "cpId")int cpId ){
 	constantPartyService.updateEpicPoints(rbName, pointsToAdd, cpId);
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void addNewCP(@RequestBody ConstantParty newCp){
+        constantPartyService.addNewCP(newCp);
     }
 }

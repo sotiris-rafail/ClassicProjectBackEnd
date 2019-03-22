@@ -43,4 +43,10 @@ public class CharacterController {
     public void deleteCharacter(@RequestParam(name = "characterId")int characterId){
         characterService.deleteCharacter(characterId);
     }
+
+    @RequestMapping(value = "/removeCharFromClan", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeCharacterFromClan(@RequestParam(name = "characterId") int characterId) {
+        characterService.removeCharacterFromClan(characterId);
+    }
 }

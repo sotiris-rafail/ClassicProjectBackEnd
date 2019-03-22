@@ -28,7 +28,7 @@ public class ClanWebController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void getAllClanInfo(@RequestBody Clan registerClan){
+    public void addNewClan(@RequestBody Clan registerClan){
 	clanService.addNewClan(registerClan);
     }
 }

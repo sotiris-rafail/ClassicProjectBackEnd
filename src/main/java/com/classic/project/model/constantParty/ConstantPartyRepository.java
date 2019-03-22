@@ -31,4 +31,6 @@ public interface ConstantPartyRepository extends JpaRepository<ConstantParty, In
     @Transactional
     @Query("update ConstantParty cp set cp.aqPoints =?2  where cp.cpId = ?1")
     void updateAQPoints(int cpId, int updatedAQPoints);
+
+    Optional<ConstantParty> findByCpNameContaining(String cpName);
 }

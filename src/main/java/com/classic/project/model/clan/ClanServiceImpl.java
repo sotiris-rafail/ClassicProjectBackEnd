@@ -1,5 +1,6 @@
 package com.classic.project.model.clan;
 
+import com.classic.project.model.clan.exception.ClanExistException;
 import com.classic.project.model.clan.responce.ClanResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,10 @@ public class ClanServiceImpl implements ClanService {
 
     @Override
     public void addNewClan(Clan registerClan) {
+        if(clanRepository.findByNameContaining(registerClan.getName()).isPresent()){
+            throw new ClanExistException(registerClan.getName());
+        }
         registerClan.setClanMembers(new ArrayList<>());
-	clanRepository.save(registerClan);
+	    clanRepository.save(registerClan);
     }
 }

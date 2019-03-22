@@ -1,4 +1,4 @@
-package com.classic.project.model.user;
+package com.classic.project.model.user.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

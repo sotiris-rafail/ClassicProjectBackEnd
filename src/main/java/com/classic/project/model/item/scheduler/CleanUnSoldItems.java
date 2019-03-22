@@ -1,5 +1,6 @@
 package com.classic.project.model.item.scheduler;
 
+import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.sold.SoldItem;
 import com.classic.project.model.item.sold.SoldItemRepository;
 import com.classic.project.model.item.unSold.UnSoldItem;
@@ -35,6 +36,7 @@ public class CleanUnSoldItems {
 	List<UnSoldItem> unSoldItems = unSoldItemRepository.getUnSoldItemsByStateOfItem();
 	for(UnSoldItem unSoldItem : unSoldItems){
 	    if(unSoldItem.getExpirationDate().before(new Date())){
+	        unSoldItem.setStateOfItem(StateOfItem.SOLD);
 		registerUnSoldItemsAsSoldItems(unSoldItem);
 		deleteUnSoldItems(unSoldItem.getItemId());
 	    }
