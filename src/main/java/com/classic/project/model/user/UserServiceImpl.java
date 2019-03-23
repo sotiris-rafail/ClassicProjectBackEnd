@@ -1,13 +1,17 @@
 package com.classic.project.model.user;
 
+import com.classic.project.model.character.Character;
 import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
+import com.classic.project.model.character.exception.CharacterExistException;
+import com.classic.project.model.character.exception.CharacterNotFoundException;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
 import com.classic.project.model.user.exception.UserExistException;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -93,7 +97,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserToCp(int characterId, int cpId) {
-        int userId = characterRepository.findById(characterId).get().getUser().getUserId();
+        Optional<Character> charFromDb = characterRepository.findById(characterId);
+        if(!charFromDb.isPresent()){
+            throw new CharacterNotFoundException(characterId);
+	}
+        int userId = charFromDb.get().getUser().getUserId();
         userRepository.addUsersToCP(cpId, userId);
     }
 }

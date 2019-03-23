@@ -11,7 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
         import java.util.ArrayList;
-        import java.util.Optional;
+	import java.util.List;
+	import java.util.Optional;
 
 @Component
 public class ConstantPartyServiceImpl implements ConstantPartyService {
@@ -74,6 +75,14 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         newCp.setNumberOfActivePlayers(0);
         newCp.setNumberOfBoxes(0);
         constantPartyRepository.save(newCp);
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseConstantParty>> getCPIdName() {
+        List<ConstantParty> cpsFromDb = constantPartyRepository.findAll();
+        List<ResponseConstantParty> response = new ArrayList<>();
+        cpsFromDb.forEach(cp -> response.add(ResponseConstantParty.convertForAddSingleUser(cp)));
+	return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {

@@ -113,4 +113,8 @@ public class ResponseConstantParty {
         }
         return new ResponseConstantParty(cp.getCpName(), cp.getCpId());
     }
+
+    public static ResponseConstantParty convertForAddSingleUser(ConstantParty cp) {
+	return new ResponseConstantParty(cp.getCpName(), cp.getCpId());
+    }
 }

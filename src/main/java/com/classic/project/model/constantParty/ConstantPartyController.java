@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/cp")
 public class ConstantPartyController {
@@ -41,5 +43,11 @@ public class ConstantPartyController {
     @ResponseStatus(HttpStatus.OK)
     public void addNewCP(@RequestBody ConstantParty newCp){
         constantPartyService.addNewCP(newCp);
+    }
+
+    @RequestMapping(value = "/getCPIdName", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ResponseConstantParty>> getCPIdName() {
+	return constantPartyService.getCPIdName();
     }
 }

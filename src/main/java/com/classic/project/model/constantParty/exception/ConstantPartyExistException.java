@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ConstantPartyExistException extends RuntimeException {
     public ConstantPartyExistException(String cpName) {
-        super(cpName + "already exists.");
+        super(cpName + " already exists.");
     }
 }

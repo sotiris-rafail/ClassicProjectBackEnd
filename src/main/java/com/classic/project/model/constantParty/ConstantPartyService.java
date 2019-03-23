@@ -3,6 +3,8 @@ package com.classic.project.model.constantParty;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface ConstantPartyService {
     ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId);
 
@@ -13,4 +15,6 @@ public interface ConstantPartyService {
     void updateEpicPoints(String rbName, int pointsToAdd, int cpId);
 
     void addNewCP(ConstantParty newCp);
+
+    ResponseEntity<List<ResponseConstantParty>> getCPIdName();
 }
