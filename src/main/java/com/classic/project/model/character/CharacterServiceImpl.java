@@ -54,7 +54,7 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public void registerCharacter(RegisterCharacter registerCharacter) {
-    	if(characterRepository.findByInGameNameContaining(registerCharacter.getInGameName()).isPresent()){
+    	if(characterRepository.findCharacterByInGameName(registerCharacter.getInGameName()).isPresent()){
     		throw new CharacterExistException(registerCharacter.getInGameName());
 		}
         Character character = RegisterCharacter.convertToDBObject(registerCharacter);

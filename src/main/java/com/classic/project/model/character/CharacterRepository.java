@@ -36,4 +36,6 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
     void removeCharacterFromClan(int characterId);
 
     Optional<Character> findByInGameNameContaining(String inGameName);
+
+    Optional<Character> findCharacterByInGameName(String inGameName);
 }
