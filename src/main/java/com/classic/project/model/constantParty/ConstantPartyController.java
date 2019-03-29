@@ -50,4 +50,16 @@ public class ConstantPartyController {
     public ResponseEntity<List<ResponseConstantParty>> getCPIdName() {
 	return constantPartyService.getCPIdName();
     }
-}
+
+    @RequestMapping(value = "/getCPNumbers", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ResponseConstantParty>> getCPNumbers() {
+        return constantPartyService.getCPNumbers();
+    }
+
+    @RequestMapping(value = "/getEpicPoints", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ResponseConstantParty>> getEpicPoints() {
+        return constantPartyService.getEpicPoints();
+    }
+}//getEpicPoints

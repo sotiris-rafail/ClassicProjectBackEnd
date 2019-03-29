@@ -85,6 +85,22 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 	return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<List<ResponseConstantParty>> getCPNumbers() {
+        List<ConstantParty> cpsFromDb = constantPartyRepository.findAll();
+        List<ResponseConstantParty> response = new ArrayList<>();
+        cpsFromDb.forEach(cp -> response.add(ResponseConstantParty.convertNumbersForDashboard(cp)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseConstantParty>> getEpicPoints() {
+        List<ConstantParty> cpsFromDb = constantPartyRepository.findAll();
+        List<ResponseConstantParty> response = new ArrayList<>();
+        cpsFromDb.forEach(cp -> response.add(ResponseConstantParty.convertPointsForDashboard(cp)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     private Boolean isMemberOfTheCP(int cpId, int userId) {
         return  userRepository.isUserMemberOfCP(cpId, userId).isPresent();
     }

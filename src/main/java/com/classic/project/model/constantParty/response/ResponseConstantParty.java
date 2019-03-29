@@ -34,6 +34,21 @@ public class ResponseConstantParty {
         this.cpName = cpName;
     }
 
+    public ResponseConstantParty(int cpId, String cpName, int orfenPoints, int corePoints, int aqPoints) {
+        this.cpId = cpId;
+        this.cpName = cpName;
+        this.orfenPoints = orfenPoints;
+        this.corePoints = corePoints;
+        this.aqPoints = aqPoints;
+    }
+
+    public ResponseConstantParty(int cpId, String cpName, int numberOfActivePlayers, int numberOfBoxes) {
+        this.cpId = cpId;
+        this.cpName = cpName;
+        this.numberOfActives = numberOfActivePlayers;
+        this.numberOfBoxes = numberOfBoxes;
+    }
+
     public int getCpId() {
         return cpId;
     }
@@ -116,5 +131,13 @@ public class ResponseConstantParty {
 
     public static ResponseConstantParty convertForAddSingleUser(ConstantParty cp) {
 	return new ResponseConstantParty(cp.getCpName(), cp.getCpId());
+    }
+
+    public static ResponseConstantParty convertNumbersForDashboard(ConstantParty cp) {
+        return new ResponseConstantParty(cp.getCpId(), cp.getCpName(), cp.getNumberOfActivePlayers(), cp.getNumberOfBoxes());
+    }
+
+    public static ResponseConstantParty convertPointsForDashboard(ConstantParty cp) {
+        return new ResponseConstantParty(cp.getCpId(), cp.getCpName(), cp.getOrfenPoints(), cp.getCorePoints(), cp.getAqPoints());
     }
 }

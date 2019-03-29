@@ -26,6 +26,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 	    .antMatchers("/user/register").permitAll()
+                .antMatchers("/cp/getCPNumbers").permitAll()//getEpicPoints
+                .antMatchers("/cp/getEpicPoints").permitAll()
 	    .anyRequest().access("#oauth2.hasScope('read')");
     }
 

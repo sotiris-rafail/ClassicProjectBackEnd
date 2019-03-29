@@ -17,4 +17,8 @@ public interface ConstantPartyService {
     void addNewCP(ConstantParty newCp);
 
     ResponseEntity<List<ResponseConstantParty>> getCPIdName();
+
+    ResponseEntity<List<ResponseConstantParty>> getCPNumbers();
+
+    ResponseEntity<List<ResponseConstantParty>> getEpicPoints();
 }
