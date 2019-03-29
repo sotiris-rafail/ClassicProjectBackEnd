@@ -85,16 +85,20 @@ public class ResponseUser {
         return new ResponseUser(user.get().getUserId(), user.get().getEmail(), user.get().getTypeOfUser().name(), ResponseCharacter.convertForUser(user.get().getCharacters()), ResponseConstantParty.convertForUser(user.get().getCp()));
     }
 
-    public static  List<ResponseUser> convertForCp(List<User> users){
+    public static List<ResponseUser> convertForCp(List<User> users){
         List<ResponseUser> members = new ArrayList<>();
         users.forEach(user -> members.add(new ResponseUser(user.getUserId(), user.getEmail(), user.getTypeOfUser().name(), ResponseCharacter.convertForCP(user.getCharacters()))));
         return members;
     }
 
-    public static  List<ResponseUser> convertForUsersWithoutCp(List<User> users){
+    public static List<ResponseUser> convertForUsersWithoutCp(List<User> users){
         List<User> filterUsers = users.stream().filter(user -> !user.getCharacters().isEmpty()).collect(Collectors.toList());
         List<ResponseUser> members = new ArrayList<>();
         filterUsers.forEach(user -> members.add(new ResponseUser(user.getUserId(), ResponseCharacter.convertForUsersWithoutCP(user.getCharacters()))));
         return members;
+    }
+
+    public static ResponseUser convertForDashboard(User user){
+        return new ResponseUser(user.getUserId(), user.getEmail(), user.getTypeOfUser().name(), ResponseCharacter.getForDashboard(user.getCharacters()), ResponseConstantParty.convertForUser(user.getCp()));
     }
 }

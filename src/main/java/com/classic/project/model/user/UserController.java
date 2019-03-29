@@ -61,4 +61,10 @@ public class UserController {
     public void updateUserRole(@RequestParam(name = "characterId") int characterId, @RequestParam(name = "typeOfUser") String typeOfUser) {
 	userService.updateUserRole(characterId, typeOfUser);
     }
+
+    @RequestMapping(value = "/getUsersForDashboard", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ResponseUser>> getUsersForDashboard() {
+	return userService.getUsersForDashboard();
+    }
 }

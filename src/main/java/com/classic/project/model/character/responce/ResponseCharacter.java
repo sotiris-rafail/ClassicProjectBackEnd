@@ -47,6 +47,16 @@ public class ResponseCharacter {
         this.clanName = clanName;
     }
 
+    public ResponseCharacter(int characterId, String inGameName, int level, String classOfCharacter, String clanName, String typeOfCharacter) {
+	this.characterId = characterId;
+	this.name = inGameName;
+	this.level = level;
+	this.classOfCharacter = classOfCharacter;
+	this.clanName = clanName;
+	this.typeOfCharacter = typeOfCharacter;
+    }
+
+
     public int getCharacterId() {
 	return characterId;
     }
@@ -142,5 +152,14 @@ public class ResponseCharacter {
             mainCharacters.forEach(member -> cpMembers.add(new ResponseCharacter(member.getCharacterId(), member.getInGameName(), member.getLevel(), member.getClassOfCharacter().getName(), member.getClan().getName())));
         }
         return cpMembers;
+    }
+
+    public static List<ResponseCharacter> getForDashboard(List<Character> characters) {
+	if(characters == null) {
+	    return new ArrayList<>();
+	}
+	List<ResponseCharacter> charsForDashboard = new ArrayList<>();
+	characters.forEach(character -> charsForDashboard.add(new ResponseCharacter(character.getCharacterId(), character.getInGameName(), character.getLevel(), character.getClassOfCharacter().getName(), character.getClan().getName(), character.getTypeOfCharacter().name())));
+	return charsForDashboard;
     }
 }

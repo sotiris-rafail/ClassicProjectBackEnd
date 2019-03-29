@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,5 +104,13 @@ public class UserServiceImpl implements UserService {
 	}
         int userId = charFromDb.get().getUser().getUserId();
         userRepository.addUsersToCP(cpId, userId);
+    }
+
+    @Override
+    public ResponseEntity<List<ResponseUser>> getUsersForDashboard() {
+        List<User> usersFromDb = userRepository.findAll();
+	List<ResponseUser> response = new ArrayList<>();
+	usersFromDb.forEach(user -> response.add(ResponseUser.convertForDashboard(user)));
+	return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

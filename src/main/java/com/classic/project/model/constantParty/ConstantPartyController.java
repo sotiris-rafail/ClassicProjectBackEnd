@@ -62,4 +62,4 @@ public class ConstantPartyController {
     public ResponseEntity<List<ResponseConstantParty>> getEpicPoints() {
         return constantPartyService.getEpicPoints();
     }
-}//getEpicPoints
+}

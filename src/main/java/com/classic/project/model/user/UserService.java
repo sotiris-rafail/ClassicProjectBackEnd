@@ -20,4 +20,6 @@ public interface UserService {
     void updateUserRole(int characterId, String typeOfUser);
 
     void addUserToCp(int characterId, int cpId);
+
+    ResponseEntity<List<ResponseUser>> getUsersForDashboard();
 }
