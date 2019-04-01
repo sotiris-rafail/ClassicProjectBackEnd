@@ -27,6 +27,8 @@ public class RaidBoss {
     private String windowStarts;
     @Column
     private String windowEnds;
+    @Column
+    private boolean isUnknown;
 
     public int getRaidBossId() {
         return raidBossId;
@@ -98,5 +100,13 @@ public class RaidBoss {
 
     public void setWindowEnds(String windowEnds) {
         this.windowEnds = windowEnds;
+    }
+
+    public boolean isUnknown() {
+        return isUnknown;
+    }
+
+    public void setUnknown(boolean unknown) {
+        isUnknown = unknown;
     }
 }

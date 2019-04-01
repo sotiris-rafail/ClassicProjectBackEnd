@@ -1,5 +1,7 @@
 package com.classic.project.model.radiboss;
 
+import com.classic.project.model.radiboss.exception.RaidBossExistException;
+import com.classic.project.model.radiboss.exception.RaidBossNotFoundException;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,11 +37,11 @@ public class RaidBossServiceImpl implements RaidBossService {
             calendar2.setTime(rb.getTimeOfDeath());
             if(rb.getWindowStarts().equals(rb.getWindowEnds())){
                 Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
-                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowStarts));
+                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowStarts, rb.isUnknown()));
             } else {
                 Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
                 Date windowEnds = getWindowEnds(calendar2, rb.getWindowEnds().split(":")).getTime();
-                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowEnds));
+                response.add(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowEnds, rb.isUnknown()));
             }
         }
         response.sort(Comparator.comparing(ResponseRaidBoss::getRaidBossState).reversed());
@@ -54,7 +56,17 @@ public class RaidBossServiceImpl implements RaidBossService {
         }
         raidBoss.setEpicBossPoints(0);
         raidBoss.setTimeOfDeath(new Date());
+        raidBoss.setUnknown(false);
 	    raidBossRepository.save(raidBoss);
+    }
+
+    @Override
+    public void setToUnknown(int raidId) {
+        Optional<RaidBoss> raidFromDb = raidBossRepository.findById(raidId);
+        if(!raidFromDb.isPresent()){
+            throw new RaidBossNotFoundException(raidId);
+        }
+        raidBossRepository.setToUnKnown(raidId);
     }
 
     private static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {

@@ -80,11 +80,14 @@ public class ResponseRaidBoss {
         this.raidBossState = raidBossState;
     }
 
-    public static ResponseRaidBoss convertForRaidBossTable(RaidBoss raidboss, Date windowStarts, Date windowEnds) {
-        return new ResponseRaidBoss(raidboss.getRaidBossId(), raidboss.getName(), raidboss.getLevel(), windowStarts, windowEnds, raidboss.getWhereItLives(), raidBossState(windowStarts, windowEnds));
+    public static ResponseRaidBoss convertForRaidBossTable(RaidBoss raidboss, Date windowStarts, Date windowEnds, boolean isUnknown) {
+        return new ResponseRaidBoss(raidboss.getRaidBossId(), raidboss.getName(), raidboss.getLevel(), windowStarts, windowEnds, raidboss.getWhereItLives(), raidBossState(windowStarts, windowEnds, isUnknown));
     }
 
-    private static String raidBossState(Date windowStarts, Date windowEnds) {
+    private static String raidBossState(Date windowStarts, Date windowEnds, boolean isUnknown) {
+    if(isUnknown){
+        return RaidBossState.UNKNOWN.name();
+    }
 	if(windowEnds.before(new Date())){
 	    return RaidBossState.ALIVE.name();
 	} else {

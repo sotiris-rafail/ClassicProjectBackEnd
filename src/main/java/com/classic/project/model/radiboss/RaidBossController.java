@@ -30,6 +30,12 @@ public class RaidBossController {
         raidBossService.updateDeathTimer(raidId, timer);
     }
 
+    @RequestMapping(path = "/setToUnknown", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void setToUnknown(@RequestParam(value = "raidId")int raidId){
+        raidBossService.setToUnknown(raidId);
+    }
+
     @RequestMapping(path = "/getInfo", method = RequestMethod.GET, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ResponseRaidBoss>> updateDeathTimer(){
