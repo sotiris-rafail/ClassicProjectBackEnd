@@ -159,7 +159,7 @@ public class ResponseCharacter {
 	    return new ArrayList<>();
 	}
 	List<ResponseCharacter> charsForDashboard = new ArrayList<>();
-	characters.forEach(character -> charsForDashboard.add(new ResponseCharacter(character.getCharacterId(), character.getInGameName(), character.getLevel(), character.getClassOfCharacter().getName(), character.getClan().getName(), character.getTypeOfCharacter().name())));
+	characters.forEach(character -> charsForDashboard.add(new ResponseCharacter(character.getCharacterId(), character.getInGameName(), character.getLevel(), character.getClassOfCharacter().getName(), character.getClan() != null ? character.getClan().getName() : "", character.getTypeOfCharacter().name())));
 	return charsForDashboard;
     }
 }
