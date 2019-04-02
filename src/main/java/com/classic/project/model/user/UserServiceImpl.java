@@ -79,8 +79,8 @@ public class UserServiceImpl implements UserService {
 	for (int i = 0; i < userIds.getUsersToUpdate().length; i++) {
 	    Optional<User> userFromDb = userRepository.findById(userIds.getUsersToUpdate()[i]);
 	    numberOfBoxes += userFromDb.get().getCharacters().stream().filter(character -> character.getTypeOfCharacter().name().equals(
-		TypeOfCharacter.BOX)).count();
-	    userRepository.addUsersToCP(userIds.getCpId(),userIds.getUsersToUpdate()[i]);
+		TypeOfCharacter.BOX.name())).count();
+	    userRepository.addUsersToCP(userIds.getCpId(), userIds.getUsersToUpdate()[i]);
 	}
 	constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
     }
@@ -104,6 +104,13 @@ public class UserServiceImpl implements UserService {
 	}
         int userId = charFromDb.get().getUser().getUserId();
         userRepository.addUsersToCP(cpId, userId);
+        Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(cpId);
+        int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + 1;
+        int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
+        Optional<User> userFromDb = userRepository.findById(userId);
+        numberOfBoxes += userFromDb.get().getCharacters().stream().filter(character -> character.getTypeOfCharacter().name().equals(
+                TypeOfCharacter.BOX.name())).count();
+        constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, cpId);
     }
 
     @Override

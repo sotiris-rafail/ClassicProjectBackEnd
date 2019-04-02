@@ -1,9 +1,11 @@
 package com.classic.project.model.constantParty;
 
         import com.classic.project.model.character.CharacterRepository;
+        import com.classic.project.model.character.TypeOfCharacter;
         import com.classic.project.model.constantParty.exception.ConstantPartyExistException;
         import com.classic.project.model.constantParty.response.ResponseConstantParty;
-import com.classic.project.model.user.UserRepository;
+        import com.classic.project.model.user.User;
+        import com.classic.project.model.user.UserRepository;
 import com.classic.project.security.UserAuthConfirm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,8 +49,11 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public void deleteMember(int characterId) {
-        int memberId = characterRepository.findById(characterId).get().getUser().getUserId();
-        userRepository.deleteMemberByCharacterIdId(memberId);
+        User member = characterRepository.findById(characterId).get().getUser();
+        userRepository.deleteMemberByCharacterIdId(member.getUserId());
+        int boxes = constantPartyRepository.findById(member.getCp().getCpId()).get().getNumberOfBoxes() - characterRepository.countByTypeOfCharacterAndAndUser(TypeOfCharacter.BOX, member);
+        int actives = constantPartyRepository.findById(member.getCp().getCpId()).get().getNumberOfActivePlayers() - 1;
+        constantPartyRepository.addUsersTpCP(actives, boxes, member.getCp().getCpId());
     }
 
     @Override
