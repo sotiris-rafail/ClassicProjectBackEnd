@@ -12,7 +12,7 @@ public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update RaidBoss raidBoss set raidBoss.timeOfDeath = ?2, raidBoss.isUnknown = false where raidBoss.raidBossId =?1")
+    @Query("update RaidBoss raidBoss set raidBoss.timeOfDeath = ?2, raidBoss.unknown = false where raidBoss.raidBossId =?1")
     void updateDeathTimer(int raidId, Date timer);
 
     @Query("select raidboss from RaidBoss raidboss where raidboss.name = ?1")
@@ -20,6 +20,6 @@ public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update RaidBoss raidBoss set raidBoss.isUnknown = true where raidBoss.raidBossId =?1")
+    @Query("update RaidBoss raidBoss set raidBoss.unknown = true where raidBoss.raidBossId =?1")
     void setToUnKnown(int raidId);
 }
