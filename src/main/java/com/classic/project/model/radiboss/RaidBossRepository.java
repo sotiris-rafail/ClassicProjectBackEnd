@@ -20,6 +20,6 @@ public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update RaidBoss raidBoss set raidBoss.isUnknown = true where raidBoss.raidBossId =?1")
+    @Query("update RaidBoss raidBoss set raidBoss.isUnknown = true, raidBoss.timeOfDeath='1970-01-01 00:00:00' where raidBoss.raidBossId =?1")
     void setToUnKnown(int raidId);
 }
