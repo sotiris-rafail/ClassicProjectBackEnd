@@ -86,7 +86,7 @@ public class ResponseRaidBoss {
 
     private static String raidBossState(Date windowStarts, Date windowEnds, boolean isUnknown) {
     if(isUnknown){
-        return RaidBossState.UNKNOWN.name();
+        return RaidBossState.AAUNKNOWN.name();
     }
 	if(windowEnds.before(new Date())){
 	    return RaidBossState.ALIVE.name();
