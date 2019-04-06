@@ -40,4 +40,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Query("update User user set user.cp = null where user.userId = ?1")
     void deleteMemberByCharacterIdId(int characterId);
+
+    @Query("select user.email from User user")
+    List<String> getAllEmails();
 }

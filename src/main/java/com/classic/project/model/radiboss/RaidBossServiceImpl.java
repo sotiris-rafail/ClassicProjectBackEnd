@@ -57,6 +57,7 @@ public class RaidBossServiceImpl implements RaidBossService {
         raidBoss.setEpicBossPoints(0);
         raidBoss.setTimeOfDeath(new Date());
         raidBoss.setUnknown(false);
+        raidBoss.setNotified(false);
 	    raidBossRepository.save(raidBoss);
     }
 
@@ -69,7 +70,7 @@ public class RaidBossServiceImpl implements RaidBossService {
         raidBossRepository.setToUnKnown(raidId);
     }
 
-    private static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {
+    public static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {
         calendar.add(Calendar.DATE, Integer.parseInt(windowStartsTime[0]));
         calendar.add(Calendar.HOUR, Integer.parseInt(windowStartsTime[1]));
         return calendar;

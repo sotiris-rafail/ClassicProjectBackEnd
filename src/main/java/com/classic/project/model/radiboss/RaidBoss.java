@@ -29,6 +29,8 @@ public class RaidBoss {
     private String windowEnds;
     @Column
     private boolean isUnknown;
+    @Column
+    private boolean isNotified;
 
     public int getRaidBossId() {
         return raidBossId;
@@ -108,5 +110,30 @@ public class RaidBoss {
 
     public void setUnknown(boolean unknown) {
         isUnknown = unknown;
+    }
+
+    public boolean isNotified() {
+	return isNotified;
+    }
+
+    public void setNotified(boolean notified) {
+	isNotified = notified;
+    }
+
+    @Override
+    public String toString() {
+	return "RaidBoss{" +
+	    "raidBossId=" + raidBossId +
+	    ", name='" + name + '\'' +
+	    ", timeOfDeath=" + timeOfDeath +
+	    ", level=" + level +
+	    ", whereItLives='" + whereItLives + '\'' +
+	    ", typeOfRaidBoss=" + typeOfRaidBoss +
+	    ", epicBossPoints=" + epicBossPoints +
+	    ", windowStarts='" + windowStarts + '\'' +
+	    ", windowEnds='" + windowEnds + '\'' +
+	    ", isUnknown=" + isUnknown +
+	    ", isNotified=" + isNotified +
+	    '}';
     }
 }

@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update RaidBoss raidBoss set raidBoss.timeOfDeath = ?2, raidBoss.isUnknown = false where raidBoss.raidBossId =?1")
+    @Query("update RaidBoss raidBoss set raidBoss.timeOfDeath = ?2, raidBoss.isUnknown = false, raidBoss.isNotified = false where raidBoss.raidBossId =?1")
     void updateDeathTimer(int raidId, Date timer);
 
     @Query("select raidboss from RaidBoss raidboss where raidboss.name = ?1")
@@ -22,4 +23,13 @@ public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
     @Transactional
     @Query("update RaidBoss raidBoss set raidBoss.isUnknown = true where raidBoss.raidBossId =?1")
     void setToUnKnown(int raidId);
+
+
+    @Modifying
+    @Transactional
+    @Query("update RaidBoss raidBoss set raidBoss.isNotified = true where raidBoss.raidBossId =?1")
+    void updateDeathTimerNotification(int raidId);
+
+
+    List<RaidBoss> findAllByTypeOfRaidBoss(TypeOfRaidBoss typeOfRaidBoss);
 }

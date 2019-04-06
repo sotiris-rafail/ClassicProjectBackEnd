@@ -3,21 +3,21 @@ insert into constant_party(cp_Id,number_of_active_players,number_of_boxes,orfen_
 insert into constant_party(cp_Id,number_of_active_players,number_of_boxes,orfen_points,core_points,aq_points,cp_Name) values (3,0,0,0,0,0,'BadCompany');
 insert into constant_party(cp_Id,number_of_active_players,number_of_boxes,orfen_points,core_points,aq_points,cp_Name) values (4,0,0,0,0,0,'ParaBellum');
 insert into clan(clan_id, name) values (1,'Perkunas');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (0,75,'Baium','2019-02-07 15:40:00',2,'Tower Of Insolence','04:19', '05:00');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (3,52,'Orfen','2019-02-05 12:13:00',0,'Sea Of Spores', '01:06', '01:12');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (1,40,'Queen Ant','2019-02-05 12:13:00',0,'Ant Nest', '00:21', '01:03');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (3,52,'Core','2019-02-05 12:13:00',0,'Cruma Tower', '01:12', '02:00');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (0,75,'Decar','2019-02-05 12:13:00',2,'Cruma Tower', '01:06', '01:06');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (0,75,'Ipos','2019-02-05 12:13:00',2,'Plains of Lizardman','01:06', '01:06');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (0,75,'Angel','2019-02-06 21:32:00',2,'Giran Territory','01:06', '01:06');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (0,75,'Drone','2019-02-06 20:18:00',2,'Wasteland','01:06', '01:06');
-insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends)
-VALUES (0,70,'Meanas Anor','2019-02-05 10:42:00',1,'Blazing Swamp','00:12', '00:20');
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (0,75,'Baium','2019-02-07 15:40:00',0,'Tower Of Insolence','04:19', '05:00', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (3,52,'Orfen','2019-04-04 19:40:00',0,'Sea Of Spores', '01:12', '02:00', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (1,40,'Queen Ant','2019-04-05 12:10:00',0,'Ant Nest', '00:21', '01:03', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (3,52,'Core','2019-02-05 12:13:00',0,'Cruma Tower', '01:12', '02:00', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (0,75,'Decar','2019-02-05 12:13:00',2,'Cruma Tower', '01:06', '01:06', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (0,75,'Ipos','2019-02-05 12:13:00',2,'Plains of Lizardman','01:06', '01:06', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (0,75,'Angel','2019-02-06 21:32:00',2,'Giran Territory','01:06', '01:06', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (0,75,'Drone','2019-02-06 20:18:00',2,'Wasteland','01:06', '01:06', false , false);
+insert into raid_boss(epic_boss_points, level, name, time_of_death, type_of_raid_boss, where_it_lives, window_starts, window_ends, is_notified, is_unknown)
+VALUES (0,70,'Meanas Anor','2019-02-05 10:42:00',1,'Blazing Swamp','00:12', '00:20', false , false);

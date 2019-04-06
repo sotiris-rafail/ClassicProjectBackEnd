@@ -84,7 +84,7 @@ public class ResponseRaidBoss {
         return new ResponseRaidBoss(raidboss.getRaidBossId(), raidboss.getName(), raidboss.getLevel(), windowStarts, windowEnds, raidboss.getWhereItLives(), raidBossState(windowStarts, windowEnds, isUnknown));
     }
 
-    private static String raidBossState(Date windowStarts, Date windowEnds, boolean isUnknown) {
+    public static String raidBossState(Date windowStarts, Date windowEnds, boolean isUnknown) {
     if(isUnknown){
         return RaidBossState.UNKNOWN.name();
     }
