@@ -61,8 +61,10 @@ public class RaidBossScheduler {
             for(int x =0; x< i; x++){
                 if(i >= 100) {
 		    subRecipients[x] = recipients[x+100];
+		    System.out.println(subRecipients[x]);
 		} else {
                     subRecipients[x] = recipients[x];
+		    System.out.println(recipients[x]);
 		}
 	    }
             send(bossesOnWindow, subRecipients);
