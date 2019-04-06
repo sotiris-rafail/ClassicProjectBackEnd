@@ -39,7 +39,6 @@ public class RaidBossScheduler {
 		}
 	    }
 	}
-	System.out.println(StringUtils.join(userRepository.getAllEmails(), ","));
 	if(!bossesOnWindow.isEmpty()) {
 	    sendMail(bossesOnWindow);
 	    for(RaidBoss raidBoss : bossesOnWindow){
@@ -50,7 +49,7 @@ public class RaidBossScheduler {
 
     private void sendMail(List<RaidBoss> bossesOnWindow) {
 	SimpleMailMessage mail = new SimpleMailMessage();
-	mail.setTo("vasile.nastasiu@gmail.com","smoschop@gmail.com");
+	mail.setTo(StringUtils.join(userRepository.getAllEmails(), ","));
 	mail.setText(getText(bossesOnWindow));
 	mail.setSubject("Bosses On Window");
 	mail.setFrom("inquisitionAlliance@gmail.com");
