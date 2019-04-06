@@ -55,6 +55,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 	if(responseUnSoldItems.isEmpty()){
 	    throw new UnSoldItemsNotFoundException("There are not items for sale at the moment");
 	}
+	responseUnSoldItems.sort(Comparator.comparing(ResponseUnSoldItem::getExpirationDate));
 	return new ResponseEntity<>(responseUnSoldItems, HttpStatus.OK);
     }
 

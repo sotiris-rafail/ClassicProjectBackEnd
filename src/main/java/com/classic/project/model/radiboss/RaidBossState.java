@@ -1,5 +1,5 @@
 package com.classic.project.model.radiboss;
 
 public enum RaidBossState {
-    ALIVE,DEAD,ONWINDOW,UNKNOWN
+    ALIVE, DEAD, ONWINDOW, AAUNKNOWN
 }
