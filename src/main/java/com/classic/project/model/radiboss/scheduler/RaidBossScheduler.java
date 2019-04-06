@@ -51,7 +51,7 @@ public class RaidBossScheduler {
 	if(recipients.length > 100) {
 	    sendMoreThanEmails(bossesOnWindow, recipients);
 	} else {
-		send(bossesOnWindow, recipients);
+	    send(bossesOnWindow, recipients);
 	}
     }
 
