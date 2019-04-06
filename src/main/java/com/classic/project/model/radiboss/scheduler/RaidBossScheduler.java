@@ -57,16 +57,20 @@ public class RaidBossScheduler {
 
     private void sendMoreThanEmails(List<RaidBoss> bossesOnWindow, String[] recipients) {
 	for(int i =0; i < recipients.length; i=i+100){
-	    String[] subRecipients = new String[100];
+	    String[] subRecipients;
 	    if(i >= 100) {
-		for (int x = 0; x <= i-100; x++) {
+	        int leftUntilFinish = recipients.length - i;
+	        if(leftUntilFinish > 100 ) {
+	            leftUntilFinish = 100;
+		}
+		subRecipients =  new String[leftUntilFinish];
+		for (int x = 0; x < leftUntilFinish; x++) {
 		    subRecipients[x] = recipients[x + 100];
-		    System.out.println(subRecipients[x]);
 		}
 	    } else {
+		subRecipients = new String[100];
 		for (int x = 0; x < 100; x++) {
 		    subRecipients[x] = recipients[x];
-		    System.out.println(subRecipients[x]);
 		}
 	    }
 	    send(bossesOnWindow, subRecipients);
