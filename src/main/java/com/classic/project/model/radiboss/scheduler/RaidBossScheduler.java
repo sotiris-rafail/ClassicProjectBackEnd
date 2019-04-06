@@ -48,7 +48,7 @@ public class RaidBossScheduler {
 
     private void sendMail(List<RaidBoss> bossesOnWindow) {
 	String[] recipients = getRecipients(userRepository.getAllEmails());
-	if(recipients.length > 100) {
+	if(recipients.length > 10) {
 	    sendMoreThanEmails(bossesOnWindow, recipients);
 	} else {
 	    send(bossesOnWindow, recipients);
@@ -56,18 +56,20 @@ public class RaidBossScheduler {
     }
 
     private void sendMoreThanEmails(List<RaidBoss> bossesOnWindow, String[] recipients) {
-        for(int i =0; i < recipients.length; i=i+100){
+	for(int i =0; i < recipients.length; i=i+100){
 	    String[] subRecipients = new String[100];
-            for(int x =0; x< i; x++){
-                if(i >= 100) {
-		    subRecipients[x] = recipients[x+100];
+	    if(i >= 100) {
+		for (int x = 0; x <= i-100; x++) {
+		    subRecipients[x] = recipients[x + 100];
 		    System.out.println(subRecipients[x]);
-		} else {
-                    subRecipients[x] = recipients[x];
-		    System.out.println(recipients[x]);
+		}
+	    } else {
+		for (int x = 0; x < 100; x++) {
+		    subRecipients[x] = recipients[x];
+		    System.out.println(subRecipients[x]);
 		}
 	    }
-            send(bossesOnWindow, subRecipients);
+	    send(bossesOnWindow, subRecipients);
 	}
     }
 
@@ -82,10 +84,10 @@ public class RaidBossScheduler {
     }
 
     private static String[] getRecipients(List<String> allEmails) {
-        int i = 0;
+	int i = 0;
 	String[] recipients = new String[allEmails.size()];
-        for(String email : allEmails) {
-            recipients[i++] = email;
+	for(String email : allEmails) {
+	    recipients[i++] = email;
 	}
 	return recipients;
     }
