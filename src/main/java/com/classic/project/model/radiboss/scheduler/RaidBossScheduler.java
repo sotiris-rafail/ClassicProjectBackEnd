@@ -49,12 +49,20 @@ public class RaidBossScheduler {
 
     private void sendMail(List<RaidBoss> bossesOnWindow) {
 	SimpleMailMessage mail = new SimpleMailMessage();
-	mail.setTo(StringUtils.join(userRepository.getAllEmails(), ","));
+	mail.setTo(getRecipients(userRepository.getAllEmails()));
 	mail.setText(getText(bossesOnWindow));
 	mail.setSubject("Bosses On Window");
 	mail.setFrom("inquisitionAlliance@gmail.com");
 	mail.setSentDate(new Date());
 	javaMailSender.send(mail);
+    }
+
+    private String getRecipients(List<String> allEmails) {
+	StringBuilder text = new StringBuilder();
+	for(String email : allEmails){
+	    text.append(email).append(",");
+	}
+        return text.toString().substring(0, text.length() -1);
     }
 
     private String getText(List<RaidBoss> bossesOnWindow) {

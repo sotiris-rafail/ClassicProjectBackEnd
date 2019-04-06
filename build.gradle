@@ -31,7 +31,6 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation 'mysql:mysql-connector-java:8.0.13'
     compile 'org.springframework.boot:spring-boot-starter-mail'
-    compile file ('~/deploy.jar')
     //implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.2.RELEASE'
     runtimeOnly 'com.h2database:h2'
