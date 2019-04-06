@@ -59,7 +59,7 @@ public class RaidBossScheduler {
         for(int i =0; i < recipients.length; i=i+100){
 	    String[] subRecipients = new String[100];
             for(int x =0; x< i; x++){
-                if(i <= 100) {
+                if(i >= 100) {
 		    subRecipients[x] = recipients[x+100];
 		} else {
                     subRecipients[x] = recipients[x];
