@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+	import org.springframework.web.multipart.MultipartFile;
 
-        import java.io.File;
-        import java.util.ArrayList;
+	import java.util.ArrayList;
 	import java.util.List;
 	import java.util.Optional;
 
@@ -108,8 +108,8 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     @Override
-    public boolean uploadEpicPhoto(File photo, int cpId, int cpName) {
-        System.out.println(photo.getName());
+    public boolean uploadEpicPhoto(MultipartFile photo, int cpId, int cpName) {
+        System.out.println(photo.getOriginalFilename());
         System.out.println(cpId);
         System.out.println(cpName);
         return true;

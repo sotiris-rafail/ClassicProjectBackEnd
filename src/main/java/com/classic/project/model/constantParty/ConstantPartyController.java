@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
@@ -66,7 +67,7 @@ public class ConstantPartyController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public boolean uploadEpicPhoto(@RequestParam File photo, @RequestParam(name = "cpId")int cpId,  @RequestParam(name = "cpName")int cpName){
+    public boolean uploadEpicPhoto(@RequestParam MultipartFile photo, @RequestParam(name = "cpId")int cpId,  @RequestParam(name = "cpName")int cpName){
         return constantPartyService.uploadEpicPhoto(photo, cpId, cpName);
     }
 }
