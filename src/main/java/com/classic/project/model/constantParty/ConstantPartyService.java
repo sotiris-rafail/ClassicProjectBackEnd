@@ -3,6 +3,7 @@ package com.classic.project.model.constantParty;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import org.springframework.http.ResponseEntity;
 
+import java.io.File;
 import java.util.List;
 
 public interface ConstantPartyService {
@@ -21,4 +22,6 @@ public interface ConstantPartyService {
     ResponseEntity<List<ResponseConstantParty>> getCPNumbers();
 
     ResponseEntity<List<ResponseConstantParty>> getEpicPoints();
+
+    boolean uploadEpicPhoto(File photo, int cpId, int cpName);
 }

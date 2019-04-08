@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+        import java.io.File;
         import java.util.ArrayList;
 	import java.util.List;
 	import java.util.Optional;
@@ -104,6 +105,14 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         List<ResponseConstantParty> response = new ArrayList<>();
         cpsFromDb.forEach(cp -> response.add(ResponseConstantParty.convertPointsForDashboard(cp)));
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public boolean uploadEpicPhoto(File photo, int cpId, int cpName) {
+        System.out.println(photo.getName());
+        System.out.println(cpId);
+        System.out.println(cpName);
+        return true;
     }
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {

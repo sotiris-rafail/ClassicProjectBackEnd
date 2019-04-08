@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -61,5 +62,11 @@ public class ConstantPartyController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ResponseConstantParty>> getEpicPoints() {
         return constantPartyService.getEpicPoints();
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean uploadEpicPhoto(@RequestParam File photo, @RequestParam(name = "cpId")int cpId,  @RequestParam(name = "cpName")int cpName){
+        return constantPartyService.uploadEpicPhoto(photo, cpId, cpName);
     }
 }
