@@ -10,6 +10,8 @@ import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -27,6 +29,9 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 
     private static final String JPG =".jpg";
 
+	@Autowired
+	private JavaMailSender javaMailSender;
+
     @Override
     public void addNewItemForSale(NewUnSoldItem newUnSoldItem, int amountOfItem) {
         for (int i = 0; i < amountOfItem; i++) {
@@ -41,9 +46,20 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
             unSoldItemRepository.save(unSoldItem);
             unSoldItemRepository.flush();
         }
+        sendMail(newUnSoldItem);
     }
 
-    @Override
+	private void sendMail(NewUnSoldItem newUnSoldItem) {
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo("allianceinquisition@googlegroups.com");
+		mail.setText(newUnSoldItem.getName() + "is added on auction with starting price " +newUnSoldItem.getStartingPrice());
+		mail.setSubject("New item on auction");
+		mail.setFrom("inquisitionAlliance@gmail.com");
+		mail.setSentDate(new Date());
+		javaMailSender.send(mail);
+	}
+
+	@Override
     public ResponseEntity<List<ResponseUnSoldItem>> getUnSoldItems() {
 	List<UnSoldItem> allUnSoldItems = unSoldItemRepository.findAll();
 	List<ResponseUnSoldItem> responseUnSoldItems = new ArrayList<>();

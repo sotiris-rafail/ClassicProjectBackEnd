@@ -23,5 +23,5 @@ public interface ConstantPartyService {
 
     ResponseEntity<List<ResponseConstantParty>> getEpicPoints();
 
-    boolean uploadEpicPhoto(MultipartFile photo, int cpId, int cpName);
+    boolean uploadEpicPhoto(MultipartFile photo, int cpId, String cpName);
 }

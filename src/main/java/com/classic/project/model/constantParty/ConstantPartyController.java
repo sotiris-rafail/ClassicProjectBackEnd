@@ -67,7 +67,7 @@ public class ConstantPartyController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public boolean uploadEpicPhoto(@RequestParam MultipartFile photo, @RequestParam(name = "cpId")int cpId,  @RequestParam(name = "cpName")int cpName){
+    public boolean uploadEpicPhoto(@RequestParam(name = "photo") MultipartFile photo, @RequestParam(name = "cpId") int cpId,  @RequestParam(name = "cpName") String cpName){
         return constantPartyService.uploadEpicPhoto(photo, cpId, cpName);
     }
 }
