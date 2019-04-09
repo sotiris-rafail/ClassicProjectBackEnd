@@ -23,7 +23,7 @@ public class RaidBossScheduler {
     @Autowired
     private UserRepository userRepository;
 
-    //@Scheduled(cron = "*/60 * * * * *") //the top of every hour of every day.
+    @Scheduled(cron = "*/60 * * * * *") //the top of every hour of every day.
     public void NotifyOnWindow(){
 	List<RaidBoss> bossesOnWindow = new ArrayList<>();
 	List<RaidBoss> epicBosses = raidBossRepository.findAllByTypeOfRaidBoss(TypeOfRaidBoss.EPIC);
