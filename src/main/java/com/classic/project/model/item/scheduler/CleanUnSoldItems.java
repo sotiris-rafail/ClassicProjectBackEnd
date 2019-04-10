@@ -35,7 +35,9 @@ public class CleanUnSoldItems {
 	    soldItems.add(registerUnSoldItemsAsSoldItems(unSoldItem));
 	    deleteUnSoldItems(unSoldItem.getItemId());
 	}
-	notifyForSoldItems(soldItems);
+	if(!soldItems.isEmpty()) {
+	    notifyForSoldItems(soldItems);
+	}
     }
 
     @Scheduled(cron = "0 0 * * * *") //the top of every hour of every day.
@@ -49,7 +51,9 @@ public class CleanUnSoldItems {
 		deleteUnSoldItems(unSoldItem.getItemId());
 	    }
 	}
-	notifyForSoldItems(soldItems);
+	if(!soldItems.isEmpty()) {
+	    notifyForSoldItems(soldItems);
+	}
     }
 
     private void notifyForSoldItems(List<SoldItem> soldItems) {
