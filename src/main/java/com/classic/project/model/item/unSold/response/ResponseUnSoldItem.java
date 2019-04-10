@@ -2,6 +2,8 @@ package com.classic.project.model.item.unSold.response;
 
 import com.classic.project.model.item.unSold.UnSoldItem;
 
+import java.util.Date;
+
 public class ResponseUnSoldItem {
 
     private int itemId;
@@ -11,14 +13,14 @@ public class ResponseUnSoldItem {
     private double startingPrice;
     private String stateOfItem;
     private String name;
-    private String expirationDate;
+    private Date expirationDate;
     private double bidStep;
     private double currentValue;
     private String lastBidder;
     private String photoPath;
 
     public ResponseUnSoldItem(int itemId, String grade, String typeOfItem, double maxPrice, double startingPrice,
-	String stateOfItem, String name, String expirationDate, double bidStep, double currentValue, String lastBidder,
+	String stateOfItem, String name, Date expirationDate, double bidStep, double currentValue, String lastBidder,
 	String photoPath) {
 	this.itemId = itemId;
 	this.grade = grade;
@@ -90,11 +92,11 @@ public class ResponseUnSoldItem {
 	this.name = name;
     }
 
-    public String getExpirationDate() {
+    public Date getExpirationDate() {
 	return expirationDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
+    public void setExpirationDate(Date expirationDate) {
 	this.expirationDate = expirationDate;
     }
 
@@ -131,6 +133,6 @@ public class ResponseUnSoldItem {
     }
 
     public static ResponseUnSoldItem convertToResponse(UnSoldItem unSoldItem) {
-	return new ResponseUnSoldItem(unSoldItem.getItemId(), unSoldItem.getGrade().getGrade(), unSoldItem.getItemType().getType(), unSoldItem.getMaxPrice(), unSoldItem.getStartingPrice(), unSoldItem.getStateOfItem().getState(), unSoldItem.getItemName(), unSoldItem.getExpirationDate().toString(), unSoldItem.getBidStep(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), unSoldItem.getPhotoPath());
+	return new ResponseUnSoldItem(unSoldItem.getItemId(), unSoldItem.getGrade().getGrade(), unSoldItem.getItemType().getType(), unSoldItem.getMaxPrice(), unSoldItem.getStartingPrice(), unSoldItem.getStateOfItem().getState(), unSoldItem.getItemName(), unSoldItem.getExpirationDate(), unSoldItem.getBidStep(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), unSoldItem.getPhotoPath());
     }
 }
