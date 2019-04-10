@@ -52,7 +52,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 	private void sendMail(NewUnSoldItem newUnSoldItem) {
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo("allianceinquisition@googlegroups.com");
-		mail.setText(newUnSoldItem.getName() + "is added on auction with starting price " +newUnSoldItem.getStartingPrice());
+		mail.setText(newUnSoldItem.getName() + " is added on auction with starting price " + calculatePrices(newUnSoldItem.getStartingPrice()) + " adena");
 		mail.setSubject("New item on auction");
 		mail.setFrom("inquisitionAlliance@gmail.com");
 		mail.setSentDate(new Date());

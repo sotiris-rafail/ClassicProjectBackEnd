@@ -1,5 +1,7 @@
 package com.classic.project.model.item;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -19,6 +21,7 @@ public class Item {
     @Column
     private String itemName;
     @Column
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date registerDate;
     @Column
     private StateOfItem stateOfItem;

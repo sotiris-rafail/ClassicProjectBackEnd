@@ -4,6 +4,7 @@ import com.classic.project.model.item.Grade;
 import com.classic.project.model.item.Item;
 import com.classic.project.model.item.ItemType;
 import com.classic.project.model.item.StateOfItem;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +28,7 @@ public class UnSoldItem extends Item {
     @Column
     private double bidStep;
     @Column
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date expirationDate;
 
     public UnSoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice, int daysToStayUnSold, double currentValue, String lastBidder, double bidStep) {
