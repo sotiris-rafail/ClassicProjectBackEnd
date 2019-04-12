@@ -23,7 +23,7 @@ public class ClanServiceImpl implements ClanService {
     public ResponseEntity<List<ClanResponseEntity>> getAllClanInfo() {
         List<ClanResponseEntity> responseMembers = ClanResponseEntity.convertAll(clanRepository.findAll());
         for (ClanResponseEntity clan: responseMembers) {
-            clan.getMembers().sort(Comparator.comparing(ResponseCharacter::getTypeOfCharacter).reversed().thenComparing(ResponseCharacter::getLevel));
+            clan.getMembers().sort(Comparator.comparing(ResponseCharacter::getTypeOfUser).reversed().thenComparing(ResponseCharacter::getTypeOfCharacter).reversed().thenComparing(ResponseCharacter::getLevel));
         }
         return new ResponseEntity<>(responseMembers, HttpStatus.OK);
     }
