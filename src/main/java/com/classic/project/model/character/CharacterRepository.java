@@ -30,11 +30,6 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
     @Query("delete from Character character where character.characterId = ?1")
     void deleteByCharacterId(int charId);
 
-    @Modifying
-    @Transactional
-    @Query("update Character character set character.clan.clanId = null where character.characterId = ?1")
-    void removeCharacterFromClan(int characterId);
-
     Optional<Character> findByInGameNameContaining(String inGameName);
 
     Optional<Character> findCharacterByInGameName(String inGameName);

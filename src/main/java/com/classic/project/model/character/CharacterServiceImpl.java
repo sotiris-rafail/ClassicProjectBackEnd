@@ -81,10 +81,6 @@ public class CharacterServiceImpl implements CharacterService {
 		characterRepository.deleteByCharacterId(characterId);
 	}
 
-	@Override
-	public void removeCharacterFromClan(int characterId) {
-		characterRepository.removeCharacterFromClan(characterId);
-	}
 
 	private static String[] getAllNames(){
 	String[] names = new String[ClassOfCharacter.values().length];

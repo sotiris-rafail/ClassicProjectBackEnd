@@ -22,4 +22,6 @@ public interface UserService {
     void addUserToCp(int characterId, int cpId);
 
     ResponseEntity<List<ResponseUser>> getUsersForDashboard();
+
+    void deleteUser(int userId);
 }

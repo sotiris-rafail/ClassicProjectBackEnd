@@ -8,6 +8,7 @@ import com.classic.project.model.character.exception.CharacterNotFoundException;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
 import com.classic.project.model.user.exception.UserExistException;
+import com.classic.project.model.user.exception.UserNotFoundException;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
@@ -119,5 +120,14 @@ public class UserServiceImpl implements UserService {
 	List<ResponseUser> response = new ArrayList<>();
 	usersFromDb.forEach(user -> response.add(ResponseUser.convertForDashboard(user)));
 	return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public void deleteUser(int userId) {
+        Optional<User> userFromDb = userRepository.findById(userId);
+        if(!userFromDb.isPresent()){
+            throw new UserNotFoundException(userId);
+        }
+        userRepository.deleteUserByUserId(userId);
     }
 }

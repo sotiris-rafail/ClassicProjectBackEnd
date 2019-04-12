@@ -14,6 +14,4 @@ public interface CharacterService {
     void updateCharacter(UpdateCharacter character);
 
     void deleteCharacter(int characterId);
-
-    void removeCharacterFromClan(int characterId);
 }

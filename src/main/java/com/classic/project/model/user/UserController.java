@@ -67,4 +67,10 @@ public class UserController {
     public ResponseEntity<List<ResponseUser>> getUsersForDashboard() {
 	return userService.getUsersForDashboard();
     }
+
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@RequestParam(name = "userId") int userId) {
+        userService.deleteUser(userId);
+    }
 }
