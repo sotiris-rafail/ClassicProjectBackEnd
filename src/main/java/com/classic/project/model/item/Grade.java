@@ -5,7 +5,8 @@ public enum Grade {
     A("A"),
     B("B"),
     C("C"),
-    D("D");
+    D("D"),
+    NONE("NONE");
 
 
     private String grade;

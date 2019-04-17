@@ -4,7 +4,9 @@ public enum ItemType {
 
     ARMOR("Armor"),
     WEAPON("Weapon"),
-    JEWELL("Jewell");
+    JEWELL("Jewell"),
+    BOOK("Book"),
+    ENCHANT("Enchant");
 
     private String type;
     ItemType(String jewell) {
