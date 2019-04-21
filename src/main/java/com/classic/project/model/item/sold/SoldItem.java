@@ -21,6 +21,8 @@ public class SoldItem extends Item {
     private String whoBoughtIt;
     @Column
     private boolean isDelivered;
+    @Column
+    private int unSoldItemId;
 
     public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered) {
         super(grade, itemType, photoPath, itemName, stateOfItem);
@@ -30,12 +32,13 @@ public class SoldItem extends Item {
         this.isDelivered = isDelivered;
     }
 
-    public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered) {
+    public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId) {
         super(itemId, grade, itemType, photoPath, itemName, stateOfItem);
         this.maxPrice = maxPrice;
         this.boughtPrice = boughtPrice;
         this.whoBoughtIt = whoBoughtIt;
         this.isDelivered = isDelivered;
+        this.unSoldItemId = unSoldItemId;
     }
 
     public SoldItem(){
@@ -72,5 +75,13 @@ public class SoldItem extends Item {
 
     public void setDelivered(boolean delivered) {
         isDelivered = delivered;
+    }
+
+    public int getUnSoldItemId() {
+	return unSoldItemId;
+    }
+
+    public void setUnSoldItemId(int unSoldItemId) {
+	this.unSoldItemId = unSoldItemId;
     }
 }

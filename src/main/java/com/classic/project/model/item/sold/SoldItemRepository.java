@@ -13,4 +13,7 @@ public interface SoldItemRepository extends JpaRepository<SoldItem, Integer> {
     @Transactional
     @Query("update SoldItem soldItem set soldItem.isDelivered = ?2 where soldItem.itemId = ?1")
     int deliverSoldItem(int itemId, boolean isDelivered);
+
+    @Query("select max(soldItem.itemId) from SoldItem soldItem")
+    int maxId();
 }

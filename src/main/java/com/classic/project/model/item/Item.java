@@ -9,7 +9,7 @@ import java.util.Date;
 public class Item {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     @Column
     private int itemId;
     @Column

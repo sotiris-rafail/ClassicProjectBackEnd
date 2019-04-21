@@ -76,7 +76,7 @@ public class CleanUnSoldItems {
     }
 
     private SoldItem registerUnSoldItemsAsSoldItems(UnSoldItem unSoldItem) {
-	SoldItem soldItem = new SoldItem(unSoldItem.getItemId(), unSoldItem.getGrade(), unSoldItem.getItemType(), unSoldItem.getPhotoPath(), unSoldItem.getItemName(), unSoldItem.getStateOfItem(), unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), false);
+	SoldItem soldItem = new SoldItem(soldItemRepository.maxId() + 1 , unSoldItem.getGrade(), unSoldItem.getItemType(), unSoldItem.getPhotoPath(), unSoldItem.getItemName(), unSoldItem.getStateOfItem(), unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), false, unSoldItem.getItemId());
 	soldItem.setRegisterDate(new Date());
 	return soldItemRepository.save(soldItem);
     }
