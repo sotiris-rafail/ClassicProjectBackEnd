@@ -20,6 +20,7 @@ hs_err_pid*
 .idea/
 
 # Sensitive or high-churn files:
+.idea
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.xml
@@ -29,6 +30,7 @@ hs_err_pid*
 # Gradle:
 .idea/**/libraries
 .gradle/
+.idea/gradle.xml
 # Mongo Explorer plugin:
 .idea/**/mongoSettings.xml
 
