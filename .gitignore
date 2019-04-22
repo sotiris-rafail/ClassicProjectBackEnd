@@ -67,4 +67,4 @@ fabric.properties
 src/test/test.iml
 build/*
 logging/*
-src/mail/resources/*
+src/main/resources/*
