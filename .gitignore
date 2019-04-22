@@ -30,7 +30,6 @@ hs_err_pid*
 # Gradle:
 .idea/**/libraries
 .gradle/
-.idea/gradle.xml
 # Mongo Explorer plugin:
 .idea/**/mongoSettings.xml
 
@@ -63,7 +62,7 @@ fabric.properties
  *.ipr
 
 # End of https://www.gitignore.io/api/intellij
-/.idea/gradle.xml
+.idea/gradle.xml
 /src/test/test.iml
 src/test/test.iml
 build/*
