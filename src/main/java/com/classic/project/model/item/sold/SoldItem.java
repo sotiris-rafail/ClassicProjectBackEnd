@@ -24,12 +24,13 @@ public class SoldItem extends Item {
     @Column
     private int unSoldItemId;
 
-    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered) {
+    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId) {
         super(grade, itemType, photoPath, itemName, stateOfItem);
         this.maxPrice = maxPrice;
         this.boughtPrice = boughtPrice;
         this.whoBoughtIt = whoBoughtIt;
         this.isDelivered = isDelivered;
+        this.unSoldItemId = unSoldItemId;
     }
 
     public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId) {

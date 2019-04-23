@@ -40,7 +40,7 @@ public class CleanUnSoldItems {
 	}
     }
 
-    @Scheduled(cron = "0 0 * * * *") //the top of every hour of every day.
+    @Scheduled(cron = "0 0 0 * * *") //the top of every hour of every day.
     public void cleanUpExpiredUnSoldItems(){
 	List<UnSoldItem> unSoldItems = unSoldItemRepository.getUnSoldItemsByStateOfItem();
 	List<SoldItem> soldItems = new ArrayList<>();
@@ -76,7 +76,7 @@ public class CleanUnSoldItems {
     }
 
     private SoldItem registerUnSoldItemsAsSoldItems(UnSoldItem unSoldItem) {
-	SoldItem soldItem = new SoldItem(soldItemRepository.maxId() + 1 , unSoldItem.getGrade(), unSoldItem.getItemType(), unSoldItem.getPhotoPath(), unSoldItem.getItemName(), unSoldItem.getStateOfItem(), unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), false, unSoldItem.getItemId());
+	SoldItem soldItem = new SoldItem(unSoldItem.getGrade(), unSoldItem.getItemType(), unSoldItem.getPhotoPath(), unSoldItem.getItemName(), unSoldItem.getStateOfItem(), unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), false, unSoldItem.getItemId());
 	soldItem.setRegisterDate(new Date());
 	return soldItemRepository.save(soldItem);
     }
