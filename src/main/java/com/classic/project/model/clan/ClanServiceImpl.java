@@ -4,6 +4,7 @@ import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.clan.exception.ClanExistException;
 import com.classic.project.model.clan.responce.ClanResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Component
+@CacheConfig(cacheNames = "clanMembers")
 public class ClanServiceImpl implements ClanService {
 
     @Autowired
@@ -21,7 +23,7 @@ public class ClanServiceImpl implements ClanService {
 
 
     @Override
-    @Cacheable("clanMembers")
+    @Cacheable
     public ResponseEntity<List<ClanResponseEntity>> getAllClanInfo() {
         List<ClanResponseEntity> responseMembers = ClanResponseEntity.convertAll(clanRepository.findAll());
         for (ClanResponseEntity clan: responseMembers) {
