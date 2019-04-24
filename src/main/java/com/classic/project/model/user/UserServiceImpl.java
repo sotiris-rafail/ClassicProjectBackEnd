@@ -14,6 +14,10 @@ import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,7 @@ import java.util.Optional;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Component
+@CacheConfig(cacheNames={"membersDashBoard"})
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -45,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private CharacterRepository characterRepository;
 
     @Override
+    @CacheEvict(allEntries = true)
     public ResponseEntity<String> registerUser(User user) {
         User userFromDb = userRepository.findUserByEmail(user.getEmail());
         if(userFromDb == null) {
@@ -73,36 +79,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void addUsersToCp(AddUserToCP userIds) {
         Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(userIds.getCpId());
-	int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + userIds.getUsersToUpdate().length;
-	int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
-	for (int i = 0; i < userIds.getUsersToUpdate().length; i++) {
-	    Optional<User> userFromDb = userRepository.findById(userIds.getUsersToUpdate()[i]);
-	    numberOfBoxes += userFromDb.get().getCharacters().stream().filter(character -> character.getTypeOfCharacter().name().equals(
-		TypeOfCharacter.BOX.name())).count();
-	    userRepository.addUsersToCP(userIds.getCpId(), userIds.getUsersToUpdate()[i]);
-	}
-	constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
+        int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + userIds.getUsersToUpdate().length;
+        int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
+        for (int i = 0; i < userIds.getUsersToUpdate().length; i++) {
+            Optional<User> userFromDb = userRepository.findById(userIds.getUsersToUpdate()[i]);
+            numberOfBoxes += userFromDb.get().getCharacters().stream().filter(character -> character.getTypeOfCharacter().name().equals(
+                    TypeOfCharacter.BOX.name())).count();
+            userRepository.addUsersToCP(userIds.getCpId(), userIds.getUsersToUpdate()[i]);
+        }
+        constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
     }
 
     @Override
     public ResponseEntity<TypeOfUser> getTypeOfUser(int userId) {
-	return new ResponseEntity<>(userRepository.getTypeOfUser(userId), HttpStatus.OK);
+        return new ResponseEntity<>(userRepository.getTypeOfUser(userId), HttpStatus.OK);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void updateUserRole(int characterId, String typeOfUser) {
         int userId = userRepository.getUserByCharacterId(characterId);
-	userRepository.updateUserRole(userId, TypeOfUser.values()[Integer.parseInt(typeOfUser)]);
+        userRepository.updateUserRole(userId, TypeOfUser.values()[Integer.parseInt(typeOfUser)]);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void addUserToCp(int characterId, int cpId) {
         Optional<Character> charFromDb = characterRepository.findById(characterId);
         if(!charFromDb.isPresent()){
             throw new CharacterNotFoundException(characterId);
-	}
+        }
         int userId = charFromDb.get().getUser().getUserId();
         userRepository.addUsersToCP(cpId, userId);
         Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(cpId);
@@ -115,14 +124,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable
     public ResponseEntity<List<ResponseUser>> getUsersForDashboard() {
         List<User> usersFromDb = userRepository.findAll();
-	List<ResponseUser> response = new ArrayList<>();
-	usersFromDb.forEach(user -> response.add(ResponseUser.convertForDashboard(user)));
-	return new ResponseEntity<>(response, HttpStatus.OK);
+        List<ResponseUser> response = new ArrayList<>();
+        usersFromDb.forEach(user -> response.add(ResponseUser.convertForDashboard(user)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void deleteUser(int userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
         if(!userFromDb.isPresent()){

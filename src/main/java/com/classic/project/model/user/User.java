@@ -4,6 +4,7 @@ import com.classic.project.model.character.Character;
 import com.classic.project.model.constantParty.ConstantParty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class User {
     @Column
     private int userId;
     @Column
+    @Email
     private String email;
     @Column
     private String password;
