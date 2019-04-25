@@ -15,7 +15,6 @@ import java.time.DateTimeException;
 import java.util.*;
 
 @Component
-@CacheConfig(cacheNames = "raidBosses")
 public class RaidBossServiceImpl implements RaidBossService {
 
     @Autowired
@@ -23,7 +22,6 @@ public class RaidBossServiceImpl implements RaidBossService {
 
 
     @Override
-    @CacheEvict(allEntries = true)
     public void updateDeathTimer(int raidId, Date timer) {
         if(timer.after(Calendar.getInstance().getTime())){
             throw new DateTimeException("Date is on future");
@@ -32,7 +30,6 @@ public class RaidBossServiceImpl implements RaidBossService {
     }
 
     @Override
-    @Cacheable
     public ResponseEntity<List<ResponseRaidBoss>> getAllBosses() {
         List<ResponseRaidBoss> response = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
@@ -55,7 +52,6 @@ public class RaidBossServiceImpl implements RaidBossService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     public void addNewRaid(RaidBoss raidBoss) {
         Optional<RaidBoss> raidFromDB = raidBossRepository.findBossByName(raidBoss.getName());
         if(raidFromDB.isPresent()) {
@@ -69,7 +65,6 @@ public class RaidBossServiceImpl implements RaidBossService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     public void setToUnknown(int raidId) {
         Optional<RaidBoss> raidFromDb = raidBossRepository.findById(raidId);
         if(!raidFromDb.isPresent()){
