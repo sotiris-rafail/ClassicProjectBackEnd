@@ -18,6 +18,7 @@ hs_err_pid*
 # User-specific stuff:
 .idea/**/tasks.xml
 .idea/
+tokens/*
 
 # Sensitive or high-churn files:
 .idea

@@ -1,5 +1,6 @@
 package com.classic.project.model.constantParty;
 
+import com.classic.project.model.constantParty.image.CpImages;
 import com.classic.project.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,6 +30,8 @@ public class ConstantParty {
     private String cpName;
     @OneToMany(mappedBy = "cp", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
+    @OneToMany(mappedBy = "cpImg", cascade = CascadeType.ALL)
+    private List<CpImages> images = new ArrayList<>();
 
     public int getCpId() {
         return cpId;
@@ -93,5 +96,13 @@ public class ConstantParty {
 
     public void setCpName(String cpName) {
         this.cpName = cpName;
+    }
+
+    public List<CpImages> getImages() {
+        return images;
+    }
+
+    public void setImages(List<CpImages> images) {
+        this.images = images;
     }
 }
