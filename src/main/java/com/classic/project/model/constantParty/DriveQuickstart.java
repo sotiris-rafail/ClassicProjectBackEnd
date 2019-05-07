@@ -87,11 +87,6 @@ public class DriveQuickstart {
                 System.out.printf("%s (%s)\n", file.getName(), file);
             }
         }
-
-//        File execute = service.files().get("1syl3wLuFMAyYFkU5YsqwVKxVGokQXUOe").setFields("kind,parents,webViewLink,webContentLink,name,mimeType").execute();
-//        System.out.println(execute);
-//        execute = service.files().get("1syl3wLuFMAyYFkU5YsqwVKxVGokQXUOe").setFields("kind,parents,webViewLink,webContentLink,name,mimeType").execute();
-//        System.out.println(execute);
     }
 
     private static String getMonthForInt(int num) {
