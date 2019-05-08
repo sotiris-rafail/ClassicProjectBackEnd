@@ -74,12 +74,12 @@ public class DriveQuickstart {
         // Print the names and IDs for up to 10 files.
         FileList result = service.files().list()
                 .setSpaces("drive")
-                .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,thumbnailLink,spaces,createdTime)")
-                //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
+                .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
+                //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
                 //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
-                .setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
-                //.setQ("createdTime > '2019-05-06' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
-                //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'image/' or mimeType contains 'video/')")
+                .setQ("mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder'")
+                //.setQ("createdTime > '2019-05-06' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
+                //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'file/' or mimeType contains 'video/')")
                 .setOrderBy("folder,createdTime")
                 .execute();
 
