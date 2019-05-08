@@ -18,6 +18,7 @@ import com.google.api.services.drive.model.FileList;
 import java.io.*;
 import java.security.GeneralSecurityException;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -68,12 +69,16 @@ public class DriveQuickstart {
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-        System.out.println(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+        SimpleDateFormat dfs = new SimpleDateFormat("YYYY-MM-dd");
+        Calendar today = Calendar.getInstance();
         // Print the names and IDs for up to 10 files.
         FileList result = service.files().list()
                 .setSpaces("drive")
-                .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,thumbnailLink)")
-                .setQ("createdTime > '2019-05-06' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
+                .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,thumbnailLink,spaces,createdTime)")
+                //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
+                //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
+                .setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
+                //.setQ("createdTime > '2019-05-06' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
                 //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'image/' or mimeType contains 'video/')")
                 .setOrderBy("folder,createdTime")
                 .execute();
@@ -89,13 +94,8 @@ public class DriveQuickstart {
         }
     }
 
-    private static String getMonthForInt(int num) {
-        String month = "wrong";
-        DateFormatSymbols dfs = new DateFormatSymbols();
-        String[] months = dfs.getMonths();
-        if (num >= 0 && num <= 11 ) {
-            month = months[num];
-        }
-        return month;
+    private static Calendar getTomorrow(Calendar today) {
+        today.add(Calendar.DAY_OF_MONTH, 1);
+        return today;
     }
 }

@@ -15,6 +15,9 @@ public class CpImages {
     @Column
     private String imageName;
 
+    @Column
+    private String parentId;
+
     @ManyToOne
     @JoinColumn(name = "cpId")
     private ConstantParty cpImg;
