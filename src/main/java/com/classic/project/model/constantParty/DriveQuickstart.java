@@ -1,5 +1,11 @@
 package com.classic.project.model.constantParty;
 
+import com.classic.project.model.constantParty.file.CpFile;
+import com.classic.project.model.constantParty.file.CpFileRepository;
+import com.classic.project.model.constantParty.file.FileType;
+import com.classic.project.model.constantParty.response.file.FileResponse;
+import com.classic.project.model.constantParty.response.file.RootFolderResponse;
+import com.classic.project.model.constantParty.response.file.SubFolderResponse;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -14,18 +20,28 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 //-Dhttps.protocols=SSLv3,TLSv1,TLSv1.1,TLSv1.2
+@Component
 public class DriveQuickstart {
+
+    @Autowired
+    private CpFileRepository cpFileRepository;
+
+    @Autowired
+    private ConstantPartyRepository constantPartyRepository;
+
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -35,7 +51,7 @@ public class DriveQuickstart {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE);
-    private static final String CREDENTIALS_FILE_PATH = "";//to se set as property
+    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";//to se set as property
 
     /**
      * Creates an authorized Credential object.
@@ -62,9 +78,10 @@ public class DriveQuickstart {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-
-    public static void main(String... args) throws IOException, GeneralSecurityException {
+    @Scheduled(cron = "0 * * * * *")
+    public void main() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
+        RootFolderResponse foldersResponse = null;
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
@@ -74,28 +91,67 @@ public class DriveQuickstart {
         // Print the names and IDs for up to 10 files.
         FileList result = service.files().list()
                 .setSpaces("drive")
+                .setPageSize(1000)
                 .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
                 //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
                 //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
-                .setQ("mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder'")
+                .setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
                 //.setQ("createdTime > '2019-05-06' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
                 //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'file/' or mimeType contains 'video/')")
                 .setOrderBy("folder,createdTime")
                 .execute();
 
         List<File> files = result.getFiles();
+
         if (files == null || files.isEmpty()) {
             System.out.println("No files found.");
         } else {
-            System.out.println("Files:");
+            List<CpFile> cpFiles = new ArrayList<>();
             for (File file : files) {
-                System.out.printf("%s (%s)\n", file.getName(), file);
+                if(file.getName().equals("Myrmidon Team")){
+                    cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.ROOT, new Date(file.getCreatedTime().getValue()),
+                            file.getWebViewLink(), file.getWebContentLink(), constantPartyRepository.findByCpNameContaining("Kamikaze").get()));
+                } else {
+                    //String fileId, String filename, String parents, FileType fileType, Date creationTime, String webViewLink, String webContentLink, ConstantParty cpImg
+                    cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.getType(file.getMimeType()), new Date(file.getCreatedTime().getValue()), file.getWebViewLink(), file.getWebContentLink(), null));
+                }
+            }
+
+            for (CpFile file : cpFiles) {
+                if (!file.getFileType().getType().equals(FileType.ROOT.getType())) {
+                    if (!cpFileRepository.existsById(file.getFileId())) { // check if the file exists
+                        Optional<CpFile> parent = cpFileRepository.findById(file.getParents());
+                        if (!parent.isPresent()) { //check if the above file/folder exists
+                            parent = cpFileRepository.findByParents(file.getParents());
+                            if (!parent.isPresent()) {
+                                parent = findParent(cpFiles, file.getParents());
+                                if (cpFileRepository.existsById(parent.get().getFileId())) {
+                                    file.setCpImg(parent.get().getCpImg());
+                                } else {
+                                    Optional<CpFile> upperParent = cpFileRepository.findByParents(parent.get().getParents());
+                                    if (!upperParent.isPresent()) {
+                                        upperParent = findParent(cpFiles, parent.get().getParents());
+                                    }
+                                }
+                            } else {
+                                file.setCpImg(parent.get().getCpImg());
+                            }
+                        } else {
+                            file.setCpImg(parent.get().getCpImg());
+                        }
+                    }
+                }
+                System.out.println("Hello");
             }
         }
     }
 
-    private static Calendar getTomorrow(Calendar today) {
-        today.add(Calendar.DAY_OF_MONTH, 1);
-        return today;
+    private Optional<CpFile> findParent(List<CpFile> cpFiles, String parents) {
+        for (CpFile cpFile : cpFiles) {
+            if (cpFile.getFileId().equals(parents)) {
+                return Optional.of(cpFile);
+            }
+        }
+        return Optional.empty();
     }
 }

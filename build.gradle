@@ -45,5 +45,6 @@ dependencies {
 
 bootRun {
     System.properties.put("user.timezone", "GMT")
+    System.properties.put("https.protocols", "SSLv3,TLSv1,TLSv1.1,TLSv1.2")
     systemProperties = System.properties
 }
