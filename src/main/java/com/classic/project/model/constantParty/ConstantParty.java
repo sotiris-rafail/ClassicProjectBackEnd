@@ -28,6 +28,8 @@ public class ConstantParty {
     private int aqPoints;
     @Column
     private String cpName;
+    @Column
+    private String rootFolderId;
     @OneToMany(mappedBy = "cp", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
     @OneToMany(mappedBy = "cpImg", cascade = CascadeType.ALL)
@@ -98,11 +100,20 @@ public class ConstantParty {
         this.cpName = cpName;
     }
 
+    @JsonIgnore
     public List<CpFile> getImages() {
         return images;
     }
 
     public void setImages(List<CpFile> images) {
         this.images = images;
+    }
+
+    public String getRootFolderId() {
+        return rootFolderId;
+    }
+
+    public void setRootFolderId(String rootFolderId) {
+        this.rootFolderId = rootFolderId;
     }
 }

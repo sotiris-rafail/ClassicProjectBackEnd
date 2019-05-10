@@ -78,7 +78,7 @@ public class DriveQuickstart {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    //@Scheduled(cron = "0 * * * * *")
     public void main() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         RootFolderResponse foldersResponse = null;
@@ -108,9 +108,9 @@ public class DriveQuickstart {
         } else {
             List<CpFile> cpFiles = new ArrayList<>();
             for (File file : files) {
-                if(file.getName().equals("Myrmidon Team")){
+                if(constantPartyRepository.findByRootFolderId(file.getId()).isPresent()){
                     cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.ROOT, new Date(file.getCreatedTime().getValue()),
-                            file.getWebViewLink(), file.getWebContentLink(), constantPartyRepository.findByCpNameContaining("Kamikaze").get()));
+                            file.getWebViewLink(), file.getWebContentLink(), constantPartyRepository.findByRootFolderId(file.getId()).get()));
                 } else {
                     //String fileId, String filename, String parents, FileType fileType, Date creationTime, String webViewLink, String webContentLink, ConstantParty cpImg
                     cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.getType(file.getMimeType()), new Date(file.getCreatedTime().getValue()), file.getWebViewLink(), file.getWebContentLink(), null));
@@ -119,31 +119,30 @@ public class DriveQuickstart {
 
             for (CpFile file : cpFiles) {
                 if (!file.getFileType().getType().equals(FileType.ROOT.getType())) {
-                    if (!cpFileRepository.existsById(file.getFileId())) { // check if the file exists
-                        Optional<CpFile> parent = cpFileRepository.findById(file.getParents());
-                        if (!parent.isPresent()) { //check if the above file/folder exists
-                            parent = cpFileRepository.findByParents(file.getParents());
-                            if (!parent.isPresent()) {
-                                parent = findParent(cpFiles, file.getParents());
-                                if (cpFileRepository.existsById(parent.get().getFileId())) {
-                                    file.setCpImg(parent.get().getCpImg());
-                                } else {
-                                    Optional<CpFile> upperParent = cpFileRepository.findByParents(parent.get().getParents());
-                                    if (!upperParent.isPresent()) {
-                                        upperParent = findParent(cpFiles, parent.get().getParents());
-                                    }
-                                }
-                            } else {
-                                file.setCpImg(parent.get().getCpImg());
-                            }
-                        } else {
-                            file.setCpImg(parent.get().getCpImg());
-                        }
-                    }
+                   file.setCpImg(findCpId(cpFiles, file).get().getCpImg());
                 }
-                System.out.println("Hello");
             }
+            cpFileRepository.saveAll(cpFiles);
         }
+    }
+
+    private Optional<CpFile> findCpId(List<CpFile> files, CpFile file) {
+        Optional<CpFile> parent;
+        if(!cpFileRepository.existsById(file.getFileId())) {
+            parent = cpFileRepository.findById(file.getParents());
+            if(!parent.isPresent()) {
+                parent = findParent(files, file.getParents());
+            }
+        } else {
+            return cpFileRepository.findById(file.getFileId());
+        }
+
+        if (parent.get().getCpImg() != null || parent.get().getFileType().getType().equals(FileType.ROOT.getType())) {
+            return parent;
+        } else {
+            return findCpId(files, parent.get());
+        }
+
     }
 
     private Optional<CpFile> findParent(List<CpFile> cpFiles, String parents) {

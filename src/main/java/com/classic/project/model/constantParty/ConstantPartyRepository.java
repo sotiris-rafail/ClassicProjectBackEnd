@@ -1,5 +1,6 @@
 package com.classic.project.model.constantParty;
 
+import com.classic.project.model.constantParty.file.CpFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +35,6 @@ public interface ConstantPartyRepository extends JpaRepository<ConstantParty, In
     void updateAQPoints(int cpId, int updatedAQPoints);
 
     Optional<ConstantParty> findByCpNameContaining(String cpName);
+
+    Optional<ConstantParty> findByRootFolderId(String id);
 }

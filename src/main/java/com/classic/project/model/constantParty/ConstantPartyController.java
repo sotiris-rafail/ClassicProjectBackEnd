@@ -2,6 +2,7 @@ package com.classic.project.model.constantParty;
 
 import com.classic.project.model.clan.Clan;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
+import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,5 +70,11 @@ public class ConstantPartyController {
     @ResponseStatus(HttpStatus.OK)
     public boolean uploadEpicPhoto(@RequestParam(name = "photo") MultipartFile photo, @RequestParam(name = "cpId") int cpId,  @RequestParam(name = "cpName") String cpName){
         return constantPartyService.uploadEpicPhoto(photo, cpId, cpName);
+    }
+
+    @RequestMapping(value = "/{cpId}/{userId}/photos", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<RootFolderResponse> getCpPhotos(@PathVariable(name = "cpId") int cpId, @PathVariable(name = "userId") int userId) {
+        return constantPartyService.getCpPhotos(cpId, userId);
     }
 }

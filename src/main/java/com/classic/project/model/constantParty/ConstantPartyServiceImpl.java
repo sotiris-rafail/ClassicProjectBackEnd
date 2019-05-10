@@ -158,13 +158,22 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         return true;
     }
 
+    @Override
+    public ResponseEntity<RootFolderResponse> getCpPhotos(int cpId, int userId) {
+        //userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
+        //if(isMemberOfTheCP(cpId, userId)) {
+            return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
+        //}
+        //return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
     private Boolean isMemberOfTheCP(int cpId, int userId) {
         return  userRepository.isUserMemberOfCP(cpId, userId).isPresent();
     }
 
-    private RootFolderResponse getFodlersByCPId(){
+    private RootFolderResponse getFoldersByCPId(int cpId){
         RootFolderResponse foldersResponse = null;
-        List<CpFile> files = cpFileRepository.findAll();
+        List<CpFile> files = cpFileRepository.findAllByCpImg(cpId);
         if(files.isEmpty()) {
             return new RootFolderResponse("","", new ArrayList<>(), FileType.FOLDER.getType());
         }
@@ -238,11 +247,11 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         return null;
     }
 
-    private void addsFolder(Map.Entry<String, SubFolderResponse> folder, CpFile file) {
-        folder.getValue().getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().getType()));
+    private void addsFolder(Map.Entry<String, SubFolderResponse> folder, CpFile file) {//String folderId, String name, List<String> parent, String type, Date creationTime, String webViewLink, String webContentLink
+        folder.getValue().getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().getType(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 
     private void addsFile(Map.Entry<String, SubFolderResponse> folder, CpFile file) {
-        folder.getValue().getFileResponseMap().put(file.getFileId(), new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().getType()));
+        folder.getValue().getFileResponseMap().put(file.getFileId(), new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().getType(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 }

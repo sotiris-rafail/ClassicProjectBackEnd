@@ -1,6 +1,7 @@
 package com.classic.project.model.constantParty;
 
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
+import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,4 +25,6 @@ public interface ConstantPartyService {
     ResponseEntity<List<ResponseConstantParty>> getEpicPoints();
 
     boolean uploadEpicPhoto(MultipartFile photo, int cpId, String cpName);
+
+    ResponseEntity<RootFolderResponse> getCpPhotos(int cpId, int userId);
 }
