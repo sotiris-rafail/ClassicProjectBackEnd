@@ -179,14 +179,14 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         }
         for(CpFile file : files) {
             if(file.getFileType().equals(FileType.ROOT)) {
-                foldersResponse = new RootFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().getType());
+                foldersResponse = new RootFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink());
             }
         }
         List<CpFile> toBeRemoved = new ArrayList<>();
         for (CpFile file : files) {
             //System.out.printf("%s (%s)\n", file.getName(), file);
             if (file.getParents().contains(foldersResponse.getFolderId())) { //Monthly Folders
-                foldersResponse.getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().getType()));
+                foldersResponse.getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name()));
                 toBeRemoved.add(file);
             }
         }
@@ -248,10 +248,10 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     private void addsFolder(Map.Entry<String, SubFolderResponse> folder, CpFile file) {//String folderId, String name, List<String> parent, String type, Date creationTime, String webViewLink, String webContentLink
-        folder.getValue().getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().getType(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+        folder.getValue().getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 
     private void addsFile(Map.Entry<String, SubFolderResponse> folder, CpFile file) {
-        folder.getValue().getFileResponseMap().put(file.getFileId(), new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().getType(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+        folder.getValue().getFileResponseMap().put(file.getFileId(), new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 }
