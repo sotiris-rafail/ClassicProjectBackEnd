@@ -1,10 +1,8 @@
 package com.classic.project.model.constantParty.response.file;
 
 import javax.persistence.Column;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class SubFolderResponse {
 
@@ -16,8 +14,8 @@ public class SubFolderResponse {
     private String webViewLink;
     private String webContentLink;
 
-    private Map<String, SubFolderResponse> folderResponseMap = new HashMap<>();
-    private Map<String, FileResponse> fileResponseMap = new HashMap<>();
+    private List<SubFolderResponse> folderResponseMap =new ArrayList<SubFolderResponse>();
+    private List<FileResponse> fileResponseMap = new ArrayList<FileResponse>();
 
     public SubFolderResponse(String folderId, String name, List<String> parent, String type) {
         this.folderId = folderId;
@@ -92,19 +90,19 @@ public class SubFolderResponse {
         this.webContentLink = webContentLink;
     }
 
-    public Map<String, SubFolderResponse> getFolderResponseMap() {
+    public List<SubFolderResponse> getFolderResponseMap() {
         return folderResponseMap;
     }
 
-    public void setFolderResponseMap(Map<String, SubFolderResponse> folderResponseMap) {
+    public void setFolderResponseMap(List<SubFolderResponse> folderResponseMap) {
         this.folderResponseMap = folderResponseMap;
     }
 
-    public Map<String, FileResponse> getFileResponseMap() {
+    public List<FileResponse> getFileResponseMap() {
         return fileResponseMap;
     }
 
-    public void setFileResponseMap(Map<String, FileResponse> fileResponseMap) {
+    public void setFileResponseMap(List<FileResponse> fileResponseMap) {
         this.fileResponseMap = fileResponseMap;
     }
 }

@@ -1,9 +1,6 @@
 package com.classic.project.model.constantParty.response.file;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RootFolderResponse {
 
@@ -15,7 +12,7 @@ public class RootFolderResponse {
     private String webViewLink;
     private String webContentLink;
 
-    private Map<String, SubFolderResponse> folderResponseMap = new HashMap<>();
+    private List<SubFolderResponse> folderResponseMap = new ArrayList<>();
 
     public RootFolderResponse(String folderId, String name,  List<String> parents, String type) {
         this.folderId = folderId;
@@ -90,11 +87,11 @@ public class RootFolderResponse {
         this.webContentLink = webContentLink;
     }
 
-    public Map<String, SubFolderResponse> getFolderResponseMap() {
+    public List<SubFolderResponse> getFolderResponseMap() {
         return folderResponseMap;
     }
 
-    public void setFolderResponseMap(Map<String, SubFolderResponse> folderResponseMap) {
+    public void setFolderResponseMapArray(List<SubFolderResponse> folderResponseMap) {
         this.folderResponseMap = folderResponseMap;
     }
 }

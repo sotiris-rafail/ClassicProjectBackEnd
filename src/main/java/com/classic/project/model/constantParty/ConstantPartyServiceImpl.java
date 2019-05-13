@@ -14,7 +14,6 @@ import com.classic.project.model.constantParty.response.file.SubFolderResponse;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.UserRepository;
 import com.classic.project.security.UserAuthConfirm;
-import com.google.api.services.drive.model.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -186,7 +184,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         for (CpFile file : files) {
             //System.out.printf("%s (%s)\n", file.getName(), file);
             if (file.getParents().contains(foldersResponse.getFolderId())) { //Monthly Folders
-                foldersResponse.getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name()));
+                foldersResponse.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name()));
                 toBeRemoved.add(file);
             }
         }
@@ -202,7 +200,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         }
         List<CpFile> toBeRemoved = new ArrayList<>();
         for (CpFile file : files) {
-            for (Map.Entry<String, SubFolderResponse> subFolderResponse : foldersResponse.getFolderResponseMap().entrySet()) {
+            for (SubFolderResponse subFolderResponse : foldersResponse.getFolderResponseMap()) {
                 toBeRemoved.add(insertToFolder(subFolderResponse, file));
             }
         }
@@ -211,8 +209,8 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
         //adds bosses folders for ech daily folder
         for (CpFile file : files) {
-            for (Map.Entry<String, SubFolderResponse> subFolderResponse : foldersResponse.getFolderResponseMap().entrySet()) {
-                for (Map.Entry<String, SubFolderResponse> depperSubFolder : subFolderResponse.getValue().getFolderResponseMap().entrySet()) {
+            for (SubFolderResponse subFolderResponse : foldersResponse.getFolderResponseMap()) {
+                for (SubFolderResponse depperSubFolder : subFolderResponse.getFolderResponseMap()) {
                     toBeRemoved.add(insertToFolder(depperSubFolder, file));
                 }
             }
@@ -221,9 +219,9 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         toBeRemoved.clear();
 
         for (CpFile file : files) {
-            for (Map.Entry<String, SubFolderResponse> subFolderResponse : foldersResponse.getFolderResponseMap().entrySet()) {
-                for (Map.Entry<String, SubFolderResponse> depperSubFolder : subFolderResponse.getValue().getFolderResponseMap().entrySet()) {
-                    for (Map.Entry<String, SubFolderResponse> bossFolder : depperSubFolder.getValue().getFolderResponseMap().entrySet()) {
+            for (SubFolderResponse subFolderResponse : foldersResponse.getFolderResponseMap()) {
+                for (SubFolderResponse depperSubFolder : subFolderResponse.getFolderResponseMap()) {
+                    for (SubFolderResponse bossFolder : depperSubFolder.getFolderResponseMap()) {
                         toBeRemoved.add(insertToFolder(bossFolder, file));
                     }
                 }
@@ -235,8 +233,8 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     }
 
-    private CpFile insertToFolder(Map.Entry<String, SubFolderResponse> folder, CpFile file) {
-        if (file.getParents().contains(folder.getKey())) {
+    private CpFile insertToFolder(SubFolderResponse folder, CpFile file) {
+        if (file.getParents().contains(folder.getFolderId())) {
             if (file.getFileType().getType().equals(FileType.FOLDER.getType())) {
                 addsFolder(folder, file);
             } else if (file.getFileType().getType().contains(FileType.IMAGE.getType())) {
@@ -247,11 +245,11 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         return null;
     }
 
-    private void addsFolder(Map.Entry<String, SubFolderResponse> folder, CpFile file) {//String folderId, String name, List<String> parent, String type, Date creationTime, String webViewLink, String webContentLink
-        folder.getValue().getFolderResponseMap().put(file.getFileId(), new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+    private void addsFolder(SubFolderResponse folder, CpFile file) {//String folderId, String name, List<String> parent, String type, Date creationTime, String webViewLink, String webContentLink
+        folder.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 
-    private void addsFile(Map.Entry<String, SubFolderResponse> folder, CpFile file) {
-        folder.getValue().getFileResponseMap().put(file.getFileId(), new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+    private void addsFile(SubFolderResponse folder, CpFile file) {
+        folder.getFileResponseMap().add(new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 }
