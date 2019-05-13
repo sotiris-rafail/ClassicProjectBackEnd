@@ -78,7 +78,9 @@ public class DriveQuickstart {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    //@Scheduled(cron = "0 * * * * *")
+    List<CpFile> cpFiles = new ArrayList<>();
+
+    @Scheduled(cron = "0 * * * * *")
     public void main() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         RootFolderResponse foldersResponse = null;
@@ -92,11 +94,11 @@ public class DriveQuickstart {
         FileList result = service.files().list()
                 .setSpaces("drive")
                 .setPageSize(1000)
-                .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
+                .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime,trashed)")
                 //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
                 //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
+                //.setQ("'1-ShVtg0FZvYWXbl11QLE9qMjbmGrL44Y' in parents and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
                 .setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
-                //.setQ("createdTime > '2019-05-06' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
                 //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'file/' or mimeType contains 'video/')")
                 .setOrderBy("folder,createdTime")
                 .execute();
@@ -106,41 +108,61 @@ public class DriveQuickstart {
         if (files == null || files.isEmpty()) {
             System.out.println("No files found.");
         } else {
-            List<CpFile> cpFiles = new ArrayList<>();
+
+            List<CpFile> rootFolders = new ArrayList<>();
+            List<File> toBeRemoved = new ArrayList<>();
+            List<File> trashed = new ArrayList<>();
             for (File file : files) {
-                if(constantPartyRepository.findByRootFolderId(file.getId()).isPresent()){
-                    cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.ROOT, new Date(file.getCreatedTime().getValue()),
+                if (constantPartyRepository.findByRootFolderId(file.getId()).isPresent()) {
+                    rootFolders.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.ROOT, new Date(file.getCreatedTime().getValue()),
                             file.getWebViewLink(), file.getWebContentLink(), constantPartyRepository.findByRootFolderId(file.getId()).get()));
-                } else {
-                    //String fileId, String filename, String parents, FileType fileType, Date creationTime, String webViewLink, String webContentLink, ConstantParty cpImg
-                    cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.getType(file.getMimeType()), new Date(file.getCreatedTime().getValue()), file.getWebViewLink(), file.getWebContentLink(), null));
+                    toBeRemoved.add(file);
                 }
+
+            }
+
+            cpFileRepository.saveAll(rootFolders);
+            files.removeAll(toBeRemoved);
+
+            for (File file : files) {
+                //String fileId, String filename, String parents, FileType fileType, Date creationTime, String webViewLink, String webContentLink, ConstantParty cpImg
+                cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.getType(file.getMimeType()), new Date(file.getCreatedTime().getValue()), file.getWebViewLink(), file.getWebContentLink(), null));
             }
 
             for (CpFile file : cpFiles) {
                 if (!file.getFileType().getType().equals(FileType.ROOT.getType())) {
-                   file.setCpImg(findCpId(cpFiles, file).get().getCpImg());
+                    file.setCpImg(findCpId(cpFiles, file).get().getCpImg());
                 }
             }
             cpFileRepository.saveAll(cpFiles);
         }
+        cpFiles.clear();
     }
 
     private Optional<CpFile> findCpId(List<CpFile> files, CpFile file) {
         Optional<CpFile> parent;
-        if(!cpFileRepository.existsById(file.getFileId())) {
+        if (!cpFileRepository.existsById(file.getFileId())) {
             parent = cpFileRepository.findById(file.getParents());
-            if(!parent.isPresent()) {
+            if (!parent.isPresent()) {
                 parent = findParent(files, file.getParents());
             }
         } else {
             return cpFileRepository.findById(file.getFileId());
         }
-
-        if (parent.get().getCpImg() != null || parent.get().getFileType().getType().equals(FileType.ROOT.getType())) {
-            return parent;
+        if (parent.isPresent()) {
+            if (parent.get().getCpImg() != null || parent.get().getFileType().getType().equals(FileType.ROOT.getType())) {
+                return parent;
+            } else {
+                return findCpId(files, parent.get());
+            }
         } else {
-            return findCpId(files, parent.get());
+            if (!findParent(cpFiles, file.getParents()).isPresent()) {
+                CpFile cpFile = new CpFile();
+                cpFile.setCpImg(constantPartyRepository.findById(99).get());
+                return Optional.of(cpFile);
+            } else {
+                return findParent(cpFiles, file.getParents());
+            }
         }
 
     }
