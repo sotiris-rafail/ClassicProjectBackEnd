@@ -5,7 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table
@@ -17,9 +19,6 @@ public class CpFile {
 
     @Column
     private String filename;
-
-    @Column
-    private String parents;
 
     @Column
     private FileType fileType;
@@ -38,13 +37,26 @@ public class CpFile {
     @JoinColumn(name = "cpId")
     private ConstantParty cpImg;
 
+    @OneToMany(mappedBy = "folderId", cascade = CascadeType.ALL)
+    private List<ParentFile> parents = new ArrayList<>();
+
     public CpFile() {
     }
 
-    public CpFile(String fileId, String filename, String parents, FileType fileType, Date creationTime, String webViewLink, String webContentLink, ConstantParty cpImg) {
+    public CpFile(String fileId, String filename, List<ParentFile> parents, FileType fileType, Date creationTime, String webViewLink, String webContentLink, ConstantParty cpImg) {
         this.fileId = fileId;
         this.filename = filename;
         this.parents = parents;
+        this.fileType = fileType;
+        this.creationTime = creationTime;
+        this.webViewLink = webViewLink;
+        this.webContentLink = webContentLink;
+        this.cpImg = cpImg;
+    }
+
+    public CpFile(String fileId, String filename, FileType fileType, Date creationTime, String webViewLink, String webContentLink, ConstantParty cpImg) {
+        this.fileId = fileId;
+        this.filename = filename;
         this.fileType = fileType;
         this.creationTime = creationTime;
         this.webViewLink = webViewLink;
@@ -68,11 +80,11 @@ public class CpFile {
         this.filename = filename;
     }
 
-    public String getParents() {
+    public List<ParentFile> getParents() {
         return parents;
     }
 
-    public void setParents(String parents) {
+    public void setParents(List<ParentFile> parents) {
         this.parents = parents;
     }
 

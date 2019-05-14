@@ -1,9 +1,10 @@
-package com.classic.project.model.constantParty.response.file.schedule;
+package com.classic.project.model.constantParty.file.schedule;
 
 import com.classic.project.model.constantParty.ConstantPartyRepository;
 import com.classic.project.model.constantParty.file.CpFile;
 import com.classic.project.model.constantParty.file.CpFileRepository;
 import com.classic.project.model.constantParty.file.FileType;
+import com.classic.project.model.constantParty.file.ParentFile;
 import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -88,36 +89,51 @@ public class GetFile {
         SimpleDateFormat dfs = new SimpleDateFormat("YYYY-MM-dd");
         Calendar today = Calendar.getInstance();
         // Print the names and IDs for up to 10 files.
-        FileList result = service.files().list()
-                .setSpaces("drive")
-                .setPageSize(1000)
-                .setFields("files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
-                //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
-                //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
-                //.setQ("'1-ShVtg0FZvYWXbl11QLE9qMjbmGrL44Y' in parents and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
-                .setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
-                //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'file/' or mimeType contains 'video/')")
-                .setOrderBy("folder,createdTime")
-                .execute();
+        String tokenPage = null;
+        do {
+            FileList result = service.files().list()
+                    .setSpaces("drive")
+                    .setPageSize(1000).setPageToken(tokenPage)
+                    .setFields("nextPageToken,incompleteSearch,files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
+                    //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
+                    //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
+                    .setQ("createdTime > '2019-05-13' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
+                    //.setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
+                    //.setQ("(mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder') and '1yIQG136ez05tI0VmmDPIudJ5lyZ2p3Jp' in parents")
+                    //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'file/' or mimeType contains 'video/')")
+                    .setOrderBy("folder,createdTime")
+                    .execute();
 
-        List<File> files = result.getFiles();
-
-        if (files == null || files.isEmpty()) {
-            System.out.println("No files found.");
-        } else {
-            List<CpFile> cpFiles = new ArrayList<>();
-            for (File file : files) {
-                if (constantPartyRepository.findByRootFolderId(file.getId()).isPresent()) {
-                    cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.ROOT, new Date(file.getCreatedTime().getValue()),
-                            file.getWebViewLink(), file.getWebContentLink(), constantPartyRepository.findByRootFolderId(file.getId()).get()));
-                } else {
-                    cpFiles.add(new CpFile(file.getId(), file.getName(), String.join(",", file.getParents()), FileType.getType(file.getMimeType()), new Date(file.getCreatedTime().getValue()), file.getWebViewLink(), file.getWebContentLink(), null));
+            List<File> files = result.getFiles();
+            tokenPage = result.getNextPageToken();
+            if (files == null || files.isEmpty()) {
+                System.out.println("No files found.");
+            } else {
+                List<CpFile> cpFiles = new ArrayList<>();
+                for (File file : files) {
+                    CpFile toBeAdded;
+                    if (constantPartyRepository.findByRootFolderId(file.getId()).isPresent()) {
+                        toBeAdded = new CpFile(file.getId(), file.getName(), FileType.ROOT, new Date(file.getCreatedTime().getValue()),
+                                file.getWebViewLink(), file.getWebContentLink(), constantPartyRepository.findByRootFolderId(file.getId()).get());
+                    } else {
+                        toBeAdded = new CpFile(file.getId(), file.getName(), FileType.getType(file.getMimeType()), new Date(file.getCreatedTime().getValue()), file.getWebViewLink(), file.getWebContentLink(), null);
+                    }
+                    toBeAdded.setParents(setParents(file.getParents(), toBeAdded));
+                    cpFiles.add(toBeAdded);
                 }
 
+                cpFileRepository.saveAll(cpFiles);
             }
+        } while (tokenPage != null);
 
-            cpFileRepository.saveAll(cpFiles);
+    }
+
+    private static List<ParentFile> setParents(List<String> parents, CpFile file) {
+        List<ParentFile> parent = new ArrayList<>();
+        for (String parentId : parents) {
+            parent.add(new ParentFile(file, parentId, file.getFileId()));
         }
+        return parent;
     }
 
 }

@@ -14,6 +14,6 @@ public interface CpFileRepository extends JpaRepository<CpFile, String> {
     @Query("select cpFile from CpFile cpFile where cpFile.parents like ?1")
     Optional<CpFile> findByParents(String parent);
 
-    @Query("select cpFile from CpFile where cpImg is null ")
+    @Query("select cpFile from CpFile cpFile where cpFile.cpImg is null ")
     List<CpFile> getCpFilesWithoutCp();
 }

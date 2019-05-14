@@ -4,9 +4,7 @@ import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.constantParty.exception.ConstantPartyExistException;
 import com.classic.project.model.constantParty.exception.FileExistsException;
-import com.classic.project.model.constantParty.file.CpFile;
-import com.classic.project.model.constantParty.file.CpFileRepository;
-import com.classic.project.model.constantParty.file.FileType;
+import com.classic.project.model.constantParty.file.*;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.constantParty.response.file.FileResponse;
 import com.classic.project.model.constantParty.response.file.RootFolderResponse;
@@ -49,6 +47,9 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Autowired
     private CpFileRepository cpFileRepository;
+
+    @Autowired
+    private ParentFileRepository parentFileRepository;
 
     @Override
     public ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId) {
@@ -177,14 +178,14 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         }
         for(CpFile file : files) {
             if(file.getFileType().equals(FileType.ROOT)) {
-                foldersResponse = new RootFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink());
+                foldersResponse = new RootFolderResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParetIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink());
             }
         }
         List<CpFile> toBeRemoved = new ArrayList<>();
         for (CpFile file : files) {
             //System.out.printf("%s (%s)\n", file.getName(), file);
             if (file.getParents().contains(foldersResponse.getFolderId())) { //Monthly Folders
-                foldersResponse.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name()));
+                foldersResponse.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParetIdByFileId(file.getFileId()), file.getFileType().name()));
                 toBeRemoved.add(file);
             }
         }
@@ -246,10 +247,10 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     private void addsFolder(SubFolderResponse folder, CpFile file) {//String folderId, String name, List<String> parent, String type, Date creationTime, String webViewLink, String webContentLink
-        folder.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+        folder.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParetIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 
     private void addsFile(SubFolderResponse folder, CpFile file) {
-        folder.getFileResponseMap().add(new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+        folder.getFileResponseMap().add(new FileResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParetIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 }
