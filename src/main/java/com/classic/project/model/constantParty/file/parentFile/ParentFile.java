@@ -1,4 +1,7 @@
-package com.classic.project.model.constantParty.file;
+package com.classic.project.model.constantParty.file.parentFile;
+
+import com.classic.project.model.constantParty.file.CpFile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -10,17 +13,13 @@ public class ParentFile {
     private String fileId;
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fileId", referencedColumnName = "fileId", insertable = false, updatable = false)
     private CpFile folderId;
 
     @Id
     @Column
     private String parentId;
-
-    public CpFile getFolderId() {
-        return folderId;
-    }
 
     public ParentFile(CpFile folderId, String parentId) {
         this.folderId = folderId;
@@ -36,6 +35,11 @@ public class ParentFile {
     public ParentFile() {
     }
 
+
+    public CpFile getFolderId() {
+        return folderId;
+    }
+
     public void setFolderId(CpFile folderId) {
         this.folderId = folderId;
     }
@@ -47,6 +51,7 @@ public class ParentFile {
     public void setParentId(String parentId) {
         this.parentId = parentId;
     }
+
 
     public String getFileId() {
         return fileId;

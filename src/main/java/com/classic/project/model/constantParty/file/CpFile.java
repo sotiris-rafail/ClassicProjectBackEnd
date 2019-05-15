@@ -1,6 +1,8 @@
 package com.classic.project.model.constantParty.file;
 
 import com.classic.project.model.constantParty.ConstantParty;
+import com.classic.project.model.constantParty.file.parentFile.ParentFile;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -80,6 +82,7 @@ public class CpFile {
         this.filename = filename;
     }
 
+    @JsonIgnore
     public List<ParentFile> getParents() {
         return parents;
     }

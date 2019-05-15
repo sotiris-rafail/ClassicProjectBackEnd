@@ -4,7 +4,7 @@ import com.classic.project.model.constantParty.ConstantPartyRepository;
 import com.classic.project.model.constantParty.file.CpFile;
 import com.classic.project.model.constantParty.file.CpFileRepository;
 import com.classic.project.model.constantParty.file.FileType;
-import com.classic.project.model.constantParty.file.ParentFile;
+import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -78,7 +78,7 @@ public class GetFile {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    //@Scheduled(cron = "0 * * * * *")
     public void getFile() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         RootFolderResponse foldersResponse = null;
@@ -97,8 +97,8 @@ public class GetFile {
                     .setFields("nextPageToken,incompleteSearch,files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
                     //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
                     //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
-                    .setQ("createdTime > '2019-05-13' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
-                    //.setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
+                    //.setQ("createdTime > '2019-05-13' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
+                    .setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
                     //.setQ("(mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder') and '1yIQG136ez05tI0VmmDPIudJ5lyZ2p3Jp' in parents")
                     //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'file/' or mimeType contains 'video/')")
                     .setOrderBy("folder,createdTime")
@@ -129,11 +129,14 @@ public class GetFile {
     }
 
     private static List<ParentFile> setParents(List<String> parents, CpFile file) {
-        List<ParentFile> parent = new ArrayList<>();
-        for (String parentId : parents) {
-            parent.add(new ParentFile(file, parentId, file.getFileId()));
+        if(parents != null && !parents.isEmpty()) {
+            List<ParentFile> parent = new ArrayList<>();
+            for (String parentId : parents) {
+                parent.add(new ParentFile(file, parentId, file.getFileId()));
+            }
+            return parent;
         }
-        return parent;
+        return new ArrayList<>();
     }
 
 }
