@@ -4,9 +4,9 @@ import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.constantParty.exception.ConstantPartyExistException;
 import com.classic.project.model.constantParty.exception.FileExistsException;
-import com.classic.project.model.constantParty.file.CpFile;
-import com.classic.project.model.constantParty.file.CpFileRepository;
-import com.classic.project.model.constantParty.file.FileType;
+import com.classic.project.model.constantParty.file.*;
+import com.classic.project.model.constantParty.file.parentFile.ParentFile;
+import com.classic.project.model.constantParty.file.parentFile.ParentFileRepository;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.constantParty.response.file.FileResponse;
 import com.classic.project.model.constantParty.response.file.RootFolderResponse;
@@ -50,6 +50,9 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     @Autowired
     private CpFileRepository cpFileRepository;
 
+    @Autowired
+    private ParentFileRepository parentFileRepository;
+
     @Override
     public ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId) {
         ResponseConstantParty responseCP = ResponseConstantParty.convertForLeader(constantPartyRepository.findByLeaderId(userId));
@@ -59,7 +62,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     @Override
     public ResponseEntity<ResponseConstantParty> getCp(int cpId, int userId) {
         userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
-        if(isMemberOfTheCP(cpId, userId)) {
+        if (isMemberOfTheCP(cpId, userId)) {
             ResponseConstantParty responseCP = ResponseConstantParty.convertForLeader(constantPartyRepository.findById(cpId));
             return new ResponseEntity<>(responseCP, HttpStatus.OK);
         }
@@ -78,18 +81,18 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     @Override
     public void updateEpicPoints(String rbName, int pointsToAdd, int cpId) {
         Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(cpId);
-        if(rbName.equals("Orfen")){
+        if (rbName.equals("Orfen")) {
             constantPartyRepository.updateOrfenPoints(cpId, cpFromDb.get().getOrfenPoints() + pointsToAdd);
-        } else if(rbName.equals("Core")){
+        } else if (rbName.equals("Core")) {
             constantPartyRepository.updateCorePoints(cpId, cpFromDb.get().getCorePoints() + pointsToAdd);
-        } else if(rbName.equals("Queen Ant")) {
+        } else if (rbName.equals("Queen Ant")) {
             constantPartyRepository.updateAQPoints(cpId, cpFromDb.get().getAqPoints() + pointsToAdd);
         }
     }
 
     @Override
     public void addNewCP(ConstantParty newCp) {
-        if(constantPartyRepository.findByCpNameContaining(newCp.getCpName()).isPresent()){
+        if (constantPartyRepository.findByCpNameContaining(newCp.getCpName()).isPresent()) {
             throw new ConstantPartyExistException(newCp.getCpName());
         }
         newCp.setMembers(new ArrayList<>());
@@ -127,28 +130,28 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public boolean uploadEpicPhoto(MultipartFile photo, int cpId, String cpName) {
-        this.rootLocation = Paths.get(Paths.get(environment.getProperty("photo.upload.path")+cpName).toFile().getAbsolutePath());
+        this.rootLocation = Paths.get(Paths.get(environment.getProperty("photo.upload.path") + cpName).toFile().getAbsolutePath());
         try {
             if (photo.isEmpty()) {
                 //throw new StorageException("Failed to store empty file " + photo.getOriginalFilename());
                 return false;
             }
-            if (!rootLocation.toFile().exists()){
+            if (!rootLocation.toFile().exists()) {
                 boolean mkdir = rootLocation.toFile().mkdir();
-                if(!mkdir){
+                if (!mkdir) {
                     boolean mkdirs = rootLocation.toFile().mkdirs();
-                    if(!mkdirs) {
+                    if (!mkdirs) {
                         return false;
                     }
                 }
             }
-            if(this.rootLocation.toFile().isDirectory()) {
+            if (this.rootLocation.toFile().isDirectory()) {
                 Files.copy(photo.getInputStream(), this.rootLocation.resolve(photo.getOriginalFilename()));
             } else {
                 return false;
             }
         } catch (Exception e) {
-            if(e instanceof FileAlreadyExistsException){
+            if (e instanceof FileAlreadyExistsException) {
                 throw new FileExistsException("The photo already exists");
             }
             throw new FileExistsException(e.getLocalizedMessage());
@@ -160,32 +163,39 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     public ResponseEntity<RootFolderResponse> getCpPhotos(int cpId, int userId) {
         //userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
         //if(isMemberOfTheCP(cpId, userId)) {
-            return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
+        return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
         //}
         //return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {
-        return  userRepository.isUserMemberOfCP(cpId, userId).isPresent();
+        return userRepository.isUserMemberOfCP(cpId, userId).isPresent();
     }
 
-    private RootFolderResponse getFoldersByCPId(int cpId){
+    private RootFolderResponse getFoldersByCPId(int cpId) {
         RootFolderResponse foldersResponse = null;
+        List<CpFile> toBeRemoved = new ArrayList<>();
         List<CpFile> files = cpFileRepository.findAllByCpImg(cpId);
-        if(files.isEmpty()) {
-            return new RootFolderResponse("","", new ArrayList<>(), FileType.FOLDER.getType());
+        if (files.isEmpty()) {
+            return new RootFolderResponse("", "", new ArrayList<>(), FileType.FOLDER.getType());
         }
-        for(CpFile file : files) {
-            if(file.getFileType().equals(FileType.ROOT)) {
-                foldersResponse = new RootFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink());
+        for (CpFile file : files) {
+            if (file.getFileType().equals(FileType.ROOT)) {
+                foldersResponse = new RootFolderResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParentIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink());
+                toBeRemoved.add(file);
             }
         }
-        List<CpFile> toBeRemoved = new ArrayList<>();
+        files.removeAll(toBeRemoved);
+        toBeRemoved.clear();
+
         for (CpFile file : files) {
             //System.out.printf("%s (%s)\n", file.getName(), file);
-            if (file.getParents().contains(foldersResponse.getFolderId())) { //Monthly Folders
-                foldersResponse.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name()));
-                toBeRemoved.add(file);
+            for (ParentFile parent : file.getParents()) { //Monthly Folders
+                Optional<CpFile> cpFile = cpFileRepository.findById(parent.getParentId());
+                if (cpFile.isPresent() && foldersResponse.getFolderId().equals(cpFile.get().getFileId()) && cpFile.get().getCpImg() != null) {
+                    foldersResponse.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParentIdByFileId(file.getFileId()), file.getFileType().name()));
+                    toBeRemoved.add(file);
+                }
             }
         }
         files.removeAll(toBeRemoved);
@@ -234,22 +244,24 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     private CpFile insertToFolder(SubFolderResponse folder, CpFile file) {
-        if (file.getParents().contains(folder.getFolderId())) {
-            if (file.getFileType().getType().equals(FileType.FOLDER.getType())) {
-                addsFolder(folder, file);
-            } else if (file.getFileType().getType().contains(FileType.IMAGE.getType())) {
-                addsFile(folder, file);
+        for (ParentFile parentFile : file.getParents()) {
+            if (folder.getFolderId().equals(parentFile.getParentId())) {
+                if (file.getFileType().getType().equals(FileType.FOLDER.getType())) {
+                    addsFolder(folder, file);
+                } else if (file.getFileType().getType().contains(FileType.IMAGE.getType())) {
+                    addsFile(folder, file);
+                }
+                return file;
             }
-            return file;
         }
         return null;
     }
 
     private void addsFolder(SubFolderResponse folder, CpFile file) {//String folderId, String name, List<String> parent, String type, Date creationTime, String webViewLink, String webContentLink
-        folder.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(),Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+        folder.getFolderResponseMap().add(new SubFolderResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParentIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 
     private void addsFile(SubFolderResponse folder, CpFile file) {
-        folder.getFileResponseMap().add(new FileResponse(file.getFileId(), file.getFilename(), Arrays.asList(file.getParents().split(",")), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+        folder.getFileResponseMap().add(new FileResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParentIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 }
