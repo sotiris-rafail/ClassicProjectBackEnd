@@ -5,7 +5,6 @@ import com.classic.project.model.constantParty.file.CpFile;
 import com.classic.project.model.constantParty.file.CpFileRepository;
 import com.classic.project.model.constantParty.file.FileType;
 import com.classic.project.model.constantParty.file.parentFile.ParentFile;
-import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -21,6 +20,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +42,9 @@ public class GetFile {
     @Autowired
     private ConstantPartyRepository constantPartyRepository;
 
+    @Value("${google.drive.credentials}")
+    private String googleDriveCredentials;
+
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -51,7 +54,6 @@ public class GetFile {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE);
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";//to se set as property
 
     /**
      * Creates an authorized Credential object.
@@ -60,11 +62,11 @@ public class GetFile {
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
-    private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+    private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = GetFile.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = GetFile.class.getResourceAsStream(googleDriveCredentials);
         if (in == null) {
-            throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+            throw new FileNotFoundException("Resource not found: " + googleDriveCredentials);
         }
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -78,29 +80,25 @@ public class GetFile {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    //@Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 1 * * *") //every day at midnight
     public void getFile() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
-        RootFolderResponse foldersResponse = null;
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
         SimpleDateFormat dfs = new SimpleDateFormat("YYYY-MM-dd");
         Calendar today = Calendar.getInstance();
+        today.add(Calendar.DATE, -1);
         // Print the names and IDs for up to 10 files.
         String tokenPage = null;
+        System.out.println(dfs.format(today.getTime()));
         do {
             FileList result = service.files().list()
                     .setSpaces("drive")
                     .setPageSize(1000).setPageToken(tokenPage)
                     .setFields("nextPageToken,incompleteSearch,files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
-                    //.setQ("createdTime > '"+ dfs.format(today.getTime()) +"T00:00:00' and createdTime < '"+ dfs.format(today.getTime()) +"T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
-                    //.setQ("createdTime > '2019-05-05T00:00:00' and createdTime < '2019-05-05T23:59:59'")
-                    //.setQ("createdTime > '2019-05-13' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
-                    .setQ("mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder'")
-                    //.setQ("(mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder') and '1yIQG136ez05tI0VmmDPIudJ5lyZ2p3Jp' in parents")
-                    //.setQ("createdTime > '2012-06-04T12:00:00' and (mimeType contains 'file/' or mimeType contains 'video/')")
+                    .setQ("createdTime > '" + dfs.format(today.getTime()) + "T00:00:00' and createdTime < '" + dfs.format(today.getTime()) + "T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
                     .setOrderBy("folder,createdTime")
                     .execute();
 
@@ -121,7 +119,6 @@ public class GetFile {
                     toBeAdded.setParents(setParents(file.getParents(), toBeAdded));
                     cpFiles.add(toBeAdded);
                 }
-
                 cpFileRepository.saveAll(cpFiles);
             }
         } while (tokenPage != null);
@@ -129,7 +126,7 @@ public class GetFile {
     }
 
     private static List<ParentFile> setParents(List<String> parents, CpFile file) {
-        if(parents != null && !parents.isEmpty()) {
+        if (parents != null && !parents.isEmpty()) {
             List<ParentFile> parent = new ArrayList<>();
             for (String parentId : parents) {
                 parent.add(new ParentFile(file, parentId, file.getFileId()));

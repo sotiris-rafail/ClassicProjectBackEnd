@@ -1,6 +1,5 @@
 package com.classic.project.model.constantParty.file.schedule;
 
-import com.classic.project.model.constantParty.ConstantPartyRepository;
 import com.classic.project.model.constantParty.file.CpFile;
 import com.classic.project.model.constantParty.file.CpFileRepository;
 import com.classic.project.model.constantParty.file.FileType;
@@ -21,25 +20,21 @@ public class FileProcessing {
     private CpFileRepository cpFileRepository;
 
     @Autowired
-    private ConstantPartyRepository constantPartyRepository;
-
-    @Autowired
     private ParentFileRepository parentFileRepository;
 
     List<CpFile> cpFiles = new ArrayList<>();
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 */3 * * *")//runs every 3 hours
     private void assignFileToCp() {
         List<CpFile> toBeSaved = new ArrayList<>();
         cpFiles = cpFileRepository.getCpFilesWithoutCp();
-        List<CpFile> rootFolders = cpFileRepository.getRootFolders();
         for (CpFile file : cpFiles) {
             if (!file.getFileType().getType().equals(FileType.ROOT.getType())) {
                 List<ParentFile> parents = parentFileRepository.getParentsByFileId(file.getFileId());
-                for(ParentFile parentFile : parents) {
+                for (ParentFile parentFile : parents) {
                     Optional<CpFile> cpFile = cpFileRepository.findById(parentFile.getParentId());
-                    if(parentFile.getFolderId().getFileId().equals(file.getFileId()) && cpFile.isPresent()) {
-                        if(cpFile.get().getCpImg() != null ) {
+                    if (parentFile.getFolderId().getFileId().equals(file.getFileId()) && cpFile.isPresent()) {
+                        if (cpFile.get().getCpImg() != null) {
                             file.setCpImg(cpFile.get().getCpImg());
                             toBeSaved.add(file);
                         }
@@ -48,5 +43,10 @@ public class FileProcessing {
             }
         }
         cpFileRepository.saveAll(toBeSaved);
+    }
+
+    @Scheduled(cron = "0 0 23 * * *")//runs every night at 23
+    private void deleteFilesWithoutCP(){
+        cpFileRepository.deleteCpFilesWithoutCp();
     }
 }

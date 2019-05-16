@@ -40,7 +40,7 @@ public class CleanUnSoldItems {
 	}
     }
 
-    @Scheduled(cron = "0 0 15 * * *") //the top of every hour of every day.
+    @Scheduled(cron = "0 0 15 * * *") //every day at 15:00
     public void cleanUpExpiredUnSoldItems(){
 	List<UnSoldItem> unSoldItems = unSoldItemRepository.getUnSoldItemsByStateOfItem();
 	List<SoldItem> soldItems = new ArrayList<>();

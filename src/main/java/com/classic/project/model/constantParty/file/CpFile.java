@@ -3,6 +3,8 @@ package com.classic.project.model.constantParty.file;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -40,6 +42,7 @@ public class CpFile {
     private ConstantParty cpImg;
 
     @OneToMany(mappedBy = "folderId", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ParentFile> parents = new ArrayList<>();
 
     public CpFile() {

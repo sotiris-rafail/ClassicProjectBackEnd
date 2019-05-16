@@ -1,7 +1,9 @@
 package com.classic.project.model.constantParty.file;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,9 @@ public interface CpFileRepository extends JpaRepository<CpFile, String> {
     @Query("select cpFile from CpFile cpFile where cpFile.fileType = 2")
     List<CpFile> getRootFolders();
 
+
+    @Modifying
+    @Transactional
+    @Query("delete from CpFile cpFile where cpFile.cpImg is null")
+    void deleteCpFilesWithoutCp();
 }

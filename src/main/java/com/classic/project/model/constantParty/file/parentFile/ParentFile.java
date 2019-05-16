@@ -1,7 +1,6 @@
 package com.classic.project.model.constantParty.file.parentFile;
 
 import com.classic.project.model.constantParty.file.CpFile;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 

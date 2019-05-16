@@ -17,8 +17,9 @@ public class ResponseConstantParty {
     private int corePoints;
     private int aqPoints;
     private List<ResponseUser> members;
+    private String googleDriveFolderId;
 
-    public ResponseConstantParty(String cpName, int numberOfActives, int numberOfBoxes, int orfenPoints, int corePoints, int aqPoints, List<ResponseUser> members, int cpId) {
+    public ResponseConstantParty(String cpName, int numberOfActives, int numberOfBoxes, int orfenPoints, int corePoints, int aqPoints, List<ResponseUser> members, int cpId, String googleDriveFolderId) {
         this.cpName = cpName;
         this.numberOfActives = numberOfActives;
         this.numberOfBoxes = numberOfBoxes;
@@ -27,6 +28,7 @@ public class ResponseConstantParty {
         this.aqPoints = aqPoints;
         this.members = members;
         this.cpId = cpId;
+        this.googleDriveFolderId = googleDriveFolderId;
     }
 
     public ResponseConstantParty(String cpName, int cpId) {
@@ -113,13 +115,21 @@ public class ResponseConstantParty {
         this.members = members;
     }
 
+    public String getGoogleDriveFolderId() {
+        return googleDriveFolderId;
+    }
+
+    public void setGoogleDriveFolderId(String googleDriveFolderId) {
+        this.googleDriveFolderId = googleDriveFolderId;
+    }
+
     public static ResponseConstantParty convertForLeader(Optional<ConstantParty> cpFromDB) {
         ConstantParty cp;
         if(!cpFromDB.isPresent()) {
             throw new CpNotFoundException();
         }
         cp = cpFromDB.get();
-        return new ResponseConstantParty(cp.getCpName(), cp.getNumberOfActivePlayers(), cp.getNumberOfBoxes(), cp.getOrfenPoints(), cp.getCorePoints(), cp.getAqPoints(), ResponseUser.convertForCp(cp.getMembers()), cp.getCpId());
+        return new ResponseConstantParty(cp.getCpName(), cp.getNumberOfActivePlayers(), cp.getNumberOfBoxes(), cp.getOrfenPoints(), cp.getCorePoints(), cp.getAqPoints(), ResponseUser.convertForCp(cp.getMembers()), cp.getCpId(), cp.getRootFolderId());
     }
 
     public static ResponseConstantParty convertForUser(ConstantParty cp) {
