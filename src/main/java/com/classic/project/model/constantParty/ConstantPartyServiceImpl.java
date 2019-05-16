@@ -161,11 +161,11 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public ResponseEntity<RootFolderResponse> getCpPhotos(int cpId, int userId) {
-        //userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
-        //if(isMemberOfTheCP(cpId, userId)) {
+        userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
+        if(isMemberOfTheCP(cpId, userId)) {
         return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
-        //}
-        //return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {
