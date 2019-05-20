@@ -98,7 +98,7 @@ public class GetFile {
                     .setSpaces("drive")
                     .setPageSize(1000).setPageToken(tokenPage)
                     .setFields("nextPageToken,incompleteSearch,files(id,name,parents,webViewLink,webContentLink,mimeType,createdTime)")
-                    .setQ("createdTime > '" + dfs.format(today.getTime()) + "T00:00:00' and createdTime < '" + dfs.format(today.getTime()) + "T23:59:59' and (mimeType contains 'file/' or mimeType contains 'application/vnd.google-apps.folder')")
+                    .setQ("createdTime > '" + dfs.format(today.getTime()) + "T00:00:00' and createdTime < '" + dfs.format(today.getTime()) + "T23:59:59' and (mimeType contains 'image/' or mimeType contains 'application/vnd.google-apps.folder')")
                     .setOrderBy("folder,createdTime")
                     .execute();
 
