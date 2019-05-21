@@ -7,28 +7,42 @@ import com.classic.project.model.constantParty.exception.FileExistsException;
 import com.classic.project.model.constantParty.file.*;
 import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import com.classic.project.model.constantParty.file.parentFile.ParentFileRepository;
+import com.classic.project.model.constantParty.file.schedule.GetFile;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
+import com.classic.project.model.constantParty.response.file.AddNewFile;
 import com.classic.project.model.constantParty.response.file.FileResponse;
 import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import com.classic.project.model.constantParty.response.file.SubFolderResponse;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.UserRepository;
 import com.classic.project.security.UserAuthConfirm;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.File;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.util.*;
 
 @Component
 public class ConstantPartyServiceImpl implements ConstantPartyService {
+
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final String APPLICATION_NAME = "Classic Project";
 
     @Autowired
     private ConstantPartyRepository constantPartyRepository;
@@ -52,6 +66,9 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Autowired
     private ParentFileRepository parentFileRepository;
+
+    @Value("${google.drive.credentials}")
+    private String googleDriveCredentials;
 
     @Override
     public ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId) {
@@ -166,6 +183,37 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @Override
+    public void addNewFolder(int cpId, AddNewFile cpFile) throws GeneralSecurityException, IOException {
+        CpFile newFile = AddNewFile.convertNewFileToCPFile(cpFile);
+        newFile.getParents().get(0).setFolderId(newFile);
+        newFile.setFileId(insertFolderInDrive(newFile));
+        newFile.getParents().get(0).setFileId(newFile.getFileId());
+        newFile.setCpImg(constantPartyRepository.findById(cpId).get());
+        cpFileRepository.save(newFile);
+    }
+
+    private String insertFolderInDrive(CpFile newFile) throws GeneralSecurityException, IOException {
+        GetFile getFile = new GetFile();
+        getFile.setGoogleDriveCredentials(googleDriveCredentials);
+        List<String> parents = new ArrayList<String>();
+        newFile.getParents().forEach(parentFile -> parents.add(parentFile.getParentId()));
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getFile.getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+        File fileMetadata = new File();
+        fileMetadata.setName(newFile.getFilename());
+        fileMetadata.setParents(parents);
+        fileMetadata.setMimeType(newFile.getFileType().getType());
+
+        File file = service.files().create(fileMetadata)
+                .setFields("id")
+                .execute();
+        System.out.println("Folder ID: " + file.getId());
+        return file.getId();
     }
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {

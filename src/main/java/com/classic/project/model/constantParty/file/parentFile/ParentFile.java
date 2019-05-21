@@ -31,6 +31,10 @@ public class ParentFile {
         this.fileId = fileId;
     }
 
+    public ParentFile(String parentId) {
+        this.parentId = parentId;
+    }
+
     public ParentFile() {
     }
 

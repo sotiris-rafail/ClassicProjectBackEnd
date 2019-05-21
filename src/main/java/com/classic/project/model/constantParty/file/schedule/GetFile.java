@@ -42,6 +42,10 @@ public class GetFile {
     @Autowired
     private ConstantPartyRepository constantPartyRepository;
 
+    public void setGoogleDriveCredentials(String googleDriveCredentials) {
+        this.googleDriveCredentials = googleDriveCredentials;
+    }
+
     @Value("${google.drive.credentials}")
     private String googleDriveCredentials;
 
@@ -62,7 +66,7 @@ public class GetFile {
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
-    private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+    public Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
         InputStream in = GetFile.class.getResourceAsStream(googleDriveCredentials);
         if (in == null) {

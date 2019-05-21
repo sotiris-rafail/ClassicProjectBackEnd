@@ -69,6 +69,13 @@ public class CpFile {
         this.cpImg = cpImg;
     }
 
+    public CpFile(String name, FileType fileType, Date creationTime, List<ParentFile> parent) {
+        this.filename = name;
+        this.fileType = fileType;
+        this.creationTime = creationTime;
+        this.parents = parent;
+    }
+
     public String getFileId() {
         return fileId;
     }
