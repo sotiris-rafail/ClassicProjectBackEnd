@@ -96,18 +96,6 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     @Override
-    public void updateEpicPoints(String rbName, int pointsToAdd, int cpId) {
-        Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(cpId);
-        if (rbName.equals("Orfen")) {
-            constantPartyRepository.updateOrfenPoints(cpId, cpFromDb.get().getOrfenPoints() + pointsToAdd);
-        } else if (rbName.equals("Core")) {
-            constantPartyRepository.updateCorePoints(cpId, cpFromDb.get().getCorePoints() + pointsToAdd);
-        } else if (rbName.equals("Queen Ant")) {
-            constantPartyRepository.updateAQPoints(cpId, cpFromDb.get().getAqPoints() + pointsToAdd);
-        }
-    }
-
-    @Override
     public void addNewCP(ConstantParty newCp) {
         if (constantPartyRepository.findByCpNameContaining(newCp.getCpName()).isPresent()) {
             throw new ConstantPartyExistException(newCp.getCpName());

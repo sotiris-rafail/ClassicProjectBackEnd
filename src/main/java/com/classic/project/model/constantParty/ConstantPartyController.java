@@ -40,12 +40,6 @@ public class ConstantPartyController {
         constantPartyService.deleteMember(characterId);
     }
 
-    @RequestMapping(value = "/updateEpicPoints", method = RequestMethod.PUT, consumes = "application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateEpicPoints(@RequestParam(name = "rbName")String rbName, @RequestParam(name = "pointsToAdd")int pointsToAdd, @RequestParam(name = "cpId")int cpId ){
-	constantPartyService.updateEpicPoints(rbName, pointsToAdd, cpId);
-    }
-
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public void addNewCP(@RequestBody ConstantParty newCp){
