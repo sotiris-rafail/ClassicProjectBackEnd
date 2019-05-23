@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ConstantPartyRepository extends JpaRepository<ConstantParty, Integer> {
@@ -36,4 +37,7 @@ public interface ConstantPartyRepository extends JpaRepository<ConstantParty, In
 
     @Query("select cp from ConstantParty cp where cp.rootFolderId = ?1")
     Optional<ConstantParty> findByRootFolderId(String id);
+
+    @Query("select cp from ConstantParty  cp where cp.spreadSheetId is not null")
+    List<ConstantParty> findAllWithSpreadSheet();
 }

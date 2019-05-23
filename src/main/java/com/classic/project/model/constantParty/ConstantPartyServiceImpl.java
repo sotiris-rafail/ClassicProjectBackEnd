@@ -196,12 +196,10 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     private String insertFolderInDrive(CpFile newFile) throws GeneralSecurityException, IOException {
-        GetFile getFile = new GetFile();
-        getFile.setGoogleDriveCredentials(googleDriveCredentials);
         List<String> parents = new ArrayList<String>();
         newFile.getParents().forEach(parentFile -> parents.add(parentFile.getParentId()));
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getFile.getCredentials(HTTP_TRANSPORT))
+        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleCredential.getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
         File fileMetadata = new File();

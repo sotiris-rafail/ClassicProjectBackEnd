@@ -30,6 +30,8 @@ public class ConstantParty {
     private String cpName;
     @Column
     private String rootFolderId;
+    @Column
+    private String spreadSheetId;
     @OneToMany(mappedBy = "cp", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
     @OneToMany(mappedBy = "cpImg", cascade = CascadeType.ALL)
@@ -115,5 +117,13 @@ public class ConstantParty {
 
     public void setRootFolderId(String rootFolderId) {
         this.rootFolderId = rootFolderId;
+    }
+
+    public String getSpreadSheetId() {
+        return spreadSheetId;
+    }
+
+    public void setSpreadSheetId(String spreadSheetId) {
+        this.spreadSheetId = spreadSheetId;
     }
 }
