@@ -17,9 +17,11 @@ import com.classic.project.model.user.User;
 import com.classic.project.model.user.UserRepository;
 import com.classic.project.security.UserAuthConfirm;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +137,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public boolean uploadEpicPhoto(MultipartFile photo, int cpId, String cpName) {
-        this.rootLocation = Paths.get(Paths.get(environment.getProperty("photo.upload.path") + cpName).toFile().getAbsolutePath());
+        this.rootLocation = Paths.get(Paths.get(environment.getProperty("photo.upload.path") + constantPartyRepository.findById(cpId).get().getCpName()).toFile().getAbsolutePath());
         try {
             if (photo.isEmpty()) {
                 //throw new StorageException("Failed to store empty file " + photo.getOriginalFilename());
@@ -152,6 +154,19 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
             }
             if (this.rootLocation.toFile().isDirectory()) {
                 Files.copy(photo.getInputStream(), this.rootLocation.resolve(photo.getOriginalFilename()));
+                CpFile newFile = new CpFile();
+                newFile.setFileType(FileType.IMAGE);
+                newFile.setCreationTime(new Date());
+                newFile.setFileId(uploadPhotoToDrive(photo, cpName));
+                newFile.setFilename(photo.getOriginalFilename());
+                newFile.setCpImg(constantPartyRepository.findById(cpId).get());
+                newFile.setWebViewLink("https://drive.google.com/file/d/"+newFile.getFileId());
+                newFile.setWebContentLink("https://drive.google.com/uc?id=" + newFile.getFileId() + "&export=download");
+                List<ParentFile> parentFiles = new ArrayList<>();
+                parentFiles.add(new ParentFile(newFile, cpName));
+                newFile.getParents().get(0).setFileId(newFile.getFileId());
+                newFile.setParents(parentFiles);
+                cpFileRepository.save(newFile);
             } else {
                 return false;
             }
@@ -164,11 +179,40 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         return true;
     }
 
+    private File setUpMetaData(MultipartFile photo, String parentId) {
+        File fileMetaData = new File();
+        fileMetaData.setName(photo.getOriginalFilename());
+        List<String> parents = new ArrayList<>();
+        parents.add(parentId);
+        fileMetaData.setParents(parents);
+        fileMetaData.setCreatedTime(new DateTime(new Date()));
+        return fileMetaData;
+    }
+
+    private String uploadPhotoToDrive(MultipartFile photo, String parentId) {
+        java.io.File filePath = new java.io.File(this.rootLocation.toFile().getPath() + "/" + photo.getOriginalFilename());
+        FileContent mediaContent = new FileContent(photo.getContentType(), filePath);
+        final NetHttpTransport HTTP_TRANSPORT;
+        try {
+            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleCredential.getCredentials(HTTP_TRANSPORT))
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
+            File file = service.files().create(setUpMetaData(photo, parentId), mediaContent)
+                    .setFields("id")
+                    .execute();
+            return file.getId();
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     @Override
     public ResponseEntity<RootFolderResponse> getCpPhotos(int cpId, int userId) {
         userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
-        if(isMemberOfTheCP(cpId, userId)) {
-        return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
+        if (isMemberOfTheCP(cpId, userId)) {
+            return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -198,7 +242,6 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         File file = service.files().create(fileMetadata)
                 .setFields("id")
                 .execute();
-        System.out.println("Folder ID: " + file.getId());
         return file.getId();
     }
 
