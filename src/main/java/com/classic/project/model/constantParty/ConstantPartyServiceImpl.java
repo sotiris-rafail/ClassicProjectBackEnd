@@ -7,7 +7,6 @@ import com.classic.project.model.constantParty.exception.FileExistsException;
 import com.classic.project.model.constantParty.file.*;
 import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import com.classic.project.model.constantParty.file.parentFile.ParentFileRepository;
-import com.classic.project.model.constantParty.file.schedule.GetFile;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.constantParty.response.file.AddNewFile;
 import com.classic.project.model.constantParty.response.file.FileResponse;
@@ -71,6 +70,9 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Value("${google.drive.credentials}")
     private String googleDriveCredentials;
+
+    @Value("${photo.upload.path}")
+    private String uploadPhotoPath;
 
     @Override
     public ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId) {
@@ -137,7 +139,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public boolean uploadEpicPhoto(MultipartFile photo, int cpId, String cpName) {
-        this.rootLocation = Paths.get(Paths.get(environment.getProperty("photo.upload.path") + constantPartyRepository.findById(cpId).get().getCpName()).toFile().getAbsolutePath());
+        this.rootLocation = Paths.get(Paths.get(uploadPhotoPath + constantPartyRepository.findById(cpId).get().getCpName()).toFile().getAbsolutePath());
         try {
             if (photo.isEmpty()) {
                 //throw new StorageException("Failed to store empty file " + photo.getOriginalFilename());
@@ -164,9 +166,10 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
                 newFile.setWebContentLink("https://drive.google.com/uc?id=" + newFile.getFileId() + "&export=download");
                 List<ParentFile> parentFiles = new ArrayList<>();
                 parentFiles.add(new ParentFile(newFile, cpName));
+		newFile.setParents(parentFiles);
                 newFile.getParents().get(0).setFileId(newFile.getFileId());
-                newFile.setParents(parentFiles);
                 cpFileRepository.save(newFile);
+                Files.delete(this.rootLocation.resolve(photo.getOriginalFilename()));
             } else {
                 return false;
             }
@@ -297,8 +300,8 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         //adds bosses folders for ech daily folder
         for (CpFile file : files) {
             for (SubFolderResponse subFolderResponse : foldersResponse.getFolderResponseMap()) {
-                for (SubFolderResponse depperSubFolder : subFolderResponse.getFolderResponseMap()) {
-                    toBeRemoved.add(insertToFolder(depperSubFolder, file));
+                for (SubFolderResponse deeperSubFolder : subFolderResponse.getFolderResponseMap()) {
+                    toBeRemoved.add(insertToFolder(deeperSubFolder, file));
                 }
             }
         }
