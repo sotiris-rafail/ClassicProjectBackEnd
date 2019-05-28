@@ -30,4 +30,6 @@ public interface ConstantPartyService {
     ResponseEntity<RootFolderResponse> getCpPhotos(int cpId, int userId);
 
     void addNewFolder(int cpId, AddNewFile cpFile) throws GeneralSecurityException, IOException;
+
+    void deleteFile(String fileId) throws GeneralSecurityException, IOException;
 }

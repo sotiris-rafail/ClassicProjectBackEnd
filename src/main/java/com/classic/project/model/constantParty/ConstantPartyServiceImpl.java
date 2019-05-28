@@ -31,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -156,19 +157,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
             }
             if (this.rootLocation.toFile().isDirectory()) {
                 Files.copy(photo.getInputStream(), this.rootLocation.resolve(photo.getOriginalFilename()));
-                CpFile newFile = new CpFile();
-                newFile.setFileType(FileType.IMAGE);
-                newFile.setCreationTime(new Date());
-                newFile.setFileId(uploadPhotoToDrive(photo, cpName));
-                newFile.setFilename(photo.getOriginalFilename());
-                newFile.setCpImg(constantPartyRepository.findById(cpId).get());
-                newFile.setWebViewLink("https://drive.google.com/file/d/"+newFile.getFileId());
-                newFile.setWebContentLink("https://drive.google.com/uc?id=" + newFile.getFileId() + "&export=download");
-                List<ParentFile> parentFiles = new ArrayList<>();
-                parentFiles.add(new ParentFile(newFile, cpName));
-		newFile.setParents(parentFiles);
-                newFile.getParents().get(0).setFileId(newFile.getFileId());
-                cpFileRepository.save(newFile);
+                saveNewFileToDB(photo, cpName, cpId);
                 Files.delete(this.rootLocation.resolve(photo.getOriginalFilename()));
             } else {
                 return false;
@@ -180,6 +169,22 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
             throw new FileExistsException(e.getLocalizedMessage());
         }
         return true;
+    }
+
+    private void saveNewFileToDB(MultipartFile photo, String cpName, int cpId) {
+        CpFile newFile = new CpFile();
+        newFile.setFileType(FileType.IMAGE);
+        newFile.setCreationTime(new Date());
+        newFile.setFileId(uploadPhotoToDrive(photo, cpName));
+        newFile.setFilename(photo.getOriginalFilename());
+        newFile.setCpImg(constantPartyRepository.findById(cpId).get());
+        newFile.setWebViewLink("https://drive.google.com/file/d/" + newFile.getFileId());
+        newFile.setWebContentLink("https://drive.google.com/uc?id=" + newFile.getFileId() + "&export=download");
+        List<ParentFile> parentFiles = new ArrayList<>();
+        parentFiles.add(new ParentFile(newFile, cpName));
+        newFile.setParents(parentFiles);
+        newFile.getParents().get(0).setFileId(newFile.getFileId());
+        cpFileRepository.save(newFile);
     }
 
     private File setUpMetaData(MultipartFile photo, String parentId) {
@@ -230,8 +235,21 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         cpFileRepository.save(newFile);
     }
 
+    @Override
+    public void deleteFile(String fileId) throws GeneralSecurityException, IOException {
+        if (!cpFileRepository.existsById(fileId)) {
+            throw new FileNotFoundException("File with ID: " + fileId + " does not exist");
+        }
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleCredential.getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+        service.files().delete(fileId).execute();
+        cpFileRepository.deleteById(fileId);
+    }
+
     private String insertFolderInDrive(CpFile newFile) throws GeneralSecurityException, IOException {
-        List<String> parents = new ArrayList<String>();
+        List<String> parents = new ArrayList<>();
         newFile.getParents().forEach(parentFile -> parents.add(parentFile.getParentId()));
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleCredential.getCredentials(HTTP_TRANSPORT))

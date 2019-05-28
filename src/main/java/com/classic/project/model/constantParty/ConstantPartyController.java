@@ -81,4 +81,10 @@ public class ConstantPartyController {
     public void addNewFolder(@RequestBody AddNewFile cpFile, @RequestParam(name = "cpId") int cpId) throws GeneralSecurityException, IOException {
         constantPartyService.addNewFolder(cpId, cpFile);
     }
+
+    @RequestMapping(value = "/addFolder", method = RequestMethod.DELETE, consumes = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void deleteFile(@RequestParam(name = "fileId") String fileId) throws GeneralSecurityException, IOException {
+        constantPartyService.deleteFile(fileId);
+    }
 }
