@@ -3,20 +3,25 @@ package com.classic.project.model.user;
 import com.classic.project.model.character.Character;
 import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
-import com.classic.project.model.character.exception.CharacterExistException;
 import com.classic.project.model.character.exception.CharacterNotFoundException;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
+import com.classic.project.model.constantParty.file.GoogleCredential;
 import com.classic.project.model.user.exception.UserExistException;
 import com.classic.project.model.user.exception.UserNotFoundException;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
-import javassist.NotFoundException;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.ValueRange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +55,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private CharacterRepository characterRepository;
+
+    private static final String APPLICATION_NAME = "Classic Project";
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+
+    @Value("${clan.total.spread.id}")
+    private String spreadSheetId;
 
     @Override
     @CacheEvict(allEntries = true)
@@ -140,5 +153,18 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(userId);
         }
         userRepository.deleteUserByUserId(userId);
+    }
+
+    @Override
+    public ResponseEntity<List<List<Object>>> getEpicPointsPrice() throws GeneralSecurityException, IOException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleCredential.getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+        final String range = "System Inflation Adj!A28:B29";
+        ValueRange response = service.spreadsheets().values()
+                .get(spreadSheetId, range)
+                .execute();
+        return new ResponseEntity<>(response.getValues(), HttpStatus.OK);
     }
 }
