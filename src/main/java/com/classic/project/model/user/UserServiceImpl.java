@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable
+    @Cacheable(value = "membersDashBoard")
     public ResponseEntity<List<ResponseUser>> getUsersForDashboard() {
         List<User> usersFromDb = userRepository.findAll();
         List<ResponseUser> response = new ArrayList<>();
