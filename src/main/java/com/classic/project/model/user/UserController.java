@@ -81,4 +81,16 @@ public class UserController {
     public ResponseEntity<List<List<Object>>> getEpicPointsPrice() throws GeneralSecurityException, IOException {
         return userService.getEpicPointsPrice();
     }
+
+    @RequestMapping(value = "/verification", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<Boolean> verifyUser(@RequestParam(name = "email") String email, @RequestParam(name = "mainChar")String mainChar) {
+        return userService.verifyUser(email, mainChar);
+    }
+
+    @RequestMapping(value = "/update/password", method = RequestMethod.POST, produces = "application/json")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<Boolean> updatePassword(@RequestBody String[] params) {
+        return userService.updatePassword(params);
+    }
 }

@@ -38,7 +38,7 @@ import java.util.Optional;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Component
-@CacheConfig(cacheNames={"membersDashBoard", "clanMembers"})
+@CacheConfig(cacheNames = {"membersDashBoard", "clanMembers"})
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(allEntries = true)
     public ResponseEntity<String> registerUser(User user) {
         User userFromDb = userRepository.findUserByEmail(user.getEmail());
-        if(userFromDb == null) {
+        if (userFromDb == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userFromDb = userRepository.save(user);
         } else {
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<ResponseUser> getUserById(int userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
         userAuthConfirm.isTheAuthUser(userFromDb.get());
-        ResponseUser responseUser =  ResponseUser.convertForUser(userFromDb);
+        ResponseUser responseUser = ResponseUser.convertForUser(userFromDb);
         return new ResponseEntity<>(responseUser, HttpStatus.OK);
     }
 
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(allEntries = true)
     public void addUserToCp(int characterId, int cpId) {
         Optional<Character> charFromDb = characterRepository.findById(characterId);
-        if(!charFromDb.isPresent()){
+        if (!charFromDb.isPresent()) {
             throw new CharacterNotFoundException(characterId);
         }
         int userId = charFromDb.get().getUser().getUserId();
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(allEntries = true)
     public void deleteUser(int userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
-        if(!userFromDb.isPresent()){
+        if (!userFromDb.isPresent()) {
             throw new UserNotFoundException(userId);
         }
         userRepository.deleteUserByUserId(userId);
@@ -167,4 +167,35 @@ public class UserServiceImpl implements UserService {
                 .execute();
         return new ResponseEntity<>(response.getValues(), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Boolean> verifyUser(String email, String mainChar) {
+        User userFromDb = userRepository.findUserByEmail(email);
+        if (userFromDb == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (userFromDb.getCharacters().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        for (Character chars : userFromDb.getCharacters()) {
+            if (chars.getInGameName().equals(mainChar)) {
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> updatePassword(String[] params) {
+        User userFromDb = userRepository.findUserByEmail(params[0]);
+        if (userFromDb == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userFromDb.setPassword(passwordEncoder.encode(params[1]));
+        userRepository.save(userFromDb);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
 }
