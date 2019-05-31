@@ -38,7 +38,7 @@ import java.util.Optional;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Component
-@CacheConfig(cacheNames={"membersDashBoard"})
+@CacheConfig(cacheNames={"membersDashBoard", "clanMembers"})
 public class UserServiceImpl implements UserService {
 
     @Autowired
