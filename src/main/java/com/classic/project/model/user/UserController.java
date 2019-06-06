@@ -93,4 +93,10 @@ public class UserController {
     public ResponseEntity<Boolean> updatePassword(@RequestBody String[] params) {
         return userService.updatePassword(params);
     }
+
+    @RequestMapping(value = "/isCpMember", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<Boolean> isCpMember(@RequestParam(name = "userId")int userId) {
+        return userService.isCpMember(userId);
+    }
 }

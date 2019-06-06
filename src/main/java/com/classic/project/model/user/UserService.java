@@ -32,4 +32,6 @@ public interface UserService {
     ResponseEntity<Boolean> verifyUser(String email, String mainChar);
 
     ResponseEntity<Boolean> updatePassword(String[] params);
+
+    ResponseEntity<Boolean> isCpMember(int userId);
 }

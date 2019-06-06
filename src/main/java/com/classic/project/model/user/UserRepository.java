@@ -24,6 +24,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select user from User user where user.cp.cpId =?1 and user.userId = ?2")
     Optional<User> isUserMemberOfCP(int cpId, int userId);
 
+    @Query("select user from User user where user.cp.cpId is not null and user.userId = ?1")
+    Optional<User> isCpMember(int cpId);
+
     @Query("select user.typeOfUser from User user where user.userId = ?1")
     TypeOfUser getTypeOfUser(int userId);
 

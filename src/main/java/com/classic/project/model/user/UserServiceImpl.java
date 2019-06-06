@@ -198,4 +198,9 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<Boolean> isCpMember(int userId) {
+        return new ResponseEntity<>(userRepository.isCpMember(userId).isPresent(), HttpStatus.OK);
+    }
+
 }
