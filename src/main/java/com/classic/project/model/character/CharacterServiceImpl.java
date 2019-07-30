@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-@CacheConfig(cacheNames = "clanMembers")
+@CacheConfig(cacheNames = {"membersDashBoard", "clanMembers"})
 public class CharacterServiceImpl implements CharacterService {
 
 	@Autowired
