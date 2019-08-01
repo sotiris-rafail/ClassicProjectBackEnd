@@ -4,7 +4,10 @@ import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.constantParty.exception.ConstantPartyExistException;
 import com.classic.project.model.constantParty.exception.FileExistsException;
-import com.classic.project.model.constantParty.file.*;
+import com.classic.project.model.constantParty.file.CpFile;
+import com.classic.project.model.constantParty.file.CpFileRepository;
+import com.classic.project.model.constantParty.file.FileType;
+import com.classic.project.model.constantParty.file.GoogleCredential;
 import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import com.classic.project.model.constantParty.file.parentFile.ParentFileRepository;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
@@ -25,6 +28,8 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +43,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Component
+@CacheConfig(cacheNames = {"membersDashBoard", "clanMembers"})
 public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -92,6 +101,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void deleteMember(int characterId) {
         User member = characterRepository.findById(characterId).get().getUser();
         userRepository.deleteMemberByCharacterIdId(member.getUserId());
