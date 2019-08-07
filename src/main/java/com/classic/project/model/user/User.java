@@ -20,6 +20,9 @@ public class User {
     @Email
     private String email;
     @Column
+    @Email
+    private String emailLowerCase;
+    @Column
     private String password;
     @Column
     private TypeOfUser typeOfUser;
@@ -43,6 +46,14 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getEmailLowerCase() {
+        return emailLowerCase;
+    }
+
+    public void setEmailLowerCase(String emailLowerCase) {
+        this.emailLowerCase = emailLowerCase;
     }
 
     public List<Character> getCharacters() {

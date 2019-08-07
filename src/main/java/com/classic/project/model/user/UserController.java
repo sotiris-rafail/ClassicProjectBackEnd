@@ -42,8 +42,8 @@ public class UserController {
 
     @RequestMapping(value = "/addPeopleToCp", method = RequestMethod.PUT, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void addUsersToCp(@RequestBody AddUserToCP userIds) {
-        userService.addUsersToCp(userIds);
+    public ResponseEntity<List<ResponseUser>> addUsersToCp(@RequestBody AddUserToCP userIds) {
+        return userService.addUsersToCp(userIds);
     }
 
     @RequestMapping(value = "/addUserToCp", method = RequestMethod.PUT, consumes = "application/json")

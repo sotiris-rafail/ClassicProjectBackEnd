@@ -65,8 +65,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(allEntries = true)
     public ResponseEntity<String> registerUser(User user) {
-        User userFromDb = userRepository.findUserByEmail(user.getEmail());
+        User userFromDb = userRepository.findUserByEmail(user.getEmail().toLowerCase());
         if (userFromDb == null) {
+            user.setEmailLowerCase(user.getEmail().toLowerCase());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userFromDb = userRepository.save(user);
         } else {
@@ -93,7 +94,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CacheEvict(allEntries = true)
-    public void addUsersToCp(AddUserToCP userIds) {
+    public ResponseEntity<List<ResponseUser>> addUsersToCp(AddUserToCP userIds) {
+        List<User> responseUsers = new ArrayList<>();
         Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(userIds.getCpId());
         int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + userIds.getUsersToUpdate().length;
         int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
@@ -103,7 +105,11 @@ public class UserServiceImpl implements UserService {
                     TypeOfCharacter.BOX.name())).count();
             userRepository.addUsersToCP(userIds.getCpId(), userIds.getUsersToUpdate()[i]);
         }
+        for (int i = 0; i < userIds.getUsersToUpdate().length; i++) {
+            responseUsers.add(userRepository.findById(userIds.getUsersToUpdate()[i]).get());
+        }
         constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
+        return new ResponseEntity<>(ResponseUser.convertForCp(responseUsers), HttpStatus.OK);
     }
 
     @Override

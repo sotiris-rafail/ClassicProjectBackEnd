@@ -16,8 +16,8 @@ public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
     @Query("update RaidBoss raidBoss set raidBoss.timeOfDeath = ?2, raidBoss.isUnknown = false, raidBoss.isNotified = false where raidBoss.raidBossId =?1")
     void updateDeathTimer(int raidId, Date timer);
 
-    @Query("select raidboss from RaidBoss raidboss where raidboss.name = ?1")
-    Optional<RaidBoss> findBossByName(String name);
+    @Query("select raidboss from RaidBoss raidboss where raidboss.nameLowerCase = ?1")
+    Optional<RaidBoss> findBossByNameLowerCase(String name);
 
     @Modifying
     @Transactional

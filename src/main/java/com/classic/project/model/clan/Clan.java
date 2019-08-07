@@ -19,6 +19,8 @@ public class Clan {
     private int clanId;
     @Column
     private String name;
+    @Column
+    private String nameLowerCase;
     @OneToMany(mappedBy = "clan", cascade = CascadeType.ALL)
     private List<Character> clanMembers;
 
@@ -36,6 +38,14 @@ public class Clan {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameLowerCase() {
+        return nameLowerCase;
+    }
+
+    public void setNameLowerCase(String nameLowerCase) {
+        this.nameLowerCase = nameLowerCase;
     }
 
     public List<Character> getClanMembers() {

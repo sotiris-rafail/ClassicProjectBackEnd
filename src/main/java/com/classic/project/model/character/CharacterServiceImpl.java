@@ -2,6 +2,7 @@ package com.classic.project.model.character;
 
 import com.classic.project.model.character.exception.CharacterExistException;
 import com.classic.project.model.character.responce.RegisterCharacter;
+import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.character.responce.UpdateCharacter;
 import com.classic.project.model.clan.Clan;
 import com.classic.project.model.clan.ClanRepository;
@@ -11,7 +12,6 @@ import com.classic.project.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -56,8 +56,8 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	@CacheEvict(allEntries = true)
-	public void registerCharacter(RegisterCharacter registerCharacter) {
-		if(characterRepository.findCharacterByInGameName(registerCharacter.getInGameName()).isPresent()){
+	public ResponseEntity<ResponseCharacter> registerCharacter(RegisterCharacter registerCharacter) {
+		if(characterRepository.findCharacterByInGameNameLowerCase(registerCharacter.getInGameName().toLowerCase()).isPresent()){
 			throw new CharacterExistException(registerCharacter.getInGameName());
 		}
 		Character character = RegisterCharacter.convertToDBObject(registerCharacter);
@@ -65,7 +65,9 @@ public class CharacterServiceImpl implements CharacterService {
 		Optional<User> user = userRepository.findById(registerCharacter.getUserId());
 		character.setUser(user.get());
 		character.setClan(clan.get());
+		character.setInGameNameLowerCase(registerCharacter.getInGameName().toLowerCase());
 		characterRepository.save(character);
+		return new ResponseEntity<>(ResponseCharacter.convertForUser(Collections.singletonList(character)).get(0), HttpStatus.CREATED);
 	}
 
 	@Override

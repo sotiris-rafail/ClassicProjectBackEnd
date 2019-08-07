@@ -14,6 +14,8 @@ public class RaidBoss {
     @Column
     private String name;
     @Column
+    private String nameLowerCase;
+    @Column
     private Date timeOfDeath;
     @Column
     private int level;
@@ -46,6 +48,14 @@ public class RaidBoss {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameLowerCase() {
+        return nameLowerCase;
+    }
+
+    public void setNameLowerCase(String nameLowerCase) {
+        this.nameLowerCase = nameLowerCase;
     }
 
     public Date getTimeOfDeath() {

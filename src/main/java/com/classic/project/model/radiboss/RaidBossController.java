@@ -44,8 +44,8 @@ public class RaidBossController {
 
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void addNewRaidBoss(@RequestBody RaidBoss raidBoss){
-	raidBossService.addNewRaid(raidBoss);
+    public ResponseEntity<ResponseRaidBoss> addNewRaidBoss(@RequestBody RaidBoss raidBoss){
+	    return raidBossService.addNewRaid(raidBoss);
     }
 
 }

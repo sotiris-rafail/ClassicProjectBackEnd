@@ -1,6 +1,7 @@
 package com.classic.project.model.character;
 
 import com.classic.project.model.character.responce.RegisterCharacter;
+import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.character.responce.UpdateCharacter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class CharacterController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerCharacter(@RequestBody RegisterCharacter character){
-        characterService.registerCharacter(character);
+    public ResponseEntity<ResponseCharacter> registerCharacter(@RequestBody RegisterCharacter character){
+        return characterService.registerCharacter(character);
     }
 
     @RequestMapping(value = "/getInfoForRegister/{userId}", method = RequestMethod.GET, produces = "application/json")

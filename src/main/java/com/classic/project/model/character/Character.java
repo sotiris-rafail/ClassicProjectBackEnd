@@ -17,6 +17,8 @@ public class Character {
     @Column
     private String inGameName;
     @Column
+    private String inGameNameLowerCase;
+    @Column
     private int level;
     @Column
     private ClassOfCharacter classOfCharacter;
@@ -53,6 +55,14 @@ public class Character {
 
     public void setInGameName(String inGameName) {
         this.inGameName = inGameName;
+    }
+
+    public String getInGameNameLowerCase() {
+        return inGameNameLowerCase;
+    }
+
+    public void setInGameNameLowerCase(String inGameNameLowerCase) {
+        this.inGameNameLowerCase = inGameNameLowerCase;
     }
 
     public int getLevel() {

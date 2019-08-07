@@ -11,7 +11,7 @@ public interface RaidBossService {
 
     ResponseEntity<List<ResponseRaidBoss>> getAllBosses();
 
-    void addNewRaid(RaidBoss raidBoss);
+    ResponseEntity<ResponseRaidBoss> addNewRaid(RaidBoss raidBoss);
 
     void setToUnknown(int raidId);
 }

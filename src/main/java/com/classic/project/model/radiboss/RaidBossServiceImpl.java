@@ -29,11 +29,11 @@ public class RaidBossServiceImpl implements RaidBossService {
         raidBossRepository.updateDeathTimer(raidId, timer);
     }
 
+    private Calendar calendar2 = Calendar.getInstance();
     @Override
     public ResponseEntity<List<ResponseRaidBoss>> getAllBosses() {
         List<ResponseRaidBoss> response = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
-        Calendar calendar2 = Calendar.getInstance();
         List<RaidBoss> all = raidBossRepository.findAll();
         for (RaidBoss rb : all) {
             calendar.setTime(rb.getTimeOfDeath());
@@ -52,16 +52,30 @@ public class RaidBossServiceImpl implements RaidBossService {
     }
 
     @Override
-    public void addNewRaid(RaidBoss raidBoss) {
-        Optional<RaidBoss> raidFromDB = raidBossRepository.findBossByName(raidBoss.getName());
+    public ResponseEntity<ResponseRaidBoss> addNewRaid(RaidBoss raidBoss) {
+        Optional<RaidBoss> raidFromDB = raidBossRepository.findBossByNameLowerCase(raidBoss.getName().toLowerCase());
         if(raidFromDB.isPresent()) {
             throw new RaidBossExistException(raidFromDB.get().getName());
         }
+        raidBoss.setNameLowerCase(raidBoss.getName().toLowerCase());
         raidBoss.setEpicBossPoints(0);
         raidBoss.setTimeOfDeath(new Date());
         raidBoss.setUnknown(false);
         raidBoss.setNotified(false);
-	    raidBossRepository.save(raidBoss);
+	    RaidBoss rb = raidBossRepository.save(raidBoss);
+        if(rb.getWindowStarts().equals(rb.getWindowEnds())) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(rb.getTimeOfDeath());
+            Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
+            return new ResponseEntity<>(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowStarts, rb.isUnknown()), HttpStatus.CREATED);
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(rb.getTimeOfDeath());
+            calendar2.setTime(rb.getTimeOfDeath());
+            Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
+            Date windowEnds = getWindowEnds(calendar2, rb.getWindowEnds().split(":")).getTime();
+            return new ResponseEntity<>(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowEnds, rb.isUnknown()), HttpStatus.CREATED);
+        }
     }
 
     @Override

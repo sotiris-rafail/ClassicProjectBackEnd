@@ -34,9 +34,10 @@ public class ClanServiceImpl implements ClanService {
 
     @Override
     public void addNewClan(Clan registerClan) {
-        if(clanRepository.findByNameContaining(registerClan.getName()).isPresent()){
+        if(clanRepository.findByNameLowerCase(registerClan.getName().toLowerCase()).isPresent()){
             throw new ClanExistException(registerClan.getName());
         }
+        registerClan.setNameLowerCase(registerClan.getName().toLowerCase());
         registerClan.setClanMembers(new ArrayList<>());
 	    clanRepository.save(registerClan);
     }

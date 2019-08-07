@@ -29,6 +29,8 @@ public class ConstantParty {
     @Column
     private String cpName;
     @Column
+    private String cpNameLowerCase;
+    @Column
     private String rootFolderId;
     @Column
     private String spreadSheetId;
@@ -100,6 +102,14 @@ public class ConstantParty {
 
     public void setCpName(String cpName) {
         this.cpName = cpName;
+    }
+
+    public String getCpNameLowerCase() {
+        return cpNameLowerCase;
+    }
+
+    public void setCpNameLowerCase(String cpNameLowerCase) {
+        this.cpNameLowerCase = cpNameLowerCase;
     }
 
     @JsonIgnore

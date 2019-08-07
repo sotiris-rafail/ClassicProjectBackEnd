@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ClanRepository extends JpaRepository<Clan, Integer> {
 
-    Optional<Clan> findByNameContaining(String clanName);
+    Optional<Clan> findByNameLowerCase(String clanName);
 }

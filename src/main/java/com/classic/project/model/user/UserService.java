@@ -15,7 +15,7 @@ public interface UserService {
 
     ResponseEntity<List<ResponseUser>> getCharsWithoutCp();
 
-    void addUsersToCp(AddUserToCP userIds);
+    ResponseEntity<List<ResponseUser>> addUsersToCp(AddUserToCP userIds);
 
     ResponseEntity<TypeOfUser> getTypeOfUser(int userId);
 

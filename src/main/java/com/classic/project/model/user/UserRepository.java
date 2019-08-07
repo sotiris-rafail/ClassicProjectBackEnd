@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    @Query("select user from User user where user.email = ?1")
+    @Query("select user from User user where user.emailLowerCase = ?1")
     User findUserByEmail(String email);
 
     @Query("select user from User user where user.cp.cpId IS NULL")
