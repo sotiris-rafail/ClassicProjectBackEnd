@@ -4,6 +4,7 @@ import com.classic.project.model.radiboss.*;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
 import com.classic.project.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +21,9 @@ public class RaidBossScheduler {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Value("${send.email.raid.boss.epics.on.window}")
+	private boolean notifyEpicsOnWindow;
+
     @Scheduled(cron = "*/60 * * * * *") //the top of every hour of every day.
     public void NotifyOnWindow(){
 	List<RaidBoss> bossesOnWindow = new ArrayList<>();
@@ -35,7 +39,7 @@ public class RaidBossScheduler {
 		}
 	    }
 	}
-	if(!bossesOnWindow.isEmpty()) {
+	if(notifyEpicsOnWindow && !bossesOnWindow.isEmpty()) {
 	    sendMail(bossesOnWindow);
 	    for(RaidBoss raidBoss : bossesOnWindow){
 		raidBossRepository.updateDeathTimerNotification(raidBoss.getRaidBossId());

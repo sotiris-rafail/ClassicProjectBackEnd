@@ -8,6 +8,7 @@ import com.classic.project.model.item.unSold.exception.UnSoldItemsNotFoundExcept
 import com.classic.project.model.item.unSold.response.NewUnSoldItem;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,6 +33,9 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
+	@Value("${send.email.new.items}")
+	private boolean notifyForEachNewItem;
+
     @Override
     public void addNewItemForSale(NewUnSoldItem newUnSoldItem, int amountOfItem) {
         for (int i = 0; i < amountOfItem; i++) {
@@ -46,7 +50,9 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
             unSoldItemRepository.save(unSoldItem);
             unSoldItemRepository.flush();
         }
-        sendMail(newUnSoldItem);
+        if(notifyForEachNewItem) {
+			sendMail(newUnSoldItem);
+		}
     }
 
 	private void sendMail(NewUnSoldItem newUnSoldItem) {
@@ -108,10 +114,10 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(registerDate);
         calendar.add(Calendar.DATE, daysToStayUnSold);
-	calendar.set(Calendar.MILLISECOND, 5);
-	calendar.set(Calendar.SECOND, 59);
-	calendar.set(Calendar.MINUTE, 59);
-	calendar.set(Calendar.HOUR_OF_DAY, 14);
+		calendar.set(Calendar.MILLISECOND, 5);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.HOUR_OF_DAY, 14);
         return  calendar.getTime();
     }
 
