@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(allEntries = true)
     public ResponseEntity<String> registerUser(User user) {
-        User userFromDb = userRepository.findUserByEmail(user.getEmail().toLowerCase());
+        User userFromDb = userRepository.findUserByEmailLowerCase(user.getEmail().toLowerCase());
         if (userFromDb == null) {
             user.setEmailLowerCase(user.getEmail().toLowerCase());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
