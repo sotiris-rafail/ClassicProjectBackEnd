@@ -25,9 +25,9 @@ public class RaidBossController {
 
     @RequestMapping(path = "/updateDeathTimer", method = RequestMethod.PUT, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void updateDeathTimer(@RequestParam(value = "raidId")int raidId,
+    public ResponseEntity<ResponseRaidBoss> updateDeathTimer(@RequestParam(value = "raidId")int raidId,
                                  @RequestParam(value = "timer") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  Date timer){
-        raidBossService.updateDeathTimer(raidId, timer);
+        return raidBossService.updateDeathTimer(raidId, timer);
     }
 
     @RequestMapping(path = "/setToUnknown", method = RequestMethod.PUT, consumes = "application/json")

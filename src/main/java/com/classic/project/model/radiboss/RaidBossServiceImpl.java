@@ -4,9 +4,6 @@ import com.classic.project.model.radiboss.exception.RaidBossExistException;
 import com.classic.project.model.radiboss.exception.RaidBossNotFoundException;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -22,11 +19,12 @@ public class RaidBossServiceImpl implements RaidBossService {
 
 
     @Override
-    public void updateDeathTimer(int raidId, Date timer) {
+    public ResponseEntity<ResponseRaidBoss> updateDeathTimer(int raidId, Date timer) {
         if(timer.after(Calendar.getInstance().getTime())){
             throw new DateTimeException("Date is on future");
         }
         raidBossRepository.updateDeathTimer(raidId, timer);
+        return new ResponseEntity<>(getResponseRaidBoss(raidBossRepository.findById(raidId).get()), HttpStatus.OK);
     }
 
     private Calendar calendar2 = Calendar.getInstance();
@@ -63,18 +61,22 @@ public class RaidBossServiceImpl implements RaidBossService {
         raidBoss.setUnknown(false);
         raidBoss.setNotified(false);
 	    RaidBoss rb = raidBossRepository.save(raidBoss);
-        if(rb.getWindowStarts().equals(rb.getWindowEnds())) {
+	    return new ResponseEntity<>(getResponseRaidBoss(rb), HttpStatus.CREATED);
+    }
+
+    private ResponseRaidBoss getResponseRaidBoss(RaidBoss raidBoss) {
+        if(raidBoss.getWindowStarts().equals(raidBoss.getWindowEnds())) {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(rb.getTimeOfDeath());
-            Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
-            return new ResponseEntity<>(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowStarts, rb.isUnknown()), HttpStatus.CREATED);
+            calendar.setTime(raidBoss.getTimeOfDeath());
+            Date windowStarts = getWindowStarts(calendar, raidBoss.getWindowStarts().split(":")).getTime();
+            return ResponseRaidBoss.convertForRaidBossTable(raidBoss, windowStarts, windowStarts, raidBoss.isUnknown());
         } else {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(rb.getTimeOfDeath());
-            calendar2.setTime(rb.getTimeOfDeath());
-            Date windowStarts = getWindowStarts(calendar, rb.getWindowStarts().split(":")).getTime();
-            Date windowEnds = getWindowEnds(calendar2, rb.getWindowEnds().split(":")).getTime();
-            return new ResponseEntity<>(ResponseRaidBoss.convertForRaidBossTable(rb, windowStarts, windowEnds, rb.isUnknown()), HttpStatus.CREATED);
+            calendar.setTime(raidBoss.getTimeOfDeath());
+            calendar2.setTime(raidBoss.getTimeOfDeath());
+            Date windowStarts = getWindowStarts(calendar, raidBoss.getWindowStarts().split(":")).getTime();
+            Date windowEnds = getWindowEnds(calendar2, raidBoss.getWindowEnds().split(":")).getTime();
+            return ResponseRaidBoss.convertForRaidBossTable(raidBoss, windowStarts, windowEnds, raidBoss.isUnknown());
         }
     }
 

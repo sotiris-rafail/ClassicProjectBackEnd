@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface RaidBossService {
-    void updateDeathTimer(int raidId, Date timer);
+    ResponseEntity<ResponseRaidBoss> updateDeathTimer(int raidId, Date timer);
 
     ResponseEntity<List<ResponseRaidBoss>> getAllBosses();
 
