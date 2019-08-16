@@ -1,8 +1,11 @@
 package com.classic.project.model.constantParty.file.parentFile;
 
 import com.classic.project.model.constantParty.file.CpFile;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -19,6 +22,11 @@ public class ParentFile {
     @Id
     @Column
     private String parentId;
+
+    @Column
+    @CreationTimestamp
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date registrationDate;
 
     public ParentFile(CpFile folderId, String parentId) {
         this.folderId = folderId;
@@ -62,5 +70,9 @@ public class ParentFile {
 
     public void setFileId(String fileId) {
         this.fileId = fileId;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 }

@@ -1,5 +1,8 @@
 package com.classic.project.model.radiboss;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -33,6 +36,10 @@ public class RaidBoss {
     private boolean isUnknown;
     @Column
     private boolean isNotified;
+    @Column
+    @CreationTimestamp
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date registrationDate;
 
     public int getRaidBossId() {
         return raidBossId;
@@ -128,6 +135,10 @@ public class RaidBoss {
 
     public void setNotified(boolean notified) {
 	isNotified = notified;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 
     @Override

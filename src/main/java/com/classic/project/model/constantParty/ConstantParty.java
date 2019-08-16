@@ -3,9 +3,12 @@ package com.classic.project.model.constantParty;
 import com.classic.project.model.constantParty.file.CpFile;
 import com.classic.project.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -34,6 +37,10 @@ public class ConstantParty {
     private String rootFolderId;
     @Column
     private String spreadSheetId;
+    @Column
+    @CreationTimestamp
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date registrationDate;
     @OneToMany(mappedBy = "cp", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
     @OneToMany(mappedBy = "cpImg", cascade = CascadeType.ALL)
@@ -135,5 +142,9 @@ public class ConstantParty {
 
     public void setSpreadSheetId(String spreadSheetId) {
         this.spreadSheetId = spreadSheetId;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 }

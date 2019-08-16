@@ -3,6 +3,7 @@ package com.classic.project.model.constantParty.file;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,6 +37,11 @@ public class CpFile {
 
     @Column
     private String webContentLink;
+
+    @Column
+    @CreationTimestamp
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date registrationDate;
 
     @ManyToOne
     @JoinColumn(name = "cpId")
@@ -139,5 +145,9 @@ public class CpFile {
 
     public void setCpImg(ConstantParty cpImg) {
         this.cpImg = cpImg;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 }

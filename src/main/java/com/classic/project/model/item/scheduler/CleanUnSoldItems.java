@@ -6,6 +6,7 @@ import com.classic.project.model.item.sold.SoldItemRepository;
 import com.classic.project.model.item.unSold.UnSoldItem;
 import com.classic.project.model.item.unSold.UnSoldItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,6 +28,9 @@ public class CleanUnSoldItems {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Value("${send.email.sold.items}")
+	private boolean notifyOnSoldItem;
+
     @Scheduled(cron = "0 0 * * * *") //the top of every hour of every day.
     public void cleanUpTheSoldUnsoldItem() {
         List<UnSoldItem> unSoldItems = unSoldItemRepository.getSoldUnSoldItemsByStateOfItem();
@@ -35,7 +39,7 @@ public class CleanUnSoldItems {
 	    soldItems.add(registerUnSoldItemsAsSoldItems(unSoldItem));
 	    deleteUnSoldItems(unSoldItem.getItemId());
 	}
-	if(!soldItems.isEmpty()) {
+	if(notifyOnSoldItem && !soldItems.isEmpty()) {
 	    notifyForSoldItems(soldItems);
 	}
     }
@@ -51,7 +55,7 @@ public class CleanUnSoldItems {
 		deleteUnSoldItems(unSoldItem.getItemId());
 	    }
 	}
-	if(!soldItems.isEmpty()) {
+	if(notifyOnSoldItem && !soldItems.isEmpty()) {
 	    notifyForSoldItems(soldItems);
 	}
     }

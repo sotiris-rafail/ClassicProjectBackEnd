@@ -5,8 +5,11 @@ import com.classic.project.model.character.Character;
 import com.classic.project.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,6 +24,10 @@ public class Clan {
     private String name;
     @Column
     private String nameLowerCase;
+    @Column
+    @CreationTimestamp
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date registrationDate;
     @OneToMany(mappedBy = "clan", cascade = CascadeType.ALL)
     private List<Character> clanMembers;
 
@@ -54,5 +61,9 @@ public class Clan {
 
     public void setClanMembers(List<Character> clanMembers) {
         this.clanMembers = clanMembers;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 }

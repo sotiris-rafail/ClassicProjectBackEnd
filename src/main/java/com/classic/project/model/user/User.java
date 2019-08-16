@@ -2,10 +2,13 @@ package com.classic.project.model.user;
 
 import com.classic.project.model.character.Character;
 import com.classic.project.model.constantParty.ConstantParty;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -26,6 +29,10 @@ public class User {
     private String password;
     @Column
     private TypeOfUser typeOfUser;
+    @Column
+    @CreationTimestamp
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date registrationDate;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Character> characters = new ArrayList<>();
     @ManyToOne
@@ -86,5 +93,9 @@ public class User {
 
     public void setCp(ConstantParty cp) {
         this.cp = cp;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 }

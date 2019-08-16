@@ -4,8 +4,11 @@ package com.classic.project.model.character;
 import com.classic.project.model.clan.Clan;
 import com.classic.project.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -30,6 +33,10 @@ public class Character {
     private Clan clan;
     @Column
     private TypeOfCharacter typeOfCharacter;
+    @Column
+    @CreationTimestamp
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date registrationDate;
 
     public Character(String inGameName, int level, ClassOfCharacter classOfCharacter,
 	TypeOfCharacter typeOfCharacter) {
@@ -105,5 +112,9 @@ public class Character {
 
     public void setTypeOfCharacter(TypeOfCharacter typeOfCharacter) {
 	this.typeOfCharacter = typeOfCharacter;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 }
