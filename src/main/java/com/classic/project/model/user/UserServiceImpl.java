@@ -9,6 +9,8 @@ import com.classic.project.model.constantParty.ConstantPartyRepository;
 import com.classic.project.model.constantParty.file.GoogleCredential;
 import com.classic.project.model.user.exception.UserExistException;
 import com.classic.project.model.user.exception.UserNotFoundException;
+import com.classic.project.model.user.option.Option;
+import com.classic.project.model.user.option.OptionRepository;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.security.UserAuthConfirm;
@@ -56,6 +58,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CharacterRepository characterRepository;
 
+    @Autowired
+    private OptionRepository optionRepository;
+
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
@@ -70,12 +75,19 @@ public class UserServiceImpl implements UserService {
             user.setEmailLowerCase(user.getEmail().toLowerCase());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userFromDb = userRepository.save(user);
+	    saveOptionsOnRegister(userFromDb);
         } else {
             throw new UserExistException(user.getEmail());
         }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(User.class).slash("user").slash(userFromDb.getUserId()).toUri());
         return new ResponseEntity<>(httpHeaders.getLocation().getPath(), HttpStatus.CREATED);
+    }
+
+    private void saveOptionsOnRegister(User user) {
+	Option option = new Option();
+	option.setUserOption(user);
+	optionRepository.save(option);
     }
 
     @Override

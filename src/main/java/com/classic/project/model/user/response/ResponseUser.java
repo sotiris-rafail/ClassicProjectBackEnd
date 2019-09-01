@@ -4,6 +4,8 @@ import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.exception.UserNotFoundException;
+import com.classic.project.model.user.option.Option;
+import com.classic.project.model.user.option.response.ResponseOption;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +19,23 @@ public class ResponseUser {
     private String typeOfUser;
     private List<ResponseCharacter> chars;
     private ResponseConstantParty responseConstantParty;
+    private ResponseOption option;
 
-    public ResponseUser(int userId, String email, String typeOfUser, List<ResponseCharacter> chars, ResponseConstantParty responseConstantParty) {
+    public ResponseUser(int userId, String email, String typeOfUser, List<ResponseCharacter> chars, ResponseConstantParty responseConstantParty, ResponseOption responseOption) {
         this.userId = userId;
         this.email = email;
         this.typeOfUser = typeOfUser;
         this.chars = chars;
         this.responseConstantParty = responseConstantParty;
+        this.option = responseOption;
+    }
+
+    public ResponseUser(int userId, String email, String typeOfUser, List<ResponseCharacter> chars, ResponseConstantParty responseConstantParty) {
+	this.userId = userId;
+	this.email = email;
+	this.typeOfUser = typeOfUser;
+	this.chars = chars;
+	this.responseConstantParty = responseConstantParty;
     }
 
     public ResponseUser(int userId, String email, String name, List<ResponseCharacter> convertForCP) {
@@ -82,7 +94,11 @@ public class ResponseUser {
         if(!user.isPresent()) {
             throw new UserNotFoundException();
         }
-        return new ResponseUser(user.get().getUserId(), user.get().getEmail(), user.get().getTypeOfUser().name(), ResponseCharacter.convertForUser(user.get().getCharacters()), ResponseConstantParty.convertForUser(user.get().getCp()));
+        return new ResponseUser(user.get().getUserId(), user.get().getEmail(),
+	    user.get().getTypeOfUser().name(),
+	    ResponseCharacter.convertForUser(user.get().getCharacters()),
+	    ResponseConstantParty.convertForUser(user.get().getCp()),
+	    ResponseOption.convertForUser(user.get().getOptions()));
     }
 
     public static List<ResponseUser> convertForCp(List<User> users){

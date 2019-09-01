@@ -2,6 +2,7 @@ package com.classic.project.model.user;
 
 import com.classic.project.model.character.Character;
 import com.classic.project.model.constantParty.ConstantParty;
+import com.classic.project.model.user.option.Option;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -38,6 +39,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "cpId")
     private ConstantParty cp;
+    @OneToOne(mappedBy = "userOption", cascade = CascadeType.ALL)
+    private Option options;
 
    public int getUserId() {
         return userId;
@@ -97,5 +100,13 @@ public class User {
 
     public Date getRegistrationDate() {
         return registrationDate;
+    }
+
+    public Option getOptions() {
+	return options;
+    }
+
+    public void setOptions(Option options) {
+	this.options = options;
     }
 }
