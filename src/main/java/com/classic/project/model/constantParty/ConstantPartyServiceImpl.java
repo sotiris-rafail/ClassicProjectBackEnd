@@ -121,6 +121,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         newCp.setOrfenPoints(0);
         newCp.setNumberOfActivePlayers(0);
         newCp.setNumberOfBoxes(0);
+        newCp.setCpNameLowerCase(newCp.getCpName().toLowerCase());
         constantPartyRepository.save(newCp);
     }
 
