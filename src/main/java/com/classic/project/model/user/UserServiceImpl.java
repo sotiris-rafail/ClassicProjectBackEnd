@@ -54,6 +54,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private OptionRepository optionRepository;
 
+    private static final String APPLICATION_NAME = "Classic Project";
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+
+    @Value("${clan.total.spread.id}")
+    private String spreadSheetId;
+
     @Override
     @CacheEvict(allEntries = true)
     public ResponseEntity<String> registerUser(User user) {

@@ -56,4 +56,27 @@ public class ConstantPartyController {
         return constantPartyService.getEpicPoints();
     }
 
+//    @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json")
+//    @ResponseStatus(HttpStatus.OK)
+//    public boolean uploadEpicPhoto(@RequestParam(name = "photo") MultipartFile photo, @RequestParam(name = "cpId") int cpId,  @RequestParam(name = "cpName") String cpName){
+//        return constantPartyService.uploadEpicPhoto(photo, cpId, cpName);
+//    }
+//
+//    @RequestMapping(value = "/{cpId}/{userId}/photos", method = RequestMethod.GET, produces = "application/json")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<RootFolderResponse> getCpPhotos(@PathVariable(name = "cpId") int cpId, @PathVariable(name = "userId") int userId) {
+//        return constantPartyService.getCpPhotos(cpId, userId);
+//    }
+//
+//    @RequestMapping(value = "/addFolder", method = RequestMethod.POST, consumes = "application/json")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void addNewFolder(@RequestBody AddNewFile cpFile, @RequestParam(name = "cpId") int cpId) throws GeneralSecurityException, IOException {
+//        constantPartyService.addNewFolder(cpId, cpFile);
+//    }
+//
+//    @RequestMapping(value = "/addFolder", method = RequestMethod.DELETE, consumes = "application/json")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void deleteFile(@RequestParam(name = "fileId") String fileId) throws GeneralSecurityException, IOException {
+//        constantPartyService.deleteFile(fileId);
+//    }
 }
