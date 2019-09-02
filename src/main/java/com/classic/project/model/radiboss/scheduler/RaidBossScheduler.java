@@ -24,6 +24,9 @@ public class RaidBossScheduler {
     @Value("${send.email.raid.boss.epics.on.window}")
 	private boolean notifyEpicsOnWindow;
 
+	@Value("${bosses.notification.email}")
+	private String bossesNotificationEmail;
+
     @Scheduled(cron = "*/60 * * * * *") //the top of every hour of every day.
     public void NotifyOnWindow(){
 	List<RaidBoss> bossesOnWindow = new ArrayList<>();
@@ -39,7 +42,7 @@ public class RaidBossScheduler {
 		}
 	    }
 	}
-	if(notifyEpicsOnWindow && !bossesOnWindow.isEmpty()) {
+	if(sendEmail(bossesOnWindow)) {
 	    sendMail(bossesOnWindow);
 	    for(RaidBoss raidBoss : bossesOnWindow){
 		raidBossRepository.updateDeathTimerNotification(raidBoss.getRaidBossId());
@@ -47,9 +50,13 @@ public class RaidBossScheduler {
 	}
     }
 
+    private boolean sendEmail(List<RaidBoss> bossesOnWindow) {
+    	return notifyEpicsOnWindow && bossesNotificationEmail != null && !bossesOnWindow.isEmpty();
+	}
+
     private void sendMail(List<RaidBoss> bossesOnWindow) {
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo("allianceinquisition@googlegroups.com");
+		mail.setTo(bossesNotificationEmail);
 		mail.setText(getText(bossesOnWindow));
 		mail.setSubject("Bosses On Window");
 		mail.setFrom("inquisitionAlliance@gmail.com");

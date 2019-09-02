@@ -24,7 +24,7 @@ public class FileProcessing {
 
     List<CpFile> cpFiles = new ArrayList<>();
 
-    @Scheduled(cron = "0 0 */3 * * *")//runs every 3 hours
+    //@Scheduled(cron = "0 0 */3 * * *")//runs every 3 hours
     private void assignFileToCp() {
         List<CpFile> toBeSaved = new ArrayList<>();
         cpFiles = cpFileRepository.getCpFilesWithoutCp();
@@ -45,7 +45,7 @@ public class FileProcessing {
         cpFileRepository.saveAll(toBeSaved);
     }
 
-    @Scheduled(cron = "0 0 23 * * *")//runs every night at 23
+    //@Scheduled(cron = "0 0 23 * * *")//runs every night at 23
     private void deleteFilesWithoutCP(){
         cpFileRepository.deleteCpFilesWithoutCp();
     }

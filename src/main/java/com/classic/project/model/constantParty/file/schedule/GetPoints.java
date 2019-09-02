@@ -37,7 +37,7 @@ public class GetPoints {
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-    @Scheduled(cron = "0 0 1 * * *") //every day at midnight
+    //@Scheduled(cron = "0 0 1 * * *") //every day at midnight
     private void getPoints() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();

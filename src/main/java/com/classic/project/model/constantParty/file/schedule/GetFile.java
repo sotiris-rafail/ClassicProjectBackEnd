@@ -51,7 +51,7 @@ public class GetFile {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
 
-    @Scheduled(cron = "0 0 1 * * *") //every day at midnight
+    //@Scheduled(cron = "0 0 1 * * *") //every day at midnight
     public void getFile() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
