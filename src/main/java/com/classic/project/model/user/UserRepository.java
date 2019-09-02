@@ -54,7 +54,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("select user.email from User user")
     List<String> getAllEmails();
-
-    @Query("select user.email from User user, Option option where user.userId = option.userId and option.bossesOption = true")
-    List<String> findUsersWithBossesNotification();
 }

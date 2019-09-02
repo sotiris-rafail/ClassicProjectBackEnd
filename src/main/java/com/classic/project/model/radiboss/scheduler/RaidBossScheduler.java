@@ -2,7 +2,6 @@ package com.classic.project.model.radiboss.scheduler;
 
 import com.classic.project.model.radiboss.*;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
-import com.classic.project.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -30,14 +29,10 @@ public class RaidBossScheduler {
 	@Value("${bosses.notification.email}")
 	private String bossesNotificationEmail;
 
-	@Autowired
-    private UserRepository userRepository;
-
     @Scheduled(cron = "*/60 * * * * *") //the top of every hour of every day.
     public void NotifyOnWindow(){
 	List<RaidBoss> bossesOnWindow = new ArrayList<>();
 	List<RaidBoss> epicBosses = raidBossRepository.findAllByTypeOfRaidBoss(TypeOfRaidBoss.EPIC);
-	List<String> emails = userRepository.findUsersWithBossesNotification();
 	for(RaidBoss raidBoss : epicBosses) {
 	    Calendar deathTimer = Calendar.getInstance();
 	    deathTimer.setTime(raidBoss.getTimeOfDeath());
@@ -50,9 +45,7 @@ public class RaidBossScheduler {
 	    }
 	}
 	if(sendEmail(bossesOnWindow)) {
-	    //for (String email : emails) {
-            sendMail(bossesOnWindow, "email");
-        //}
+	    sendMail(bossesOnWindow);
 	    for(RaidBoss raidBoss : bossesOnWindow){
 		raidBossRepository.updateDeathTimerNotification(raidBoss.getRaidBossId());
 	    }
@@ -63,7 +56,7 @@ public class RaidBossScheduler {
     	return notifyEpicsOnWindow && bossesNotificationEmail != null && !bossesOnWindow.isEmpty();
 	}
 
-    private void sendMail(List<RaidBoss> bossesOnWindow, String email) {
+    private void sendMail(List<RaidBoss> bossesOnWindow) {
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(bossesNotificationEmail);
 		mail.setText(getText(bossesOnWindow));
