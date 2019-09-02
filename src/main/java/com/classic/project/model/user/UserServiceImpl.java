@@ -174,19 +174,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<List<List<Object>>> getEpicPointsPrice() throws GeneralSecurityException, IOException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleCredential.getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-        final String range = "System Inflation Adj!A28:B29";
-        ValueRange response = service.spreadsheets().values()
-                .get(spreadSheetId, range)
-                .execute();
-        return new ResponseEntity<>(response.getValues(), HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<Boolean> verifyUser(String email, String mainChar) {
         User userFromDb = userRepository.findUserByEmail(email);
         if (userFromDb == null) {

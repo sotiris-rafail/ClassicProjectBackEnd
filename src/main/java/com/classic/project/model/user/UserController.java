@@ -76,11 +76,6 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
-    @RequestMapping(value = "/epic/points", method = RequestMethod.GET, produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<List<Object>>> getEpicPointsPrice() throws GeneralSecurityException, IOException {
-        return userService.getEpicPointsPrice();
-    }
 
     @RequestMapping(value = "/verification", method = RequestMethod.GET, produces = "application/json")
     @ResponseStatus(HttpStatus.FOUND)

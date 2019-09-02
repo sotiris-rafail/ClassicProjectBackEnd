@@ -27,8 +27,6 @@ public interface UserService {
 
     void deleteUser(int userId);
 
-    ResponseEntity<List<List<Object>>> getEpicPointsPrice() throws GeneralSecurityException, IOException;
-
     ResponseEntity<Boolean> verifyUser(String email, String mainChar);
 
     ResponseEntity<Boolean> updatePassword(String[] params);
