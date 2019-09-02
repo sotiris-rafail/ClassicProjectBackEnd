@@ -1,8 +1,8 @@
 package com.classic.project.model.constantParty.response.file;
 
-import javax.persistence.Column;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class SubFolderResponse {
 

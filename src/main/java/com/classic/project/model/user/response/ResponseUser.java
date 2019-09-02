@@ -4,7 +4,6 @@ import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.exception.UserNotFoundException;
-import com.classic.project.model.user.option.Option;
 import com.classic.project.model.user.option.response.ResponseOption;
 
 import java.util.ArrayList;

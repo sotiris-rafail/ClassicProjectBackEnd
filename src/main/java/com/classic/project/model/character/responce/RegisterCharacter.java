@@ -1,8 +1,8 @@
 package com.classic.project.model.character.responce;
 
+import com.classic.project.model.character.Character;
 import com.classic.project.model.character.ClassOfCharacter;
 import com.classic.project.model.character.TypeOfCharacter;
-import com.classic.project.model.character.Character;
 
 public class RegisterCharacter {
 

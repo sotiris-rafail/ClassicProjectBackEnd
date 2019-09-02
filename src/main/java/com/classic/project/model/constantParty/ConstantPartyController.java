@@ -1,19 +1,11 @@
 package com.classic.project.model.constantParty;
 
-import com.classic.project.model.clan.Clan;
-import com.classic.project.model.constantParty.file.CpFile;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
-import com.classic.project.model.constantParty.response.file.AddNewFile;
-import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.List;
 
 @RestController

@@ -6,7 +6,6 @@ import com.classic.project.model.constantParty.file.FileType;
 import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import com.classic.project.model.constantParty.file.parentFile.ParentFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

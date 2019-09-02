@@ -1,7 +1,6 @@
 package com.classic.project.config;
 
 import com.classic.project.security.CustomUserDetailsService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

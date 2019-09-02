@@ -2,7 +2,6 @@ package com.classic.project.model.radiboss.scheduler;
 
 import com.classic.project.model.radiboss.*;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
-import com.classic.project.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,7 +9,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class RaidBossScheduler {
