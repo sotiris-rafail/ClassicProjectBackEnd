@@ -1,6 +1,6 @@
 package com.classic.project.model.constantParty;
 
-import com.classic.project.model.constantParty.file.CpFile;
+
 import com.classic.project.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,8 +43,6 @@ public class ConstantParty {
     private Date registrationDate;
     @OneToMany(mappedBy = "cp", cascade = CascadeType.ALL)
     private List<User> members = new ArrayList<>();
-    @OneToMany(mappedBy = "cpImg", cascade = CascadeType.ALL)
-    private List<CpFile> images = new ArrayList<>();
 
     public int getCpId() {
         return cpId;
@@ -117,15 +115,6 @@ public class ConstantParty {
 
     public void setCpNameLowerCase(String cpNameLowerCase) {
         this.cpNameLowerCase = cpNameLowerCase;
-    }
-
-    @JsonIgnore
-    public List<CpFile> getImages() {
-        return images;
-    }
-
-    public void setImages(List<CpFile> images) {
-        this.images = images;
     }
 
     public String getRootFolderId() {
