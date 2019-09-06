@@ -89,6 +89,14 @@ public class ResponseUser {
         this.responseConstantParty = responseConstantParty;
     }
 
+    public ResponseOption getOption() {
+        return option;
+    }
+
+    public void setOption(ResponseOption option) {
+        this.option = option;
+    }
+
     public static ResponseUser convertForUser(Optional<User> user){
         if(!user.isPresent()) {
             throw new UserNotFoundException();

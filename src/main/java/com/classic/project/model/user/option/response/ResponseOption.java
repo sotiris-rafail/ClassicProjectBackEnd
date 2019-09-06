@@ -14,6 +14,30 @@ public class ResponseOption {
 	this.soldItemNotification = soldItemNotification;
     }
 
+    public boolean isBossesNotification() {
+        return bossesNotification;
+    }
+
+    public void setBossesNotification(boolean bossesNotification) {
+        this.bossesNotification = bossesNotification;
+    }
+
+    public boolean isNewItemNotification() {
+        return newItemNotification;
+    }
+
+    public void setNewItemNotification(boolean newItemNotification) {
+        this.newItemNotification = newItemNotification;
+    }
+
+    public boolean isSoldItemNotification() {
+        return soldItemNotification;
+    }
+
+    public void setSoldItemNotification(boolean soldItemNotification) {
+        this.soldItemNotification = soldItemNotification;
+    }
+
     public static ResponseOption convertForUser(Option options) {
 	return new ResponseOption(options.isBossesOption(), options.isNewItemOption(), options.isSoldItemOption());
     }
