@@ -12,6 +12,7 @@ import com.classic.project.model.user.option.Option;
 import com.classic.project.model.user.option.OptionRepository;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
+import com.classic.project.model.user.verification.*;
 import com.classic.project.security.UserAuthConfirm;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -23,12 +24,12 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -54,6 +55,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private OptionRepository optionRepository;
 
+    @Autowired
+    private VerificationRepository verificationRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
@@ -68,7 +75,8 @@ public class UserServiceImpl implements UserService {
             user.setEmailLowerCase(user.getEmail().toLowerCase());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userFromDb = userRepository.save(user);
-	    saveOptionsOnRegister(userFromDb);
+            saveOptionsOnRegister(userFromDb);
+            saveVerification(userFromDb);
         } else {
             throw new UserExistException(user.getEmail());
         }
@@ -78,9 +86,15 @@ public class UserServiceImpl implements UserService {
     }
 
     private void saveOptionsOnRegister(User user) {
-	Option option = new Option();
-	option.setUserOption(user);
-	optionRepository.save(option);
+        Option option = new Option();
+        option.setUserOption(user);
+        optionRepository.save(option);
+    }
+
+    private void saveVerification(User user) {
+        Verification verification = new Verification();
+        verification.setStatus(VerificationStatus.ZERO);
+        verificationRepository.save(verification);
     }
 
     @Override
@@ -201,4 +215,85 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(userRepository.isCpMember(userId).isPresent(), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<VerificationStatus> sendVerificationEmailToUser(String email) {
+        User userFromDb = userRepository.findUserByEmail(email);
+        if(userFromDb.getVerification() != null) {
+            if (userFromDb == null) {
+                throw new UserNotFoundException(email);
+            } else if (userFromDb.getVerification().getExpirationDate() != null && !userFromDb.getVerification().getExpirationDate().after(new Date())) {
+                throw new VerificationEmailException("Your verification has expired");
+            } else if (!userFromDb.getVerification().getStatus().equals(VerificationStatus.ZERO)) {
+                throw new VerificationEmailException(getExceptionMessage(userFromDb.getVerification().getStatus()));
+            }
+        }
+        userFromDb.getVerification().setCode(VerificationServiceImpl.generateCode(userFromDb.getEmail(), userFromDb.getRegistrationDate()));
+        userFromDb.getVerification().setRegistrationDate(new Date());
+        userFromDb.getVerification().setExpirationDate(getExpirationVerificationDate());
+        userFromDb.getVerification().setStatus(VerificationStatus.PENDING);
+        Verification verification = verificationRepository.save(userFromDb.getVerification());
+        sendVerificationMail(verification, userFromDb.getEmail());
+        return null;
+    }
+
+    private static Date getExpirationVerificationDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        return calendar.getTime();
+    }
+
+    private static String getExceptionMessage(VerificationStatus status) {
+        if (status.equals(VerificationStatus.VERIFIED)) {
+            return "Your email has been verified";
+        } else {
+            return "You have a pending verification";
+        }
+    }
+
+    private void sendVerificationMail(Verification verification, String email) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setText(verificationMessage(verification));
+        mail.setSubject("Email Verification");
+        mail.setFrom("inquisitionAlliance@gmail.com");
+        mail.setSentDate(new Date());
+        try {
+            javaMailSender.send(mail);
+        }catch (Exception e) {
+            verification.setExpirationDate(null);
+            verification.setStatus(VerificationStatus.ZERO);
+            verification.setCode(null);
+            verificationRepository.save(verification);
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static String verificationMessage(Verification verification) {
+        return "http://localhost:8080/user/verify/" + verification.getCode() +" \n" +
+                "Your code expires in " +verification.getExpirationDate();
+    }
+
+    @Override
+    public ResponseEntity<VerificationStatus> acceptVerificationMailCode(String code) {
+        Verification verification = verificationRepository.findByCode(code);
+        Optional<User> user = userRepository.findById(verification.getUserVerification().getUserId());
+        if(!user.isPresent()){
+            throw new UserNotFoundException();
+        }
+        Verification ver;
+        if(verifyCodeEquality(code, user.get()) && user.get().getVerification().getExpirationDate().after(new Date())) {
+            verification.setStatus(VerificationStatus.VERIFIED);
+            verification.setExpirationDate(null);
+            ver = verificationRepository.save(verification);
+            return new ResponseEntity<>(ver.getStatus(), HttpStatus.OK);
+        } else {
+            throw new VerificationEmailException("You have a pending request or your code has expired.");
+        }
+    }
+
+    private static boolean verifyCodeEquality(String code, User user) {
+        return code.equals(VerificationServiceImpl.generateCode(user.getEmail(), user.getRegistrationDate()));
+    }
+
 }
+//37 level player looking for loot slot. Paying 1/3 of total doughs

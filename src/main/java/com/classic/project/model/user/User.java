@@ -3,6 +3,7 @@ package com.classic.project.model.user;
 import com.classic.project.model.character.Character;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.user.option.Option;
+import com.classic.project.model.user.verification.Verification;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -41,6 +42,8 @@ public class User {
     private ConstantParty cp;
     @OneToOne(mappedBy = "userOption", cascade = CascadeType.ALL)
     private Option options;
+    @OneToOne(mappedBy = "userVerification", cascade = CascadeType.ALL)
+    private Verification verification;
 
    public int getUserId() {
         return userId;
@@ -108,5 +111,13 @@ public class User {
 
     public void setOptions(Option options) {
 	this.options = options;
+    }
+
+    public Verification getVerification() {
+        return verification;
+    }
+
+    public void setVerification(Verification verification) {
+        this.verification = verification;
     }
 }

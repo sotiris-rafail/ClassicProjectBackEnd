@@ -2,6 +2,7 @@ package com.classic.project.model.user;
 
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
+import com.classic.project.model.user.verification.VerificationStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -30,4 +31,8 @@ public interface UserService {
     ResponseEntity<Boolean> updatePassword(String[] params);
 
     ResponseEntity<Boolean> isCpMember(int userId);
+
+    ResponseEntity<VerificationStatus> sendVerificationEmailToUser(String email);
+
+    ResponseEntity<VerificationStatus> acceptVerificationMailCode(String code);
 }

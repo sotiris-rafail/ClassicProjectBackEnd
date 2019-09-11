@@ -3,7 +3,7 @@ package com.classic.project.model.constantParty.file.parentFile;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ParentFileId  implements Serializable {
+public class ParentFileId implements Serializable {
 
     private String fileId;
     private String parentId;

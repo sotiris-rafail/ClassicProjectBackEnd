@@ -2,6 +2,7 @@ package com.classic.project.model.user;
 
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
+import com.classic.project.model.user.verification.VerificationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,5 +92,17 @@ public class UserController {
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<Boolean> isCpMember(@RequestParam(name = "userId")int userId) {
         return userService.isCpMember(userId);
+    }
+
+    @RequestMapping(value = "/verify", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<VerificationStatus> sendVerificationEmailToUser(@RequestParam(name = "email") String email) {
+        return userService.sendVerificationEmailToUser(email);
+    }
+
+    @RequestMapping(value = "/verify/{code}", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<VerificationStatus> acceptVerificationMailCode(@PathVariable(name = "code")String code) {
+        return userService.acceptVerificationMailCode(code);
     }
 }
