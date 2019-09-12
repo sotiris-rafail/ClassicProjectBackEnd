@@ -110,6 +110,14 @@ public class ResponseUser {
         this.option = option;
     }
 
+    public ResponseVerification getResponseVerification() {
+        return responseVerification;
+    }
+
+    public void setResponseVerification(ResponseVerification responseVerification) {
+        this.responseVerification = responseVerification;
+    }
+
     public static ResponseUser convertForUser(Optional<User> user){
         if(!user.isPresent()) {
             throw new UserNotFoundException();
