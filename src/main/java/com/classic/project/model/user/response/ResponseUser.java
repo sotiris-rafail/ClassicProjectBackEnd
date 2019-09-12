@@ -5,6 +5,7 @@ import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.exception.UserNotFoundException;
 import com.classic.project.model.user.option.response.ResponseOption;
+import com.classic.project.model.user.verification.response.ResponseVerification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,18 @@ public class ResponseUser {
     private List<ResponseCharacter> chars;
     private ResponseConstantParty responseConstantParty;
     private ResponseOption option;
+    private ResponseVerification responseVerification;
+
+    public ResponseUser(int userId, String email, String typeOfUser, List<ResponseCharacter> chars, ResponseConstantParty responseConstantParty,
+                        ResponseOption responseOption, ResponseVerification responseVerification) {
+        this.userId = userId;
+        this.email = email;
+        this.typeOfUser = typeOfUser;
+        this.chars = chars;
+        this.responseConstantParty = responseConstantParty;
+        this.option = responseOption;
+        this.responseVerification = responseVerification;
+    }
 
     public ResponseUser(int userId, String email, String typeOfUser, List<ResponseCharacter> chars, ResponseConstantParty responseConstantParty, ResponseOption responseOption) {
         this.userId = userId;
@@ -105,7 +118,8 @@ public class ResponseUser {
 	    user.get().getTypeOfUser().name(),
 	    ResponseCharacter.convertForUser(user.get().getCharacters()),
 	    ResponseConstantParty.convertForUser(user.get().getCp()),
-	    ResponseOption.convertForUser(user.get().getOptions()));
+	    ResponseOption.convertForUser(user.get().getOptions()),
+        ResponseVerification.convertForUser(user.get().getVerification()));
     }
 
     public static List<ResponseUser> convertForCp(List<User> users){

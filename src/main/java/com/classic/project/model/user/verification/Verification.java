@@ -16,7 +16,7 @@ public class Verification {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column
-    private String id;
+    private int id;
 
     @Column
     private String code;

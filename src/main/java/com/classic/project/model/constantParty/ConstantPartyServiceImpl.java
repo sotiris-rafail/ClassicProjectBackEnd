@@ -12,7 +12,7 @@ import com.classic.project.model.constantParty.file.parentFile.ParentFile;
 import com.classic.project.model.constantParty.file.parentFile.ParentFileRepository;
 import com.classic.project.model.constantParty.response.ResponseConstantParty;
 import com.classic.project.model.constantParty.response.file.AddNewFile;
-import com.classic.project.model.constantParty.response.file.FileResponse;
+import com.classic.project.model.constantParty.response.file.ResponseFile;
 import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import com.classic.project.model.constantParty.response.file.SubFolderResponse;
 import com.classic.project.model.user.User;
@@ -371,6 +371,6 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     private void addsFile(SubFolderResponse folder, CpFile file) {
-        folder.getFileResponseMap().add(new FileResponse(file.getFileId(), file.getFilename(), parentFileRepository.getParentIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
+        folder.getResponseFileMap().add(new ResponseFile(file.getFileId(), file.getFilename(), parentFileRepository.getParentIdByFileId(file.getFileId()), file.getFileType().name(), file.getCreationTime(), file.getWebViewLink(), file.getWebContentLink()));
     }
 }

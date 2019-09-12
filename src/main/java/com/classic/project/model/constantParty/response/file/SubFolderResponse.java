@@ -15,7 +15,7 @@ public class SubFolderResponse {
     private String webContentLink;
 
     private List<SubFolderResponse> folderResponseMap =new ArrayList<SubFolderResponse>();
-    private List<FileResponse> fileResponseMap = new ArrayList<FileResponse>();
+    private List<ResponseFile> responseFileMap = new ArrayList<ResponseFile>();
 
     public SubFolderResponse(String folderId, String name, List<String> parent, String type) {
         this.folderId = folderId;
@@ -98,11 +98,11 @@ public class SubFolderResponse {
         this.folderResponseMap = folderResponseMap;
     }
 
-    public List<FileResponse> getFileResponseMap() {
-        return fileResponseMap;
+    public List<ResponseFile> getResponseFileMap() {
+        return responseFileMap;
     }
 
-    public void setFileResponseMap(List<FileResponse> fileResponseMap) {
-        this.fileResponseMap = fileResponseMap;
+    public void setResponseFileMap(List<ResponseFile> responseFileMap) {
+        this.responseFileMap = responseFileMap;
     }
 }

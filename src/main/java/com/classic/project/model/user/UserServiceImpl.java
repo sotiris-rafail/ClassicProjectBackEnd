@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
 
     private void saveVerification(User user) {
         Verification verification = new Verification();
+        verification.setUserVerification(user);
         verification.setStatus(VerificationStatus.ZERO);
         verificationRepository.save(verification);
     }
@@ -239,8 +240,7 @@ public class UserServiceImpl implements UserService {
         userFromDb.getVerification().setExpirationDate(getExpirationVerificationDate());
         userFromDb.getVerification().setStatus(VerificationStatus.PENDING);
         Verification verification = verificationRepository.save(userFromDb.getVerification());
-        sendVerificationMail(verification, userFromDb.getEmail());
-        return null;
+        return new ResponseEntity<>(sendVerificationMail(verification, userFromDb.getEmail()), HttpStatus.OK);
     }
 
     private static Date getExpirationVerificationDate() {
@@ -257,7 +257,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void sendVerificationMail(Verification verification, String email) {
+    private VerificationStatus sendVerificationMail(Verification verification, String email) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
         mail.setText(verificationMessage(verification));
@@ -266,6 +266,7 @@ public class UserServiceImpl implements UserService {
         mail.setSentDate(new Date());
         try {
             javaMailSender.send(mail);
+            return VerificationStatus.VERIFIED;
         }catch (Exception e) {
             verification.setExpirationDate(null);
             verification.setStatus(VerificationStatus.ZERO);
@@ -273,6 +274,7 @@ public class UserServiceImpl implements UserService {
             verificationRepository.save(verification);
             System.out.println(e.getMessage());
         }
+        return VerificationStatus.ZERO;
     }
 
     private static String verificationMessage(Verification verification) {
