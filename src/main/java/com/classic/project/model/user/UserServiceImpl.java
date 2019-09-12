@@ -285,6 +285,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<VerificationStatus> acceptVerificationMailCode(String code) {
         Verification verification = verificationRepository.findByCode(code);
+        if(verification.getStatus().equals(VerificationStatus.VERIFIED)) {
+            return new ResponseEntity<>(VerificationStatus.ALREADY_VERIFIED, HttpStatus.OK);
+        }
         Optional<User> user = userRepository.findById(verification.getUserVerification().getUserId());
         if(!user.isPresent()){
             throw new UserNotFoundException();
