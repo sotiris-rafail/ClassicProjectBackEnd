@@ -266,7 +266,7 @@ public class UserServiceImpl implements UserService {
         mail.setSentDate(new Date());
         try {
             javaMailSender.send(mail);
-            return VerificationStatus.VERIFIED;
+            return VerificationStatus.PENDING;
         }catch (Exception e) {
             verification.setExpirationDate(null);
             verification.setStatus(VerificationStatus.ZERO);
