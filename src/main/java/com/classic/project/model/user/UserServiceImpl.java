@@ -61,6 +61,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    private static String verificationURL;
+
+    @Value("${verification.url.email}")
+    private void setVerificationURl(String url) {
+        UserServiceImpl.verificationURL = url;
+    }
+
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
@@ -269,7 +276,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private static String verificationMessage(Verification verification) {
-        return "http://localhost:8080/user/verify/" + verification.getCode() +" \n" +
+        return verificationURL + verification.getCode() +" \n" +
                 "Your code expires in " +verification.getExpirationDate();
     }
 
@@ -296,4 +303,3 @@ public class UserServiceImpl implements UserService {
     }
 
 }
-//37 level player looking for loot slot. Paying 1/3 of total doughs
