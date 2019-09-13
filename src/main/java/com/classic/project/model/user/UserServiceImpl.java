@@ -290,21 +290,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<VerificationStatus> acceptVerificationMailCode(String code) {
         Verification verification = verificationRepository.findByCode(code);
-        if(verification.getStatus().equals(VerificationStatus.VERIFIED)) {
-            return new ResponseEntity<>(VerificationStatus.ALREADY_VERIFIED, HttpStatus.OK);
-        }
-        Optional<User> user = userRepository.findById(verification.getUserVerification().getUserId());
-        if(!user.isPresent()){
-            throw new UserNotFoundException();
-        }
-        Verification ver;
-        if(verifyCodeEquality(code, user.get()) && user.get().getVerification().getExpirationDate().after(new Date())) {
-            verification.setStatus(VerificationStatus.VERIFIED);
-            verification.setExpirationDate(null);
-            ver = verificationRepository.save(verification);
-            return new ResponseEntity<>(ver.getStatus(), HttpStatus.OK);
+        if(verification != null) {
+            if (verification.getStatus().equals(VerificationStatus.VERIFIED)) {
+                return new ResponseEntity<>(VerificationStatus.ALREADY_VERIFIED, HttpStatus.OK);
+            }
+            Optional<User> user = userRepository.findById(verification.getUserVerification().getUserId());
+            if (!user.isPresent()) {
+                throw new UserNotFoundException();
+            }
+            Verification ver;
+            if (verifyCodeEquality(code, user.get()) && user.get().getVerification().getExpirationDate().after(new Date())) {
+                verification.setStatus(VerificationStatus.VERIFIED);
+                verification.setExpirationDate(null);
+                ver = verificationRepository.save(verification);
+                return new ResponseEntity<>(ver.getStatus(), HttpStatus.OK);
+            } else {
+                throw new VerificationEmailException("You have no pending requests or your code has expired.");
+            }
         } else {
-            throw new VerificationEmailException("You have a pending request or your code has expired.");
+            throw new VerificationEmailException("Your code does not exist");
         }
     }
 
