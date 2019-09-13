@@ -226,13 +226,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<VerificationStatus> sendVerificationEmailToUser(String email) {
         User userFromDb = userRepository.findUserByEmail(email);
-        if(userFromDb.getVerification() != null) {
-            if (userFromDb == null) {
-                throw new UserNotFoundException(email);
-            } else if (userFromDb.getVerification().getExpirationDate() != null && !userFromDb.getVerification().getExpirationDate().after(new Date())) {
-                throw new VerificationEmailException("Your verification has expired");
-            } else if (!userFromDb.getVerification().getStatus().equals(VerificationStatus.ZERO)) {
-                throw new VerificationEmailException(getExceptionMessage(userFromDb.getVerification().getStatus()));
+        if(!userRepository.isCpMember(userFromDb.getUserId()).isPresent()) {
+            throw new UserNotFoundException("You are not a CP member.", 0);
+        }
+        if (userFromDb == null) {
+            throw new UserNotFoundException(email);
+        } else {
+            if (userFromDb.getVerification() != null) {
+                if (userFromDb.getVerification().getExpirationDate() != null && !userFromDb.getVerification().getExpirationDate().after(new Date())) {
+                    throw new VerificationEmailException("Your verification has expired");
+                } else if (!userFromDb.getVerification().getStatus().equals(VerificationStatus.ZERO)) {
+                    throw new VerificationEmailException(getExceptionMessage(userFromDb.getVerification().getStatus()));
+                }
             }
         }
         userFromDb.getVerification().setCode(VerificationServiceImpl.generateCode(userFromDb.getEmail(), userFromDb.getRegistrationDate()));
