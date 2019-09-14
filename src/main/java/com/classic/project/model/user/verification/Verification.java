@@ -14,7 +14,6 @@ import java.util.Date;
 public class Verification {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column
     private int id;
 

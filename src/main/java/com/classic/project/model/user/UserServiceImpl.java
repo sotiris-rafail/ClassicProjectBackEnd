@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
 
     private void saveVerification(User user) {
         Verification verification = new Verification();
+        verification.setId(user.getUserId());
         verification.setUserVerification(user);
         verification.setStatus(VerificationStatus.ZERO);
         verificationRepository.save(verification);
