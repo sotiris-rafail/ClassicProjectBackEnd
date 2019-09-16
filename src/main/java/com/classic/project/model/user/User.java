@@ -5,6 +5,8 @@ import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.user.option.Option;
 import com.classic.project.model.user.verification.Verification;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;

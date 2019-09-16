@@ -186,6 +186,8 @@ public class UserServiceImpl implements UserService {
         if (!userFromDb.isPresent()) {
             throw new UserNotFoundException(userId);
         }
+        optionRepository.deleteByUserId(userId);
+        verificationRepository.deleteByUserId(userId);
         userRepository.deleteUserByUserId(userId);
     }
 
