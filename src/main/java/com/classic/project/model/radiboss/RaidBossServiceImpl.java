@@ -3,6 +3,8 @@ package com.classic.project.model.radiboss;
 import com.classic.project.model.radiboss.exception.RaidBossExistException;
 import com.classic.project.model.radiboss.exception.RaidBossNotFoundException;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,11 @@ public class RaidBossServiceImpl implements RaidBossService {
     @Autowired
     private RaidBossRepository raidBossRepository;
 
-
+    Logger logger = LoggerFactory.getLogger(RaidBossServiceImpl.class);
     @Override
     public ResponseEntity<ResponseRaidBoss> updateDeathTimer(int raidId, Date timer) {
-        if(timer.after(Calendar.getInstance().getTime())){
+        if(timer.after(new Date())){
+            logger.error("time is set to " + timer);
             throw new DateTimeException("Date is on future");
         }
         raidBossRepository.updateDeathTimer(raidId, timer);

@@ -6,6 +6,7 @@ import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.character.exception.CharacterNotFoundException;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
+import com.classic.project.model.radiboss.RaidBossServiceImpl;
 import com.classic.project.model.user.exception.UserExistException;
 import com.classic.project.model.user.exception.UserNotFoundException;
 import com.classic.project.model.user.option.Option;
@@ -16,6 +17,8 @@ import com.classic.project.model.user.verification.*;
 import com.classic.project.security.UserAuthConfirm;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -62,6 +65,7 @@ public class UserServiceImpl implements UserService {
     private JavaMailSender javaMailSender;
 
     private static String verificationURL;
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Value("${verification.url.email}")
     private void setVerificationURl(String url) {
@@ -280,7 +284,7 @@ public class UserServiceImpl implements UserService {
             verification.setStatus(VerificationStatus.ZERO);
             verification.setCode(null);
             verificationRepository.save(verification);
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
         return VerificationStatus.ZERO;
     }
