@@ -2,6 +2,7 @@ package com.classic.project.model.constantParty.file.schedule;
 
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
+import com.classic.project.model.constantParty.ConstantPartyService;
 import com.classic.project.model.constantParty.file.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -21,7 +22,7 @@ import java.util.List;
 @Component
 public class GetPoints {
     @Autowired
-    private ConstantPartyRepository constantPartyRepository;
+    private ConstantPartyService constantPartyService;
 
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -34,7 +35,7 @@ public class GetPoints {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
         final String range = "Main!A3:B8";
-        List<ConstantParty> cps = constantPartyRepository.findAllWithSpreadSheet();
+        List<ConstantParty> cps = constantPartyService.findAllWithSpreadSheet();
 
         for (ConstantParty cp : cps) {
             ValueRange response = service.spreadsheets().values()
@@ -58,7 +59,7 @@ public class GetPoints {
                     }
                 }
             }
-            constantPartyRepository.save(cp);
+            constantPartyService.save(cp);
         }
     }
 

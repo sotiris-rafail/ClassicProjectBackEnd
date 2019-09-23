@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @RestController
@@ -104,5 +105,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<VerificationStatus> acceptVerificationMailCode(@PathVariable(name = "code")String code) {
         return userService.acceptVerificationMailCode(code);
+    }
+
+    @RequestMapping(value = "/options", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUserOptions(@RequestParam(name = "userId") int userId,
+                                  @RequestParam(name = "options") String options,
+                                  @RequestParam(name = "optionValue") boolean optionValue) {
+        userService.updateUserOptions(userId, options, optionValue);
     }
 }

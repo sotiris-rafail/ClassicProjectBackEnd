@@ -9,4 +9,6 @@ public interface SoldItemService {
     ResponseEntity<List<ResponseSoldItem>> getSoldItems();
 
     void deliverSoldItem(int itemId, boolean isDelivered);
+
+    SoldItem save(SoldItem soldItem);
 }

@@ -16,4 +16,10 @@ public interface UnSoldItemService {
     void buyNowUnSoldItem(int itemId, int userId);
 
     ResponseEntity<Integer> getNumberOfUnsoldItems();
+
+    void deleteCleanUpUnSoldItems(int itemId);
+
+    List<UnSoldItem> getSoldUnSoldItemsByStateOfItem();
+
+    List<UnSoldItem> getUnSoldItemsByStateOfItem();
 }

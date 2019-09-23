@@ -2,6 +2,7 @@ package com.classic.project.model.item.unSold;
 
 import com.classic.project.model.character.Character;
 import com.classic.project.model.character.CharacterRepository;
+import com.classic.project.model.character.CharacterService;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.unSold.exception.UnSoldItemsNotFoundException;
@@ -24,7 +25,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
     private UnSoldItemRepository unSoldItemRepository;
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
     private static final String PHOTO_PATH ="../../assets/itemPhoto/";
 
@@ -110,6 +111,21 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 		return new ResponseEntity<>(unSoldItemRepository.countUnSoldItemByStateOfItem(StateOfItem.UNSOLD), HttpStatus.OK);
 	}
 
+	@Override
+	public void deleteCleanUpUnSoldItems(int itemId) {
+		unSoldItemRepository.deleteCleanUpUnSoldItems(itemId);
+	}
+
+	@Override
+	public List<UnSoldItem> getSoldUnSoldItemsByStateOfItem() {
+		return unSoldItemRepository.getSoldUnSoldItemsByStateOfItem();
+	}
+
+	@Override
+	public List<UnSoldItem> getUnSoldItemsByStateOfItem() {
+		return unSoldItemRepository.getUnSoldItemsByStateOfItem();
+	}
+
 	private static Date getExpirationDate(Date registerDate, int daysToStayUnSold){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(registerDate);
@@ -122,7 +138,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
     }
 
     private String getLastBidderName(int userId) {
-	Optional<Character> first = characterRepository.findByUserId(userId)
+	Optional<Character> first = characterService.findByUserId(userId)
 	    .stream()
 	    .filter(character -> character.getTypeOfCharacter().equals(
 		TypeOfCharacter.MAIN))

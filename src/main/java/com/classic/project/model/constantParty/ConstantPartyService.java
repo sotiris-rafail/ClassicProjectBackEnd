@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Optional;
 
 public interface ConstantPartyService {
     ResponseEntity<ResponseConstantParty> getCpByLeaderId(int userId);
@@ -32,4 +33,14 @@ public interface ConstantPartyService {
     void addNewFolder(int cpId, AddNewFile cpFile) throws GeneralSecurityException, IOException;
 
     void deleteFile(String fileId) throws GeneralSecurityException, IOException;
+
+    Optional<ConstantParty> findById(int cpId);
+
+    void addUsersTpCP(int activePlayers, int numberOfBoxes, int cpId);
+
+    List<ConstantParty> findAllWithSpreadSheet();
+
+    void save(ConstantParty cp);
+
+    Optional<ConstantParty> findByRootFolderId(String id);
 }

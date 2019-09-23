@@ -1,5 +1,7 @@
 package com.classic.project.model.user.verification;
 
+import com.classic.project.model.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
@@ -10,7 +12,34 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 @Component
-public class VerificationServiceImpl {
+public class VerificationServiceImpl implements VerificationService{
+
+    @Autowired
+    private VerificationRepository verificationRepository;
+
+    @Override
+    public void saveVerification(User user) {
+        Verification verification = new Verification();
+        verification.setId(user.getUserId());
+        verification.setUserVerification(user);
+        verification.setStatus(VerificationStatus.ZERO);
+        verificationRepository.save(verification);
+    }
+
+    @Override
+    public Verification save(Verification verification) {
+        return verificationRepository.save(verification);
+    }
+
+    @Override
+    public Verification findByCode(String code) {
+        return verificationRepository.findByCode(code);
+    }
+
+    @Override
+    public void deleteByUserId(int userId) {
+        verificationRepository.deleteByUserId(userId);
+    }
 
     public static String generateCode(String email, Date registrationDate) {
         Mac sha512_HMAC;

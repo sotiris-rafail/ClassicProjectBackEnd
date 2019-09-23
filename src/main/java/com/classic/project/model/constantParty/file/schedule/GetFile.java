@@ -1,6 +1,7 @@
 package com.classic.project.model.constantParty.file.schedule;
 
 import com.classic.project.model.constantParty.ConstantPartyRepository;
+import com.classic.project.model.constantParty.ConstantPartyService;
 import com.classic.project.model.constantParty.file.CpFile;
 import com.classic.project.model.constantParty.file.CpFileRepository;
 import com.classic.project.model.constantParty.file.FileType;
@@ -32,7 +33,7 @@ public class GetFile {
     private CpFileRepository cpFileRepository;
 
     @Autowired
-    private ConstantPartyRepository constantPartyRepository;
+    private ConstantPartyService constantPartyService;
 
     private static final String APPLICATION_NAME = "Classic Project";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -72,9 +73,9 @@ public class GetFile {
                 List<CpFile> cpFiles = new ArrayList<>();
                 for (File file : files) {
                     CpFile toBeAdded;
-                    if (constantPartyRepository.findByRootFolderId(file.getId()).isPresent()) {
+                    if (constantPartyService.findByRootFolderId(file.getId()).isPresent()) {
                         toBeAdded = new CpFile(file.getId(), file.getName(), FileType.ROOT, new Date(file.getCreatedTime().getValue()),
-                                file.getWebViewLink(), file.getWebContentLink(), constantPartyRepository.findByRootFolderId(file.getId()).get());
+                                file.getWebViewLink(), file.getWebContentLink(), constantPartyService.findByRootFolderId(file.getId()).get());
                     } else {
                         toBeAdded = new CpFile(file.getId(), file.getName(), FileType.getType(file.getMimeType()), new Date(file.getCreatedTime().getValue()), file.getWebViewLink(), file.getWebContentLink(), null);
                     }

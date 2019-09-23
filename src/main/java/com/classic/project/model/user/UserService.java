@@ -6,6 +6,7 @@ import com.classic.project.model.user.verification.VerificationStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     ResponseEntity<String> registerUser(User user);
@@ -35,4 +36,12 @@ public interface UserService {
     ResponseEntity<VerificationStatus> sendVerificationEmailToUser(String email);
 
     ResponseEntity<VerificationStatus> acceptVerificationMailCode(String code);
+
+    void updateUserOptions(int userId, String options, boolean optionValue);
+
+    Optional<User> findById(int userId);
+
+    void deleteMemberByCharacterIdId(int userId);
+
+    Optional<User> isUserMemberOfCP(int cpId, int userId);
 }

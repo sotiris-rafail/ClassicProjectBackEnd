@@ -12,4 +12,25 @@ public interface OptionRepository extends JpaRepository<Option, Integer> {
     @Transactional
     @Query("delete from Option where userOption.userId = ?1")
     void deleteByUserId(int userId);
+
+    @Modifying
+    @Transactional
+    @Query("update Option set soldItemOption = ?2, newItemOption = ?2, bossesOption =?2 where userOption.userId = ?1")
+    void updateAllOptions(int userId, boolean optionValue);
+
+    @Modifying
+    @Transactional
+    @Query("update Option set newItemOption = ?2 where userOption.userId = ?1")
+    void updateNewItemsOption(int userId, boolean optionValue);
+
+    @Modifying
+    @Transactional
+    @Query("update Option set soldItemOption = ?2 where userOption.userId = ?1")
+    void updateSoldItemOption(int userId, boolean optionValue);
+
+
+    @Modifying
+    @Transactional
+    @Query("update Option set bossesOption =?2 where userOption.userId = ?1")
+    void updateBossOption(int userId, boolean optionValue);
 }

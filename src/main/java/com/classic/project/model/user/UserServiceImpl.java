@@ -2,15 +2,17 @@ package com.classic.project.model.user;
 
 import com.classic.project.model.character.Character;
 import com.classic.project.model.character.CharacterRepository;
+import com.classic.project.model.character.CharacterService;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.character.exception.CharacterNotFoundException;
 import com.classic.project.model.constantParty.ConstantParty;
 import com.classic.project.model.constantParty.ConstantPartyRepository;
-import com.classic.project.model.radiboss.RaidBossServiceImpl;
+import com.classic.project.model.constantParty.ConstantPartyService;
 import com.classic.project.model.user.exception.UserExistException;
 import com.classic.project.model.user.exception.UserNotFoundException;
 import com.classic.project.model.user.option.Option;
 import com.classic.project.model.user.option.OptionRepository;
+import com.classic.project.model.user.option.OptionService;
 import com.classic.project.model.user.response.AddUserToCP;
 import com.classic.project.model.user.response.ResponseUser;
 import com.classic.project.model.user.verification.*;
@@ -47,19 +49,19 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private ConstantPartyRepository constantPartyRepository;
+    private ConstantPartyService constantPartyService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
     @Autowired
-    private OptionRepository optionRepository;
+    private VerificationService verificationService;
 
     @Autowired
-    private VerificationRepository verificationRepository;
+    private OptionService optionService;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -86,28 +88,14 @@ public class UserServiceImpl implements UserService {
             user.setEmailLowerCase(user.getEmail().toLowerCase());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userFromDb = userRepository.save(user);
-            saveOptionsOnRegister(userFromDb);
-            saveVerification(userFromDb);
+            optionService.saveOptionsOnRegister(userFromDb);
+            verificationService.saveVerification(userFromDb);
         } else {
             throw new UserExistException(user.getEmail());
         }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(User.class).slash("user").slash(userFromDb.getUserId()).toUri());
         return new ResponseEntity<>(httpHeaders.getLocation().getPath(), HttpStatus.CREATED);
-    }
-
-    private void saveOptionsOnRegister(User user) {
-        Option option = new Option();
-        option.setUserOption(user);
-        optionRepository.save(option);
-    }
-
-    private void saveVerification(User user) {
-        Verification verification = new Verification();
-        verification.setId(user.getUserId());
-        verification.setUserVerification(user);
-        verification.setStatus(VerificationStatus.ZERO);
-        verificationRepository.save(verification);
     }
 
     @Override
@@ -128,7 +116,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(allEntries = true)
     public ResponseEntity<List<ResponseUser>> addUsersToCp(AddUserToCP userIds) {
         List<User> responseUsers = new ArrayList<>();
-        Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(userIds.getCpId());
+        Optional<ConstantParty> cpFromDb = constantPartyService.findById(userIds.getCpId());
         int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + userIds.getUsersToUpdate().length;
         int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
         for (int i = 0; i < userIds.getUsersToUpdate().length; i++) {
@@ -140,7 +128,7 @@ public class UserServiceImpl implements UserService {
         for (int i = 0; i < userIds.getUsersToUpdate().length; i++) {
             responseUsers.add(userRepository.findById(userIds.getUsersToUpdate()[i]).get());
         }
-        constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
+        constantPartyService.addUsersTpCP(activePlayers, numberOfBoxes, userIds.getCpId());
         return new ResponseEntity<>(ResponseUser.convertForCp(responseUsers), HttpStatus.OK);
     }
 
@@ -159,19 +147,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(allEntries = true)
     public void addUserToCp(int characterId, int cpId) {
-        Optional<Character> charFromDb = characterRepository.findById(characterId);
+        Optional<Character> charFromDb = characterService.findById(characterId);
         if (!charFromDb.isPresent()) {
             throw new CharacterNotFoundException(characterId);
         }
         int userId = charFromDb.get().getUser().getUserId();
         userRepository.addUsersToCP(cpId, userId);
-        Optional<ConstantParty> cpFromDb = constantPartyRepository.findById(cpId);
+        Optional<ConstantParty> cpFromDb = constantPartyService.findById(cpId);
         int activePlayers = cpFromDb.get().getNumberOfActivePlayers() + 1;
         int numberOfBoxes = cpFromDb.get().getNumberOfBoxes();
         Optional<User> userFromDb = userRepository.findById(userId);
         numberOfBoxes += userFromDb.get().getCharacters().stream().filter(character -> character.getTypeOfCharacter().name().equals(
                 TypeOfCharacter.BOX.name())).count();
-        constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, cpId);
+        constantPartyService.addUsersTpCP(activePlayers, numberOfBoxes, cpId);
     }
 
     @Override
@@ -190,8 +178,8 @@ public class UserServiceImpl implements UserService {
         if (!userFromDb.isPresent()) {
             throw new UserNotFoundException(userId);
         }
-        optionRepository.deleteByUserId(userId);
-        verificationRepository.deleteByUserId(userId);
+        optionService.deleteByUserId(userId);
+        verificationService.deleteByUserId(userId);
         userRepository.deleteUserByUserId(userId);
     }
 
@@ -251,7 +239,7 @@ public class UserServiceImpl implements UserService {
         userFromDb.getVerification().setRegistrationDate(new Date());
         userFromDb.getVerification().setExpirationDate(getExpirationVerificationDate());
         userFromDb.getVerification().setStatus(VerificationStatus.PENDING);
-        Verification verification = verificationRepository.save(userFromDb.getVerification());
+        Verification verification = verificationService.save(userFromDb.getVerification());
         return new ResponseEntity<>(sendVerificationMail(verification, userFromDb.getEmail()), HttpStatus.OK);
     }
 
@@ -283,7 +271,7 @@ public class UserServiceImpl implements UserService {
             verification.setExpirationDate(null);
             verification.setStatus(VerificationStatus.ZERO);
             verification.setCode(null);
-            verificationRepository.save(verification);
+            verificationService.save(verification);
             logger.error(e.getMessage());
         }
         return VerificationStatus.ZERO;
@@ -296,7 +284,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<VerificationStatus> acceptVerificationMailCode(String code) {
-        Verification verification = verificationRepository.findByCode(code);
+        Verification verification = verificationService.findByCode(code);
         if(verification != null) {
             if (verification.getStatus().equals(VerificationStatus.VERIFIED)) {
                 return new ResponseEntity<>(VerificationStatus.ALREADY_VERIFIED, HttpStatus.OK);
@@ -309,7 +297,7 @@ public class UserServiceImpl implements UserService {
             if (verifyCodeEquality(code, user.get()) && user.get().getVerification().getExpirationDate().after(new Date())) {
                 verification.setStatus(VerificationStatus.VERIFIED);
                 verification.setExpirationDate(null);
-                ver = verificationRepository.save(verification);
+                ver = verificationService.save(verification);
                 return new ResponseEntity<>(ver.getStatus(), HttpStatus.OK);
             } else {
                 throw new VerificationEmailException("You have no pending requests or your code has expired.");
@@ -317,6 +305,32 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new VerificationEmailException("Your code does not exist");
         }
+    }
+
+    @Override
+    public void updateUserOptions(int userId, String options, boolean optionValue) {
+        if(!userRepository.findById(userId).isPresent()) {
+          throw new UserNotFoundException(userId);
+        }
+        if(userRepository.findById(userId).isPresent() && !userRepository.findById(userId).get().getVerification().getStatus().equals(VerificationStatus.VERIFIED)) {
+           throw new VerificationEmailException("Not a verified member");
+        }
+        optionService.updateOptions(userId,options,optionValue);
+    }
+
+    @Override
+    public Optional<User> findById(int userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    public void deleteMemberByCharacterIdId(int userId) {
+        userRepository.deleteMemberByCharacterIdId(userId);
+    }
+
+    @Override
+    public Optional<User> isUserMemberOfCP(int cpId, int userId) {
+        return userRepository.isUserMemberOfCP(cpId, userId);
     }
 
     private static boolean verifyCodeEquality(String code, User user) {

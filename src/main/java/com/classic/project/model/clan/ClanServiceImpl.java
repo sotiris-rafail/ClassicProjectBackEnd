@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @CacheConfig(cacheNames = "clanMembers")
@@ -40,5 +41,15 @@ public class ClanServiceImpl implements ClanService {
         registerClan.setNameLowerCase(registerClan.getName().toLowerCase());
         registerClan.setClanMembers(new ArrayList<>());
 	    clanRepository.save(registerClan);
+    }
+
+    @Override
+    public List<Clan> findAll() {
+        return clanRepository.findAll();
+    }
+
+    @Override
+    public Optional<Clan> findById(int clanId) {
+        return clanRepository.findById(clanId);
     }
 }

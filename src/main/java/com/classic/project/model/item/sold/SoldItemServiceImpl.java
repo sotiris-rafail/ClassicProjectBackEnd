@@ -36,4 +36,9 @@ public class SoldItemServiceImpl implements SoldItemService {
 	    throw new SoldItemNotFoundException(itemId);
 	}
     }
+
+    @Override
+    public SoldItem save(SoldItem soldItem) {
+        return soldItemRepository.save(soldItem);
+    }
 }

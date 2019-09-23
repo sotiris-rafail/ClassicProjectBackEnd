@@ -6,9 +6,11 @@ import com.classic.project.model.character.responce.ResponseCharacter;
 import com.classic.project.model.character.responce.UpdateCharacter;
 import com.classic.project.model.clan.Clan;
 import com.classic.project.model.clan.ClanRepository;
+import com.classic.project.model.clan.ClanService;
 import com.classic.project.model.clan.responce.ClanResponseEntity;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.UserRepository;
+import com.classic.project.model.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,14 +28,15 @@ public class CharacterServiceImpl implements CharacterService {
 	private CharacterRepository characterRepository;
 
 	@Autowired
-	private ClanRepository clanRepository;
+	private ClanService clanService;
 
-	@Autowired UserRepository userRepository;
+	@Autowired
+	private UserService userService;
 
 	@Override
 	public ResponseEntity<Map<String, Object[]>> getInfoForRegister(int userId) {
 		Map<String, Object[]> response = new HashMap<>();
-		List<Clan> clanRepositoryAll = clanRepository.findAll();
+		List<Clan> clanRepositoryAll = clanService.findAll();
 		response.put("Clan", ClanResponseEntity.convertForCharRegister(clanRepositoryAll).toArray());
 		List<Character> characterFromDb = characterRepository.findByUserId(userId);
 		if (characterFromDb.isEmpty()) {
@@ -61,8 +64,8 @@ public class CharacterServiceImpl implements CharacterService {
 			throw new CharacterExistException(registerCharacter.getInGameName());
 		}
 		Character character = RegisterCharacter.convertToDBObject(registerCharacter);
-		Optional<Clan> clan = clanRepository.findById(registerCharacter.getClanId());
-		Optional<User> user = userRepository.findById(registerCharacter.getUserId());
+		Optional<Clan> clan = clanService.findById(registerCharacter.getClanId());
+		Optional<User> user = userService.findById(registerCharacter.getUserId());
 		character.setUser(user.get());
 		character.setClan(clan.get());
 		character.setInGameNameLowerCase(registerCharacter.getInGameName().toLowerCase());
@@ -86,6 +89,21 @@ public class CharacterServiceImpl implements CharacterService {
 	@CacheEvict(allEntries = true)
 	public void deleteCharacter(int characterId) {
 		characterRepository.deleteByCharacterId(characterId);
+	}
+
+	@Override
+	public Optional<Character> findById(int characterId) {
+		return characterRepository.findById(characterId);
+	}
+
+	@Override
+	public int countByTypeOfCharacterAndAndUser(TypeOfCharacter typeOfCharacter, User member) {
+		return characterRepository.countByTypeOfCharacterAndAndUser(typeOfCharacter, member);
+	}
+
+	@Override
+	public List<Character> findByUserId(int userId) {
+		return characterRepository.findByUserId(userId);
 	}
 
 

@@ -3,8 +3,10 @@ package com.classic.project.model.item.scheduler;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.sold.SoldItem;
 import com.classic.project.model.item.sold.SoldItemRepository;
+import com.classic.project.model.item.sold.SoldItemService;
 import com.classic.project.model.item.unSold.UnSoldItem;
 import com.classic.project.model.item.unSold.UnSoldItemRepository;
+import com.classic.project.model.item.unSold.UnSoldItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,10 +22,10 @@ import java.util.List;
 public class CleanUnSoldItems {
 
     @Autowired
-    private UnSoldItemRepository unSoldItemRepository;
+    private UnSoldItemService unSoldItemService;
 
     @Autowired
-    private SoldItemRepository soldItemRepository;
+    private SoldItemService soldItemService;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -33,7 +35,7 @@ public class CleanUnSoldItems {
 
     @Scheduled(cron = "0 0 * * * *") //the top of every hour of every day.
     public void cleanUpTheSoldUnsoldItem() {
-        List<UnSoldItem> unSoldItems = unSoldItemRepository.getSoldUnSoldItemsByStateOfItem();
+        List<UnSoldItem> unSoldItems = unSoldItemService.getSoldUnSoldItemsByStateOfItem();
 	List<SoldItem> soldItems = new ArrayList<>();
 	for(UnSoldItem unSoldItem : unSoldItems){
 	    soldItems.add(registerUnSoldItemsAsSoldItems(unSoldItem));
@@ -46,7 +48,7 @@ public class CleanUnSoldItems {
 
     @Scheduled(cron = "0 0 15 * * *") //every day at 15:00
     public void cleanUpExpiredUnSoldItems(){
-	List<UnSoldItem> unSoldItems = unSoldItemRepository.getUnSoldItemsByStateOfItem();
+	List<UnSoldItem> unSoldItems = unSoldItemService.getUnSoldItemsByStateOfItem();
 	List<SoldItem> soldItems = new ArrayList<>();
 	for(UnSoldItem unSoldItem : unSoldItems){
 	    if(unSoldItem.getExpirationDate().before(new Date())){
@@ -82,10 +84,10 @@ public class CleanUnSoldItems {
     private SoldItem registerUnSoldItemsAsSoldItems(UnSoldItem unSoldItem) {
 	SoldItem soldItem = new SoldItem(unSoldItem.getGrade(), unSoldItem.getItemType(), unSoldItem.getPhotoPath(), unSoldItem.getItemName(), unSoldItem.getStateOfItem(), unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), false, unSoldItem.getItemId());
 	soldItem.setRegisterDate(new Date());
-	return soldItemRepository.save(soldItem);
+	return soldItemService.save(soldItem);
     }
 
     private void deleteUnSoldItems(int itemId){
-        unSoldItemRepository.deleteCleanUpUnSoldItems(itemId);
+        unSoldItemService.deleteCleanUpUnSoldItems(itemId);
     }
 }

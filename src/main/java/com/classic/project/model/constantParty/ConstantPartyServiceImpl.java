@@ -1,6 +1,7 @@
 package com.classic.project.model.constantParty;
 
 import com.classic.project.model.character.CharacterRepository;
+import com.classic.project.model.character.CharacterService;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.constantParty.exception.ConstantPartyExistException;
 import com.classic.project.model.constantParty.exception.FileExistsException;
@@ -17,6 +18,7 @@ import com.classic.project.model.constantParty.response.file.RootFolderResponse;
 import com.classic.project.model.constantParty.response.file.SubFolderResponse;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.UserRepository;
+import com.classic.project.model.user.UserService;
 import com.classic.project.security.UserAuthConfirm;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
@@ -59,13 +61,13 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     private ConstantPartyRepository constantPartyRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private UserAuthConfirm userAuthConfirm;
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
     @Autowired
     private Environment environment;
@@ -92,7 +94,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public ResponseEntity<ResponseConstantParty> getCp(int cpId, int userId) {
-        userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
+        userAuthConfirm.isTheAuthUser(userService.findById(userId).get());
         if (isMemberOfTheCP(cpId, userId)) {
             ResponseConstantParty responseCP = ResponseConstantParty.convertForLeader(constantPartyRepository.findById(cpId));
             return new ResponseEntity<>(responseCP, HttpStatus.OK);
@@ -103,9 +105,9 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     @Override
     @CacheEvict(allEntries = true)
     public void deleteMember(int characterId) {
-        User member = characterRepository.findById(characterId).get().getUser();
-        userRepository.deleteMemberByCharacterIdId(member.getUserId());
-        int boxes = constantPartyRepository.findById(member.getCp().getCpId()).get().getNumberOfBoxes() - characterRepository.countByTypeOfCharacterAndAndUser(TypeOfCharacter.BOX, member);
+        User member = characterService.findById(characterId).get().getUser();
+        userService.deleteMemberByCharacterIdId(member.getUserId());
+        int boxes = constantPartyRepository.findById(member.getCp().getCpId()).get().getNumberOfBoxes() - characterService.countByTypeOfCharacterAndAndUser(TypeOfCharacter.BOX, member);
         int actives = constantPartyRepository.findById(member.getCp().getCpId()).get().getNumberOfActivePlayers() - 1;
         constantPartyRepository.addUsersTpCP(actives, boxes, member.getCp().getCpId());
     }
@@ -229,7 +231,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
 
     @Override
     public ResponseEntity<RootFolderResponse> getCpPhotos(int cpId, int userId) {
-        userAuthConfirm.isTheAuthUser(userRepository.findById(userId).get());
+        userAuthConfirm.isTheAuthUser(userService.findById(userId).get());
         if (isMemberOfTheCP(cpId, userId)) {
             return new ResponseEntity<>(getFoldersByCPId(cpId), HttpStatus.OK);
         }
@@ -259,6 +261,31 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
         cpFileRepository.deleteById(fileId);
     }
 
+    @Override
+    public Optional<ConstantParty> findById(int cpId) {
+        return constantPartyRepository.findById(cpId);
+    }
+
+    @Override
+    public void addUsersTpCP(int activePlayers, int numberOfBoxes, int cpId) {
+        constantPartyRepository.addUsersTpCP(activePlayers, numberOfBoxes, cpId);
+    }
+
+    @Override
+    public List<ConstantParty> findAllWithSpreadSheet() {
+        return constantPartyRepository.findAllWithSpreadSheet();
+    }
+
+    @Override
+    public void save(ConstantParty cp) {
+        constantPartyRepository.save(cp);
+    }
+
+    @Override
+    public Optional<ConstantParty> findByRootFolderId(String id) {
+        return constantPartyRepository.findByRootFolderId(id);
+    }
+
     private String insertFolderInDrive(CpFile newFile) throws GeneralSecurityException, IOException {
         List<String> parents = new ArrayList<>();
         newFile.getParents().forEach(parentFile -> parents.add(parentFile.getParentId()));
@@ -278,7 +305,7 @@ public class ConstantPartyServiceImpl implements ConstantPartyService {
     }
 
     private Boolean isMemberOfTheCP(int cpId, int userId) {
-        return userRepository.isUserMemberOfCP(cpId, userId).isPresent();
+        return userService.isUserMemberOfCP(cpId, userId).isPresent();
     }
 
     private RootFolderResponse getFoldersByCPId(int cpId) {
