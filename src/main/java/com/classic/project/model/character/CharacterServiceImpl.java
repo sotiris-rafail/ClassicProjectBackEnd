@@ -107,8 +107,8 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public Character findByCharacterName(String whoBoughtIt) {
-		return characterRepository.findCharacterByInGameName(whoBoughtIt).get();
+	public Character findByCharacterName(String characterName) {
+		return characterRepository.findCharacterByInGameName(characterName).get();
 	}
 
 

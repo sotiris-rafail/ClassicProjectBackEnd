@@ -26,5 +26,5 @@ public interface CharacterService {
 
     List<Character> findByUserId(int userId);
 
-    Character findByCharacterName(String whoBoughtIt);
+    Character findByCharacterName(String characterName);
 }
