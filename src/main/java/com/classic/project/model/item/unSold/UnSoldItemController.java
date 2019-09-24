@@ -18,36 +18,36 @@ public class UnSoldItemController {
 
     @Autowired
     public UnSoldItemController(UnSoldItemService unSoldItemService) {
-	this.unSoldItemService = unSoldItemService;
+        this.unSoldItemService = unSoldItemService;
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void addNewUnSoldItem(@RequestBody NewUnSoldItem unSoldItem, @PathParam("amountOfItem") int amountOfItem){
-	unSoldItemService.addNewItemForSale(unSoldItem, amountOfItem);
+    public void addNewUnSoldItem(@RequestBody NewUnSoldItem unSoldItem, @PathParam("amountOfItem") int amountOfItem) {
+        unSoldItemService.addNewItemForSale(unSoldItem, amountOfItem);
     }
 
     @RequestMapping(path = "/getUnSoldItems", method = RequestMethod.GET, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ResponseUnSoldItem>> getUnSoldItems(){
-	return unSoldItemService.getUnSoldItems();
+    public ResponseEntity<List<ResponseUnSoldItem>> getUnSoldItems() {
+        return unSoldItemService.getUnSoldItems();
     }
 
     @RequestMapping(path = "/bidForItem", method = RequestMethod.PUT, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> bidForUnSoldItem(@PathParam("itemId") int itemId, @PathParam("bidStep") int bidStep, @PathParam("userId") int userId){
-	return unSoldItemService.bidForUnSoldItem(itemId, bidStep, userId);
+    public ResponseEntity<String> bidForUnSoldItem(@PathParam("itemId") int itemId, @PathParam("bidStep") int bidStep, @PathParam("userId") int userId) {
+        return unSoldItemService.bidForUnSoldItem(itemId, bidStep, userId);
     }
 
     @RequestMapping(path = "/buyNow", method = RequestMethod.PUT, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void buyNowUnSoldItem(@PathParam("itemId") int itemId, @PathParam("userId") int userId){
-	unSoldItemService.buyNowUnSoldItem(itemId, userId);
+    public void buyNowUnSoldItem(@PathParam("itemId") int itemId, @PathParam("userId") int userId) {
+        unSoldItemService.buyNowUnSoldItem(itemId, userId);
     }
 
     @RequestMapping(path = "/getNumberOfUnsoldItems", method = RequestMethod.GET, produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Integer> getNumberOfUnsoldItems(){
+    public ResponseEntity<Integer> getNumberOfUnsoldItems() {
         return unSoldItemService.getNumberOfUnsoldItems();
     }
 }

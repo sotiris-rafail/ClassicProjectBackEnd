@@ -333,6 +333,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.isUserMemberOfCP(cpId, userId);
     }
 
+    @Override
+    public List<String> getSuperUsersEmail() {
+        return userRepository.findUsersByTypeOfUser(TypeOfUser.SUPERUSER);
+    }
+
+    @Override
+    public String findEmailByCharacterName(String whoBoughtIt) {
+        return findUserByCharacterName(whoBoughtIt).getEmail();
+    }
+
+    @Override
+    public User findUserByCharacterName(String whoBoughtIt) {
+        return characterService.findByCharacterName(whoBoughtIt).getUser();
+    }
+
     private static boolean verifyCodeEquality(String code, User user) {
         return code.equals(VerificationServiceImpl.generateCode(user.getEmail(), user.getRegistrationDate()));
     }

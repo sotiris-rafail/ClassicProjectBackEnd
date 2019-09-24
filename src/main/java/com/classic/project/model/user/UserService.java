@@ -44,4 +44,10 @@ public interface UserService {
     void deleteMemberByCharacterIdId(int userId);
 
     Optional<User> isUserMemberOfCP(int cpId, int userId);
+
+    List<String> getSuperUsersEmail();
+
+    String findEmailByCharacterName(String whoBoughtIt);
+
+    User findUserByCharacterName(String whoBoughtIt);
 }

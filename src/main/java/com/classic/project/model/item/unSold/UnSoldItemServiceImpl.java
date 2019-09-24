@@ -27,15 +27,15 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
     @Autowired
     private CharacterService characterService;
 
-    private static final String PHOTO_PATH ="../../assets/itemPhoto/";
+    private static final String PHOTO_PATH = "../../assets/itemPhoto/";
 
-    private static final String JPG =".jpg";
+    private static final String JPG = ".jpg";
 
-	@Autowired
-	private JavaMailSender javaMailSender;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
-	@Value("${send.email.new.items}")
-	private boolean notifyForEachNewItem;
+    @Value("${send.email.new.items}")
+    private boolean notifyForEachNewItem;
 
     @Override
     public void addNewItemForSale(NewUnSoldItem newUnSoldItem, int amountOfItem) {
@@ -51,114 +51,114 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
             unSoldItemRepository.save(unSoldItem);
             unSoldItemRepository.flush();
         }
-        if(notifyForEachNewItem) {
-			sendMail(newUnSoldItem);
-		}
+        if (notifyForEachNewItem) {
+            sendMail(newUnSoldItem);
+        }
     }
 
-	private void sendMail(NewUnSoldItem newUnSoldItem) {
-		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo("allianceinquisition@googlegroups.com");
-		mail.setText(newUnSoldItem.getName() + " is added on auction with starting price " + calculatePrices(newUnSoldItem.getStartingPrice()) + " adena");
-		mail.setSubject("New item on auction");
-		mail.setFrom("inquisitionAlliance@gmail.com");
-		mail.setSentDate(new Date());
-		javaMailSender.send(mail);
-	}
+    private void sendMail(NewUnSoldItem newUnSoldItem) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo("allianceinquisition@googlegroups.com");
+        mail.setText(newUnSoldItem.getName() + " is added on auction with starting price " + calculatePrices(newUnSoldItem.getStartingPrice()) + " adena");
+        mail.setSubject("New item on auction");
+        mail.setFrom("inquisitionAlliance@gmail.com");
+        mail.setSentDate(new Date());
+        javaMailSender.send(mail);
+    }
 
-	@Override
+    @Override
     public ResponseEntity<List<ResponseUnSoldItem>> getUnSoldItems() {
-	List<UnSoldItem> allUnSoldItems = unSoldItemRepository.findAll();
-	List<ResponseUnSoldItem> responseUnSoldItems = new ArrayList<>();
-	for(UnSoldItem unSoldItem : allUnSoldItems) {
-	    if(unSoldItem.getStateOfItem().getState().equals(StateOfItem.UNSOLD.getState())){
-	        responseUnSoldItems.add(ResponseUnSoldItem.convertToResponse(unSoldItem));
-	    }
-	}
-	if(responseUnSoldItems.isEmpty()){
-	    throw new UnSoldItemsNotFoundException("There are not items for sale at the moment");
-	}
-	responseUnSoldItems.sort(Comparator.comparing(ResponseUnSoldItem::getExpirationDate));
-	return new ResponseEntity<>(responseUnSoldItems, HttpStatus.OK);
+        List<UnSoldItem> allUnSoldItems = unSoldItemRepository.findAll();
+        List<ResponseUnSoldItem> responseUnSoldItems = new ArrayList<>();
+        for (UnSoldItem unSoldItem : allUnSoldItems) {
+            if (unSoldItem.getStateOfItem().getState().equals(StateOfItem.UNSOLD.getState())) {
+                responseUnSoldItems.add(ResponseUnSoldItem.convertToResponse(unSoldItem));
+            }
+        }
+        if (responseUnSoldItems.isEmpty()) {
+            throw new UnSoldItemsNotFoundException("There are not items for sale at the moment");
+        }
+        responseUnSoldItems.sort(Comparator.comparing(ResponseUnSoldItem::getExpirationDate));
+        return new ResponseEntity<>(responseUnSoldItems, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> bidForUnSoldItem(int itemId, int bidStep, int userId) {
-	Optional<UnSoldItem> unSoldItem = unSoldItemRepository.findById(itemId);
-	if(!unSoldItem.isPresent()) {
-	    throw new UnSoldItemsNotFoundException(itemId);
-	}
-	double newCurrentValue = unSoldItem.get().getCurrentValue() + bidStep;
-	if(unSoldItem.get().getMaxPrice() < newCurrentValue){
-	    unSoldItemRepository.bidForItem(itemId, newCurrentValue, getLastBidderName(userId), StateOfItem.SOLD);
-	} else {
-	    unSoldItemRepository.bidForItem(itemId, newCurrentValue, getLastBidderName(userId), StateOfItem.UNSOLD);
-	}
-	return ResponseEntity.ok(getLastBidderName(userId));
+        Optional<UnSoldItem> unSoldItem = unSoldItemRepository.findById(itemId);
+        if (!unSoldItem.isPresent()) {
+            throw new UnSoldItemsNotFoundException(itemId);
+        }
+        double newCurrentValue = unSoldItem.get().getCurrentValue() + bidStep;
+        if (unSoldItem.get().getMaxPrice() < newCurrentValue) {
+            unSoldItemRepository.bidForItem(itemId, newCurrentValue, getLastBidderName(userId), StateOfItem.SOLD);
+        } else {
+            unSoldItemRepository.bidForItem(itemId, newCurrentValue, getLastBidderName(userId), StateOfItem.UNSOLD);
+        }
+        return ResponseEntity.ok(getLastBidderName(userId));
     }
 
     @Override
     public void buyNowUnSoldItem(int itemId, int userId) {
-	Optional<UnSoldItem> unSoldItem = unSoldItemRepository.findById(itemId);
-	if(!unSoldItem.isPresent()) {
-	    throw new UnSoldItemsNotFoundException(itemId);
-	}
-	unSoldItemRepository.buyNow(itemId, getLastBidderName(userId), unSoldItem.get().getMaxPrice() , StateOfItem.SOLD);
+        Optional<UnSoldItem> unSoldItem = unSoldItemRepository.findById(itemId);
+        if (!unSoldItem.isPresent()) {
+            throw new UnSoldItemsNotFoundException(itemId);
+        }
+        unSoldItemRepository.buyNow(itemId, getLastBidderName(userId), unSoldItem.get().getMaxPrice(), StateOfItem.SOLD);
     }
 
-	@Override
-	public ResponseEntity<Integer> getNumberOfUnsoldItems() {
-		return new ResponseEntity<>(unSoldItemRepository.countUnSoldItemByStateOfItem(StateOfItem.UNSOLD), HttpStatus.OK);
-	}
+    @Override
+    public ResponseEntity<Integer> getNumberOfUnsoldItems() {
+        return new ResponseEntity<>(unSoldItemRepository.countUnSoldItemByStateOfItem(StateOfItem.UNSOLD), HttpStatus.OK);
+    }
 
-	@Override
-	public void deleteCleanUpUnSoldItems(int itemId) {
-		unSoldItemRepository.deleteCleanUpUnSoldItems(itemId);
-	}
+    @Override
+    public void deleteCleanUpUnSoldItems(int itemId) {
+        unSoldItemRepository.deleteCleanUpUnSoldItems(itemId);
+    }
 
-	@Override
-	public List<UnSoldItem> getSoldUnSoldItemsByStateOfItem() {
-		return unSoldItemRepository.getSoldUnSoldItemsByStateOfItem();
-	}
+    @Override
+    public List<UnSoldItem> getSoldUnSoldItemsByStateOfItem() {
+        return unSoldItemRepository.getSoldUnSoldItemsByStateOfItem();
+    }
 
-	@Override
-	public List<UnSoldItem> getUnSoldItemsByStateOfItem() {
-		return unSoldItemRepository.getUnSoldItemsByStateOfItem();
-	}
+    @Override
+    public List<UnSoldItem> getUnSoldItemsByStateOfItem() {
+        return unSoldItemRepository.getUnSoldItemsByStateOfItem();
+    }
 
-	private static Date getExpirationDate(Date registerDate, int daysToStayUnSold){
+    private static Date getExpirationDate(Date registerDate, int daysToStayUnSold) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(registerDate);
         calendar.add(Calendar.DATE, daysToStayUnSold);
-		calendar.set(Calendar.MILLISECOND, 5);
-		calendar.set(Calendar.SECOND, 59);
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.HOUR_OF_DAY, 14);
-        return  calendar.getTime();
+        calendar.set(Calendar.MILLISECOND, 5);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        return calendar.getTime();
     }
 
     private String getLastBidderName(int userId) {
-	Optional<Character> first = characterService.findByUserId(userId)
-	    .stream()
-	    .filter(character -> character.getTypeOfCharacter().equals(
-		TypeOfCharacter.MAIN))
-	    .findFirst();
-	if(first.isPresent()) {
-	    return first.get().getInGameName();
-	} else {
-	    throw new UnSoldItemsNotFoundException("Can not bid if you do not have a main character registered");
-	}
+        Optional<Character> first = characterService.findByUserId(userId)
+                .stream()
+                .filter(character -> character.getTypeOfCharacter().equals(
+                        TypeOfCharacter.MAIN))
+                .findFirst();
+        if (first.isPresent()) {
+            return first.get().getInGameName();
+        } else {
+            throw new UnSoldItemsNotFoundException("Can not bid if you do not have a main character registered");
+        }
     }
 
-    private static Date trimToZero(Date now){
-	Calendar calendar = Calendar.getInstance();
-	calendar.setTime(now);
-	calendar.set(Calendar.MILLISECOND, 0);
-	calendar.set(Calendar.SECOND, 0);
-	calendar.set(Calendar.MINUTE, 0);
-	calendar.set(Calendar.HOUR_OF_DAY, 0);
+    private static Date trimToZero(Date now) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
 
-	return calendar.getTime();
+        return calendar.getTime();
     }
 
     private static double calculatePrices(double price) {
@@ -167,14 +167,14 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 
     private static String createPhotoPath(String itemName) {
         String[] splittedItemName = itemName.trim().split("\\s+");
-        if(splittedItemName.length == 1) {
-            return PHOTO_PATH+splittedItemName[0].toLowerCase()+JPG;
-	} else {
+        if (splittedItemName.length == 1) {
+            return PHOTO_PATH + splittedItemName[0].toLowerCase() + JPG;
+        } else {
             StringBuilder photoName = new StringBuilder();
-            for(String subString : splittedItemName){
+            for (String subString : splittedItemName) {
                 photoName.append(subString.toLowerCase()).append("_");
-	    }
-	    return PHOTO_PATH+photoName.substring(0,photoName.length() - 1)+JPG;
-	}
+            }
+            return PHOTO_PATH + photoName.substring(0, photoName.length() - 1) + JPG;
+        }
     }
 }

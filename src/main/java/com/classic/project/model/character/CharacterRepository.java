@@ -35,4 +35,6 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
     Optional<Character> findCharacterByInGameNameLowerCase(String inGameName);
 
     int countByTypeOfCharacterAndAndUser(TypeOfCharacter typeOfCharacter, User user);
+
+    Optional<Character> findCharacterByInGameName(String inGameName);
 }

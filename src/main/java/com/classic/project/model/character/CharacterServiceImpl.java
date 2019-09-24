@@ -106,6 +106,11 @@ public class CharacterServiceImpl implements CharacterService {
 		return characterRepository.findByUserId(userId);
 	}
 
+	@Override
+	public Character findByCharacterName(String whoBoughtIt) {
+		return characterRepository.findCharacterByInGameName(whoBoughtIt).get();
+	}
+
 
 	private static String[] getAllNames(){
 		String[] names = new String[ClassOfCharacter.values().length];

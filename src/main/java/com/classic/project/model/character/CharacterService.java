@@ -25,4 +25,6 @@ public interface CharacterService {
     int countByTypeOfCharacterAndAndUser(TypeOfCharacter box, User member);
 
     List<Character> findByUserId(int userId);
+
+    Character findByCharacterName(String whoBoughtIt);
 }
