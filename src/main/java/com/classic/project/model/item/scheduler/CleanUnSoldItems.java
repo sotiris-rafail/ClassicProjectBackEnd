@@ -48,7 +48,7 @@ public class CleanUnSoldItems {
             soldItems.add(registerUnSoldItemsAsSoldItems(unSoldItem));
             deleteUnSoldItems(unSoldItem.getItemId());
         }
-        sendMail(soldItems);
+        sendMail(soldItems.stream().filter(soldItem -> !soldItem.getWhoBoughtIt().equals("")).collect(Collectors.toList()));
     }
 
     @Scheduled(cron = "0 0 15 * * *") //every day at 15:00
@@ -62,7 +62,7 @@ public class CleanUnSoldItems {
                 deleteUnSoldItems(unSoldItem.getItemId());
             }
         }
-        sendMail(soldItems);
+        sendMail(soldItems.stream().filter(soldItem -> !soldItem.getWhoBoughtIt().equals("")).collect(Collectors.toList()));
     }
 
     private void sendMail(List<SoldItem> soldItems) {
@@ -83,7 +83,7 @@ public class CleanUnSoldItems {
     }
 
     private void notifyUserForSoldItems(List<SoldItem> soldItems) {
-        List<String> buyers = getDistinctBuyers(soldItems.stream().filter(soldItem -> !soldItem.getWhoBoughtIt().equals("")).collect(Collectors.toList()));
+        List<String> buyers = getDistinctBuyers(soldItems);
         for (String buyer : buyers) {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom("inquisitionalliance@gmail.com");
