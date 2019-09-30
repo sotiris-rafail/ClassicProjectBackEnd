@@ -83,7 +83,7 @@ public class CleanUnSoldItems {
     }
 
     private void notifyUserForSoldItems(List<SoldItem> soldItems) {
-        List<String> buyers = getDistinctBuyers(soldItems);
+        List<String> buyers = getDistinctBuyers(soldItems.stream().filter(soldItem -> !soldItem.getWhoBoughtIt().equals("")).collect(Collectors.toList()));
         for (String buyer : buyers) {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom("inquisitionalliance@gmail.com");
