@@ -7,9 +7,12 @@ import com.classic.project.model.item.unSold.UnSoldItem;
 import com.classic.project.model.item.unSold.UnSoldItemService;
 import com.classic.project.model.user.User;
 import com.classic.project.model.user.UserService;
+import com.classic.project.model.user.UserServiceImpl;
 import com.classic.project.model.user.option.Option;
 import com.classic.project.model.user.verification.Verification;
 import com.classic.project.model.user.verification.VerificationStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class CleanUnSoldItems {
+
+    private static Logger logger = LoggerFactory.getLogger(CleanUnSoldItems.class);
 
     @Autowired
     private UnSoldItemService unSoldItemService;
@@ -45,6 +50,7 @@ public class CleanUnSoldItems {
         List<UnSoldItem> unSoldItems = unSoldItemService.getSoldUnSoldItemsByStateOfItem();
         List<SoldItem> soldItems = new ArrayList<>();
         for (UnSoldItem unSoldItem : unSoldItems) {
+            logger.info(unSoldItems.toString());
             soldItems.add(registerUnSoldItemsAsSoldItems(unSoldItem));
             deleteUnSoldItems(unSoldItem.getItemId());
         }
@@ -56,6 +62,7 @@ public class CleanUnSoldItems {
         List<UnSoldItem> unSoldItems = unSoldItemService.getUnSoldItemsByStateOfItem();
         List<SoldItem> soldItems = new ArrayList<>();
         for (UnSoldItem unSoldItem : unSoldItems) {
+            logger.info(unSoldItems.toString());
             if (unSoldItem.getExpirationDate().before(new Date())) {
                 unSoldItem.setStateOfItem(StateOfItem.SOLD);
                 soldItems.add(registerUnSoldItemsAsSoldItems(unSoldItem));
@@ -102,18 +109,29 @@ public class CleanUnSoldItems {
                     append(" adena.");
             if (!singleMail) {
                 text.append("The winner is ").append(soldItem.getWhoBoughtIt()).append(".\n");
+            } else {
+                text.append(".\n");
             }
         }
         return text.toString();
     }
 
     private SoldItem registerUnSoldItemsAsSoldItems(UnSoldItem unSoldItem) {
-        SoldItem soldItem = new SoldItem(unSoldItem.getGrade(), unSoldItem.getItemType(), unSoldItem.getPhotoPath(), unSoldItem.getItemName(), unSoldItem.getStateOfItem(), unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), false, unSoldItem.getItemId());
+        SoldItem soldItem = new SoldItem(unSoldItem.getGrade(),
+                unSoldItem.getItemType(), unSoldItem.getPhotoPath(),
+                unSoldItem.getItemName(), unSoldItem.getStateOfItem(),
+                unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(),
+                unSoldItem.getLastBidder(), false,
+                unSoldItem.getItemId(), unSoldItem.getBidStep(),
+                unSoldItem.getDaysToStayUnSold());
         soldItem.setRegisterDate(new Date());
+        logger.info("The Unsold item " + unSoldItem.toString());
+        logger.info("The sold item " + soldItem.toString());
         return soldItemService.save(soldItem);
     }
 
     private void deleteUnSoldItems(int itemId) {
+        logger.info("UN SOLD ITEM WITH ID " + itemId + "IS DELETED");
         unSoldItemService.deleteCleanUpUnSoldItems(itemId);
     }
 
@@ -143,6 +161,7 @@ public class CleanUnSoldItems {
             if (user.getVerification().getStatus().equals(VerificationStatus.VERIFIED)
                     && user.getOptions().isSoldItemOption()) {
                 finalBuyers.add(buyer);
+                logger.info("FINAL BUYER " + buyer);
             }
         }
         return finalBuyers;

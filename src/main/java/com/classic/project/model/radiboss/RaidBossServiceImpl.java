@@ -19,7 +19,7 @@ public class RaidBossServiceImpl implements RaidBossService {
     @Autowired
     private RaidBossRepository raidBossRepository;
 
-    Logger logger = LoggerFactory.getLogger(RaidBossServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(RaidBossServiceImpl.class);
 
     @Override
     public ResponseEntity<ResponseRaidBoss> updateDeathTimer(int raidId, Date timer) {

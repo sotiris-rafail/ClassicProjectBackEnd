@@ -23,14 +23,20 @@ public class SoldItem extends Item {
     private boolean isDelivered;
     @Column
     private int unSoldItemId;
+    @Column
+    private double bidStep;
+    @Column
+    private int daysToStayUnSold;
 
-    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId) {
+    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId, double bidStep, int daysToStayUnSold) {
         super(grade, itemType, photoPath, itemName, stateOfItem);
         this.maxPrice = maxPrice;
         this.boughtPrice = boughtPrice;
         this.whoBoughtIt = whoBoughtIt;
         this.isDelivered = isDelivered;
         this.unSoldItemId = unSoldItemId;
+        this.bidStep = bidStep;
+        this.daysToStayUnSold = daysToStayUnSold;
     }
 
     public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId) {
@@ -50,7 +56,7 @@ public class SoldItem extends Item {
         return maxPrice;
     }
 
-    public void setMaxPrice(int maxPrice) {
+    public void setMaxPrice(double maxPrice) {
         this.maxPrice = maxPrice;
     }
 
@@ -58,7 +64,7 @@ public class SoldItem extends Item {
         return boughtPrice;
     }
 
-    public void setBoughtPrice(int boughtPrice) {
+    public void setBoughtPrice(double boughtPrice) {
         this.boughtPrice = boughtPrice;
     }
 
@@ -84,5 +90,34 @@ public class SoldItem extends Item {
 
     public void setUnSoldItemId(int unSoldItemId) {
 	this.unSoldItemId = unSoldItemId;
+    }
+
+    public double getBidStep() {
+        return bidStep;
+    }
+
+    public void setBidStep(double bidStep) {
+        this.bidStep = bidStep;
+    }
+
+    public int getDaysToStayUnSold() {
+        return daysToStayUnSold;
+    }
+
+    public void setDaysToStayUnSold(int daysToStayUnSold) {
+        this.daysToStayUnSold = daysToStayUnSold;
+    }
+
+    @Override
+    public String toString() {
+        return "SoldItem{" +
+                "maxPrice=" + maxPrice +
+                ", boughtPrice=" + boughtPrice +
+                ", whoBoughtIt='" + whoBoughtIt + '\'' +
+                ", isDelivered=" + isDelivered +
+                ", unSoldItemId=" + unSoldItemId +
+                ", bidStep=" + bidStep +
+                ", daysToStayUnSold=" + daysToStayUnSold +
+                '}';
     }
 }

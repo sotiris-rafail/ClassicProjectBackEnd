@@ -4,10 +4,7 @@ import com.classic.project.model.item.sold.response.ResponseSoldItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
@@ -31,7 +28,13 @@ public class SoldItemController {
 
     @RequestMapping(path = "/delivery", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void getSoldItems(@PathParam("itemId")int itemId, @PathParam("isDelivered")boolean isDelivered) {
+    public void getSoldItems(@PathParam("itemId") int itemId, @PathParam("isDelivered") boolean isDelivered) {
         soldItemService.deliverSoldItem(itemId, isDelivered);
+    }
+
+    @RequestMapping(path = "/renewItems", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void renewItems(@RequestBody List<Integer> renewItems) {
+        soldItemService.renewItems(renewItems);
     }
 }

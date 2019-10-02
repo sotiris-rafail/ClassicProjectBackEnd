@@ -111,4 +111,17 @@ public class UnSoldItem extends Item {
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
+
+    @Override
+    public String toString() {
+        return "UnSoldItem{" +
+                "maxPrice=" + maxPrice +
+                ", startingPrice=" + startingPrice +
+                ", daysToStayUnSold=" + daysToStayUnSold +
+                ", currentValue=" + currentValue +
+                ", lastBidder='" + lastBidder + '\'' +
+                ", bidStep=" + bidStep +
+                ", expirationDate=" + expirationDate +
+                '}';
+    }
 }

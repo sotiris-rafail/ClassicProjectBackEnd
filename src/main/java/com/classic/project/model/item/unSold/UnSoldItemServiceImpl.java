@@ -8,6 +8,8 @@ import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.unSold.exception.UnSoldItemsNotFoundException;
 import com.classic.project.model.item.unSold.response.NewUnSoldItem;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,15 +29,17 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
     @Autowired
     private CharacterService characterService;
 
+    @Autowired
+    private JavaMailSender javaMailSender;
+
     private static final String PHOTO_PATH = "../../assets/itemPhoto/";
 
     private static final String JPG = ".jpg";
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-
     @Value("${send.email.new.items}")
     private boolean notifyForEachNewItem;
+
+    private static Logger logger = LoggerFactory.getLogger(UnSoldItemServiceImpl.class);
 
     @Override
     public void addNewItemForSale(NewUnSoldItem newUnSoldItem, int amountOfItem) {
@@ -49,11 +53,22 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
             unSoldItem.setStartingPrice(calculatePrices(unSoldItem.getStartingPrice()));
             unSoldItem.setPhotoPath(createPhotoPath(unSoldItem.getItemName()));
             unSoldItemRepository.save(unSoldItem);
+            logger.info("ADDING UN_SOLD ITEM" + unSoldItem.toString());
             unSoldItemRepository.flush();
         }
         if (notifyForEachNewItem) {
             sendMail(newUnSoldItem);
         }
+    }
+
+    @Override
+    public void addNewItemForSaleAgain(List<UnSoldItem> renewItems) {
+        renewItems.forEach(item -> {
+            item.setRegisterDate(trimToZero(new Date()));
+            item.setExpirationDate(getExpirationDate(item.getRegisterDate(), item.getDaysToStayUnSold()));
+            logger.info("READDING UN_SOLD ITEM" + item.toString());
+        });
+        unSoldItemRepository.saveAll(renewItems);
     }
 
     private void sendMail(NewUnSoldItem newUnSoldItem) {

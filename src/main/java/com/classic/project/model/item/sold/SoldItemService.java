@@ -11,4 +11,6 @@ public interface SoldItemService {
     void deliverSoldItem(int itemId, boolean isDelivered);
 
     SoldItem save(SoldItem soldItem);
+
+    void renewItems(List<Integer> renewItems);
 }

@@ -9,6 +9,8 @@ import java.util.List;
 public interface UnSoldItemService {
     void addNewItemForSale(NewUnSoldItem raidBoss, int amountOfItem);
 
+    void addNewItemForSaleAgain(List<UnSoldItem> renewItems);
+
     ResponseEntity<List<ResponseUnSoldItem>> getUnSoldItems();
 
     ResponseEntity<String> bidForUnSoldItem(int itemId, int bidStep, int userId);
