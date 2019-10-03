@@ -1,9 +1,6 @@
 package com.classic.project.model.item.sold;
 
-import com.classic.project.model.item.Grade;
-import com.classic.project.model.item.Item;
-import com.classic.project.model.item.ItemType;
-import com.classic.project.model.item.StateOfItem;
+import com.classic.project.model.item.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,8 +25,9 @@ public class SoldItem extends Item {
     @Column
     private int daysToStayUnSold;
 
-    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId, double bidStep, int daysToStayUnSold) {
-        super(grade, itemType, photoPath, itemName, stateOfItem);
+    public SoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt,
+                    boolean isDelivered, int unSoldItemId, double bidStep, int daysToStayUnSold, SaleState saleState) {
+        super(grade, itemType, photoPath, itemName, stateOfItem, saleState);
         this.maxPrice = maxPrice;
         this.boughtPrice = boughtPrice;
         this.whoBoughtIt = whoBoughtIt;
@@ -39,8 +37,9 @@ public class SoldItem extends Item {
         this.daysToStayUnSold = daysToStayUnSold;
     }
 
-    public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice, String whoBoughtIt, boolean isDelivered, int unSoldItemId) {
-        super(itemId, grade, itemType, photoPath, itemName, stateOfItem);
+    public SoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double boughtPrice,
+                    String whoBoughtIt, boolean isDelivered, int unSoldItemId, SaleState saleState) {
+        super(itemId, grade, itemType, photoPath, itemName, stateOfItem, saleState);
         this.maxPrice = maxPrice;
         this.boughtPrice = boughtPrice;
         this.whoBoughtIt = whoBoughtIt;
@@ -118,6 +117,6 @@ public class SoldItem extends Item {
                 ", unSoldItemId=" + unSoldItemId +
                 ", bidStep=" + bidStep +
                 ", daysToStayUnSold=" + daysToStayUnSold +
-                '}';
+                '}' + super.toString();
     }
 }

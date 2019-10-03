@@ -25,22 +25,26 @@ public class Item {
     private Date registerDate;
     @Column
     private StateOfItem stateOfItem;
+    @Column
+    private SaleState saleState;
 
-    public Item(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem) {
+    public Item(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, SaleState saleState) {
         this.itemId = itemId;
         this.grade = grade;
         this.itemType = itemType;
         this.photoPath = photoPath;
         this.itemName = itemName;
         this.stateOfItem = stateOfItem;
+        this.saleState = saleState;
     }
 
-    public Item(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem) {
+    public Item(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, SaleState saleState) {
         this.grade = grade;
         this.itemType = itemType;
         this.photoPath = photoPath;
         this.itemName = itemName;
         this.stateOfItem = stateOfItem;
+        this.saleState = saleState;
     }
 
     public Item() {
@@ -100,5 +104,27 @@ public class Item {
 
     public void setStateOfItem(StateOfItem stateOfItem) {
         this.stateOfItem = stateOfItem;
+    }
+
+    public SaleState getSaleState() {
+        return saleState;
+    }
+
+    public void setSaleState(SaleState saleState) {
+        this.saleState = saleState;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "itemId=" + itemId +
+                ", grade=" + grade +
+                ", itemType=" + itemType +
+                ", photoPath='" + photoPath + '\'' +
+                ", itemName='" + itemName + '\'' +
+                ", registerDate=" + registerDate +
+                ", stateOfItem=" + stateOfItem +
+                ", saleState=" + saleState +
+                '}';
     }
 }

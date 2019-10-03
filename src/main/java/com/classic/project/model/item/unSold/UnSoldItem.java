@@ -1,9 +1,6 @@
 package com.classic.project.model.item.unSold;
 
-import com.classic.project.model.item.Grade;
-import com.classic.project.model.item.Item;
-import com.classic.project.model.item.ItemType;
-import com.classic.project.model.item.StateOfItem;
+import com.classic.project.model.item.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -31,8 +28,9 @@ public class UnSoldItem extends Item {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date expirationDate;
 
-    public UnSoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice, int daysToStayUnSold, double currentValue, String lastBidder, double bidStep) {
-        super(grade, itemType, photoPath, itemName, stateOfItem);
+    public UnSoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice,
+                      int daysToStayUnSold, double currentValue, String lastBidder, double bidStep, SaleState saleState) {
+        super(grade, itemType, photoPath, itemName, stateOfItem, saleState);
         this.maxPrice = maxPrice;
         this.startingPrice = startingPrice;
         this.daysToStayUnSold = daysToStayUnSold;
@@ -41,8 +39,9 @@ public class UnSoldItem extends Item {
         this.bidStep = bidStep;
     }
 
-    public UnSoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice, int daysToStayUnSold, double currentValue, String lastBidder, double bidStep, Date expirationDate) {
-        super(itemId, grade, itemType, photoPath, itemName, stateOfItem);
+    public UnSoldItem(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice,
+                      int daysToStayUnSold, double currentValue, String lastBidder, double bidStep, Date expirationDate, SaleState saleState) {
+        super(itemId, grade, itemType, photoPath, itemName, stateOfItem, saleState);
         this.maxPrice = maxPrice;
         this.startingPrice = startingPrice;
         this.daysToStayUnSold = daysToStayUnSold;
@@ -122,6 +121,6 @@ public class UnSoldItem extends Item {
                 ", lastBidder='" + lastBidder + '\'' +
                 ", bidStep=" + bidStep +
                 ", expirationDate=" + expirationDate +
-                '}';
+                '}' + super.toString();
     }
 }

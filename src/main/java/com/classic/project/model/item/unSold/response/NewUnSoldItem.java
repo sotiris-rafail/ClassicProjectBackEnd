@@ -2,6 +2,7 @@ package com.classic.project.model.item.unSold.response;
 
 import com.classic.project.model.item.Grade;
 import com.classic.project.model.item.ItemType;
+import com.classic.project.model.item.SaleState;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.unSold.UnSoldItem;
 
@@ -68,6 +69,9 @@ public class NewUnSoldItem {
     }
 
     public static UnSoldItem convertToUnSoldItem(NewUnSoldItem newUnSoldItem){
-        return new UnSoldItem(Grade.valueOf(newUnSoldItem.getGrade()), ItemType.valueOf(newUnSoldItem.getTypeOfItem()), newUnSoldItem.photoPath, newUnSoldItem.name, StateOfItem.getValueByState(newUnSoldItem.getStateOfItem()), newUnSoldItem.maxPrice, newUnSoldItem.startingPrice, newUnSoldItem.numberOfDays, newUnSoldItem.currentValue, newUnSoldItem.lastBidder, newUnSoldItem.bidStep);
+        return new UnSoldItem(Grade.valueOf(newUnSoldItem.getGrade()), ItemType.valueOf(newUnSoldItem.getTypeOfItem()),
+                newUnSoldItem.photoPath, newUnSoldItem.name, StateOfItem.getValueByState(newUnSoldItem.getStateOfItem()),
+                newUnSoldItem.maxPrice, newUnSoldItem.startingPrice, newUnSoldItem.numberOfDays, newUnSoldItem.currentValue,
+                newUnSoldItem.lastBidder, newUnSoldItem.bidStep, SaleState.FIRST);
     }
 }

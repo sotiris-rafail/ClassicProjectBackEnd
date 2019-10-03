@@ -18,121 +18,134 @@ public class ResponseUnSoldItem {
     private double currentValue;
     private String lastBidder;
     private String photoPath;
+    private String saleState;
 
     public ResponseUnSoldItem(int itemId, String grade, String typeOfItem, double maxPrice, double startingPrice,
-	String stateOfItem, String name, Date expirationDate, double bidStep, double currentValue, String lastBidder,
-	String photoPath) {
-	this.itemId = itemId;
-	this.grade = grade;
-	this.typeOfItem = typeOfItem;
-	this.maxPrice = maxPrice;
-	this.startingPrice = startingPrice;
-	this.stateOfItem = stateOfItem;
-	this.name = name;
-	this.expirationDate = expirationDate;
-	this.bidStep = bidStep;
-	this.currentValue = currentValue;
-	this.lastBidder = lastBidder;
-	this.photoPath = photoPath;
+                              String stateOfItem, String name, Date expirationDate, double bidStep, double currentValue, String lastBidder,
+                              String photoPath, String saleState) {
+        this.itemId = itemId;
+        this.grade = grade;
+        this.typeOfItem = typeOfItem;
+        this.maxPrice = maxPrice;
+        this.startingPrice = startingPrice;
+        this.stateOfItem = stateOfItem;
+        this.name = name;
+        this.expirationDate = expirationDate;
+        this.bidStep = bidStep;
+        this.currentValue = currentValue;
+        this.lastBidder = lastBidder;
+        this.photoPath = photoPath;
+        this.saleState = saleState;
     }
 
     public int getItemId() {
-	return itemId;
+        return itemId;
     }
 
     public void setItemId(int itemId) {
-	this.itemId = itemId;
+        this.itemId = itemId;
     }
 
     public String getGrade() {
-	return grade;
+        return grade;
     }
 
     public void setGrade(String grade) {
-	this.grade = grade;
+        this.grade = grade;
     }
 
     public String getTypeOfItem() {
-	return typeOfItem;
+        return typeOfItem;
     }
 
     public void setTypeOfItem(String typeOfItem) {
-	this.typeOfItem = typeOfItem;
+        this.typeOfItem = typeOfItem;
     }
 
     public double getMaxPrice() {
-	return maxPrice;
+        return maxPrice;
     }
 
     public void setMaxPrice(double maxPrice) {
-	this.maxPrice = maxPrice;
+        this.maxPrice = maxPrice;
     }
 
     public double getStartingPrice() {
-	return startingPrice;
+        return startingPrice;
     }
 
     public void setStartingPrice(double startingPrice) {
-	this.startingPrice = startingPrice;
+        this.startingPrice = startingPrice;
     }
 
     public String getStateOfItem() {
-	return stateOfItem;
+        return stateOfItem;
     }
 
     public void setStateOfItem(String stateOfItem) {
-	this.stateOfItem = stateOfItem;
+        this.stateOfItem = stateOfItem;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public Date getExpirationDate() {
-	return expirationDate;
+        return expirationDate;
     }
 
     public void setExpirationDate(Date expirationDate) {
-	this.expirationDate = expirationDate;
+        this.expirationDate = expirationDate;
     }
 
     public double getBidStep() {
-	return bidStep;
+        return bidStep;
     }
 
     public void setBidStep(double bidStep) {
-	this.bidStep = bidStep;
+        this.bidStep = bidStep;
     }
 
     public double getCurrentValue() {
-	return currentValue;
+        return currentValue;
     }
 
     public void setCurrentValue(double currentValue) {
-	this.currentValue = currentValue;
+        this.currentValue = currentValue;
     }
 
     public String getLastBidder() {
-	return lastBidder;
+        return lastBidder;
     }
 
     public void setLastBidder(String lastBidder) {
-	this.lastBidder = lastBidder;
+        this.lastBidder = lastBidder;
     }
 
     public String getPhotoPath() {
-	return photoPath;
+        return photoPath;
     }
 
     public void setPhotoPath(String photoPath) {
-	this.photoPath = photoPath;
+        this.photoPath = photoPath;
+    }
+
+    public String getSaleState() {
+        return saleState;
+    }
+
+    public void setSaleState(String saleState) {
+        this.saleState = saleState;
     }
 
     public static ResponseUnSoldItem convertToResponse(UnSoldItem unSoldItem) {
-	return new ResponseUnSoldItem(unSoldItem.getItemId(), unSoldItem.getGrade().getGrade(), unSoldItem.getItemType().getType(), unSoldItem.getMaxPrice(), unSoldItem.getStartingPrice(), unSoldItem.getStateOfItem().getState(), unSoldItem.getItemName(), unSoldItem.getExpirationDate(), unSoldItem.getBidStep(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(), unSoldItem.getPhotoPath());
+        return new ResponseUnSoldItem(unSoldItem.getItemId(), unSoldItem.getGrade().getGrade(), unSoldItem.getItemType().getType(),
+                unSoldItem.getMaxPrice(), unSoldItem.getStartingPrice(), unSoldItem.getStateOfItem().getState(), unSoldItem.getItemName(),
+                unSoldItem.getExpirationDate(), unSoldItem.getBidStep(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(),
+                unSoldItem.getPhotoPath(), unSoldItem.getSaleState().name());
     }
 }

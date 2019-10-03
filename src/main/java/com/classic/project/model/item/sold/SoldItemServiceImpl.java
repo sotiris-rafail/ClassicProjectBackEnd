@@ -1,5 +1,6 @@
 package com.classic.project.model.item.sold;
 
+import com.classic.project.model.item.SaleState;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.sold.exception.SoldItemNotFoundException;
 import com.classic.project.model.item.sold.response.ResponseSoldItem;
@@ -66,7 +67,7 @@ public class SoldItemServiceImpl implements SoldItemService {
                             StateOfItem.UNSOLD, toBeRenew.get().getMaxPrice(),
                             toBeRenew.get().getBoughtPrice(), toBeRenew.get().getDaysToStayUnSold(),
                             toBeRenew.get().getBoughtPrice(), toBeRenew.get().getWhoBoughtIt(),
-                            toBeRenew.get().getBidStep()));
+                            toBeRenew.get().getBidStep(), SaleState.RESALE));
                 }
             }
         });

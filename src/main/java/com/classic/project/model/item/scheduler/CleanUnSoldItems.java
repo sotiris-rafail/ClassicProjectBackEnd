@@ -1,5 +1,6 @@
 package com.classic.project.model.item.scheduler;
 
+import com.classic.project.model.item.SaleState;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.sold.SoldItem;
 import com.classic.project.model.item.sold.SoldItemService;
@@ -123,7 +124,7 @@ public class CleanUnSoldItems {
                 unSoldItem.getMaxPrice(), unSoldItem.getCurrentValue(),
                 unSoldItem.getLastBidder(), false,
                 unSoldItem.getItemId(), unSoldItem.getBidStep(),
-                unSoldItem.getDaysToStayUnSold());
+                unSoldItem.getDaysToStayUnSold(), SaleState.DONE);
         soldItem.setRegisterDate(new Date());
         logger.info("The Unsold item " + unSoldItem.toString());
         logger.info("The sold item " + soldItem.toString());
