@@ -19,10 +19,11 @@ public class ResponseUnSoldItem {
     private String lastBidder;
     private String photoPath;
     private String saleState;
+    private boolean isEditable;
 
     public ResponseUnSoldItem(int itemId, String grade, String typeOfItem, double maxPrice, double startingPrice,
                               String stateOfItem, String name, Date expirationDate, double bidStep, double currentValue, String lastBidder,
-                              String photoPath, String saleState) {
+                              String photoPath, String saleState, boolean isEditable) {
         this.itemId = itemId;
         this.grade = grade;
         this.typeOfItem = typeOfItem;
@@ -36,6 +37,7 @@ public class ResponseUnSoldItem {
         this.lastBidder = lastBidder;
         this.photoPath = photoPath;
         this.saleState = saleState;
+        this.isEditable = isEditable;
     }
 
     public int getItemId() {
@@ -142,10 +144,18 @@ public class ResponseUnSoldItem {
         this.saleState = saleState;
     }
 
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
+    }
+
     public static ResponseUnSoldItem convertToResponse(UnSoldItem unSoldItem) {
         return new ResponseUnSoldItem(unSoldItem.getItemId(), unSoldItem.getGrade().getGrade(), unSoldItem.getItemType().getType(),
                 unSoldItem.getMaxPrice(), unSoldItem.getStartingPrice(), unSoldItem.getStateOfItem().getState(), unSoldItem.getItemName(),
                 unSoldItem.getExpirationDate(), unSoldItem.getBidStep(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(),
-                unSoldItem.getPhotoPath(), unSoldItem.getSaleState().name());
+                unSoldItem.getPhotoPath(), unSoldItem.getSaleState().name(), unSoldItem.isEditable());
     }
 }
