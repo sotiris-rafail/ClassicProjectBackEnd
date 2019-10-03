@@ -72,6 +72,6 @@ public class NewUnSoldItem {
         return new UnSoldItem(Grade.valueOf(newUnSoldItem.getGrade()), ItemType.valueOf(newUnSoldItem.getTypeOfItem()),
                 newUnSoldItem.photoPath, newUnSoldItem.name, StateOfItem.getValueByState(newUnSoldItem.getStateOfItem()),
                 newUnSoldItem.maxPrice, newUnSoldItem.startingPrice, newUnSoldItem.numberOfDays, newUnSoldItem.currentValue,
-                newUnSoldItem.lastBidder, newUnSoldItem.bidStep, SaleState.FIRST);
+                newUnSoldItem.lastBidder, newUnSoldItem.bidStep, SaleState.FIRST, false);
     }
 }

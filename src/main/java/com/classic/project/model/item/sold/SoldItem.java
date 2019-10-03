@@ -1,6 +1,7 @@
 package com.classic.project.model.item.sold;
 
 import com.classic.project.model.item.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

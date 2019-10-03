@@ -1,6 +1,7 @@
 package com.classic.project.model.item.unSold;
 
 import com.classic.project.model.item.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -29,8 +30,8 @@ public class UnSoldItem extends Item {
     private Date expirationDate;
 
     public UnSoldItem(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, double maxPrice, double startingPrice,
-                      int daysToStayUnSold, double currentValue, String lastBidder, double bidStep, SaleState saleState) {
-        super(grade, itemType, photoPath, itemName, stateOfItem, saleState);
+                      int daysToStayUnSold, double currentValue, String lastBidder, double bidStep, SaleState saleState, boolean isEditable) {
+        super(grade, itemType, photoPath, itemName, stateOfItem, saleState, isEditable);
         this.maxPrice = maxPrice;
         this.startingPrice = startingPrice;
         this.daysToStayUnSold = daysToStayUnSold;

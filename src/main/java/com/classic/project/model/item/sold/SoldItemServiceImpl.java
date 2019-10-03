@@ -67,7 +67,7 @@ public class SoldItemServiceImpl implements SoldItemService {
                             StateOfItem.UNSOLD, toBeRenew.get().getMaxPrice(),
                             toBeRenew.get().getBoughtPrice(), toBeRenew.get().getDaysToStayUnSold(),
                             toBeRenew.get().getBoughtPrice(), toBeRenew.get().getWhoBoughtIt(),
-                            toBeRenew.get().getBidStep(), SaleState.RESALE));
+                            toBeRenew.get().getBidStep(), SaleState.RESALE, true));
                 }
             }
         });

@@ -1,5 +1,6 @@
 package com.classic.project.model.item;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -27,6 +28,19 @@ public class Item {
     private StateOfItem stateOfItem;
     @Column
     private SaleState saleState;
+    @Column
+    @ColumnDefault(value = "false")
+    private boolean isEditable;
+
+    public Item(Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, SaleState saleState, boolean isEditable) {
+        this.grade = grade;
+        this.itemType = itemType;
+        this.photoPath = photoPath;
+        this.itemName = itemName;
+        this.stateOfItem = stateOfItem;
+        this.saleState = saleState;
+        this.isEditable = isEditable;
+    }
 
     public Item(int itemId, Grade grade, ItemType itemType, String photoPath, String itemName, StateOfItem stateOfItem, SaleState saleState) {
         this.itemId = itemId;
@@ -114,6 +128,14 @@ public class Item {
         this.saleState = saleState;
     }
 
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -125,6 +147,7 @@ public class Item {
                 ", registerDate=" + registerDate +
                 ", stateOfItem=" + stateOfItem +
                 ", saleState=" + saleState +
+                ", isEditable=" + isEditable +
                 '}';
     }
 }
