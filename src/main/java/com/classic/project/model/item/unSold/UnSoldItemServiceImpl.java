@@ -6,6 +6,7 @@ import com.classic.project.model.character.CharacterService;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.unSold.exception.UnSoldItemsNotFoundException;
+import com.classic.project.model.item.unSold.response.EditUnSoldItem;
 import com.classic.project.model.item.unSold.response.NewUnSoldItem;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
 import org.slf4j.Logger;
@@ -139,6 +140,27 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
     @Override
     public List<UnSoldItem> getUnSoldItemsByStateOfItem() {
         return unSoldItemRepository.getUnSoldItemsByStateOfItem();
+    }
+
+    @Override
+    public void editUnSoldItem(EditUnSoldItem editUnSoldItem) {
+        if(editUnSoldItem == null) {
+            throw new UnSoldItemsNotFoundException("Edit item is null");
+        }
+        Optional<UnSoldItem> unSoldItemFromDb = unSoldItemRepository.findById(editUnSoldItem.getItemId());
+        unSoldItemFromDb.ifPresent(unSoldItem -> {
+            logger.info("ITEM BEFORE EDIT : " + unSoldItemFromDb.get().toString());
+            unSoldItemFromDb.get().setItemName(editUnSoldItem.getName());
+            unSoldItemFromDb.get().setRegisterDate(trimToZero(new Date()));
+            unSoldItemFromDb.get().setExpirationDate(getExpirationDate(unSoldItemFromDb.get().getRegisterDate(), editUnSoldItem.getNumberOfDays()));
+            unSoldItemFromDb.get().setMaxPrice(calculatePrices(editUnSoldItem.getMaxPrice()));
+            unSoldItemFromDb.get().setBidStep(calculatePrices(editUnSoldItem.getBidStep()));
+            unSoldItemFromDb.get().setStartingPrice(calculatePrices(editUnSoldItem.getStartingPrice()));
+            unSoldItemFromDb.get().setCurrentValue(calculatePrices(editUnSoldItem.getStartingPrice()));
+            unSoldItemFromDb.get().setEditable(false);
+            logger.info("ITEM AFTER EDIT : " + unSoldItemFromDb.get().toString());
+            unSoldItemRepository.save(unSoldItemFromDb.get());
+        });
     }
 
     private static Date getExpirationDate(Date registerDate, int daysToStayUnSold) {

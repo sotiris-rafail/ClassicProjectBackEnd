@@ -1,5 +1,6 @@
 package com.classic.project.model.item.unSold;
 
+import com.classic.project.model.item.unSold.response.EditUnSoldItem;
 import com.classic.project.model.item.unSold.response.NewUnSoldItem;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,11 @@ public class UnSoldItemController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Integer> getNumberOfUnsoldItems() {
         return unSoldItemService.getNumberOfUnsoldItems();
+    }
+
+    @RequestMapping(path = "/edit", method = RequestMethod.PUT, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void editUnSoldItem(@RequestBody EditUnSoldItem editUnSoldItem) {
+        unSoldItemService.editUnSoldItem(editUnSoldItem);
     }
 }

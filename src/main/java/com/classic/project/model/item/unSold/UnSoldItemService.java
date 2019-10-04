@@ -1,5 +1,6 @@
 package com.classic.project.model.item.unSold;
 
+import com.classic.project.model.item.unSold.response.EditUnSoldItem;
 import com.classic.project.model.item.unSold.response.NewUnSoldItem;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
 import org.springframework.http.ResponseEntity;
@@ -24,4 +25,6 @@ public interface UnSoldItemService {
     List<UnSoldItem> getSoldUnSoldItemsByStateOfItem();
 
     List<UnSoldItem> getUnSoldItemsByStateOfItem();
+
+    void editUnSoldItem(EditUnSoldItem editUnSoldItem);
 }
