@@ -221,11 +221,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<VerificationStatus> sendVerificationEmailToUser(String email) {
         User userFromDb = userRepository.findUserByEmail(email);
-        if(!userRepository.isCpMember(userFromDb.getUserId()).isPresent()) {
-            throw new UserNotFoundException("You are not a CP member.", 0);
-        }
         if (userFromDb == null) {
             throw new UserNotFoundException(email);
+        }
+        if(!userRepository.isCpMember(userFromDb.getUserId()).isPresent()) {
+            throw new UserNotFoundException("You are not a CP member.", 0);
         } else {
             if (userFromDb.getVerification() != null) {
                 if (userFromDb.getVerification().getExpirationDate() != null && !userFromDb.getVerification().getExpirationDate().after(new Date())) {
