@@ -185,15 +185,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Boolean> verifyUser(String email, String mainChar) {
+        logger.info("EMAIL FOR VERIFICATION {}, CHARACTER FOR VERIFICATION {}", email, mainChar);
         User userFromDb = userRepository.findUserByEmailLowerCase(email.toLowerCase());
         if (userFromDb == null) {
+            logger.info("User from Database is null {}", email);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         if (userFromDb.getCharacters().isEmpty()) {
+            logger.info("User from Database has got no chars");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         for (Character chars : userFromDb.getCharacters()) {
             if (chars.getInGameNameLowerCase().equals(mainChar.toLowerCase())) {
+		logger.info("SEARCHING FOR THE MAIN {}", chars.getInGameNameLowerCase());
                 return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
