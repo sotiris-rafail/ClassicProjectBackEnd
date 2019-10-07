@@ -22,7 +22,7 @@ import java.util.Date;
 @SpringBootApplication
 @EnableScheduling
 @EnableCaching
-public class DemoApplication extends ListenerAdapter {
+public class DemoApplication {
 
 
     private static String botToken;

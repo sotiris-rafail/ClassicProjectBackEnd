@@ -85,17 +85,25 @@ public class ResponseRaidBoss {
     }
 
     public static String raidBossState(Date windowStarts, Date windowEnds, boolean isUnknown) {
-    if(isUnknown){
-        return RaidBossState.AAUNKNOWN.name();
-    }
-	if(windowEnds.before(new Date())){
-	    return RaidBossState.ALIVE.name();
-	} else {
-	    if(windowStarts.after(new Date())){
-	        return RaidBossState.DEAD.name();
-	    }
-	    return RaidBossState.ONWINDOW.name();
-	}
+        if(isUnknown){
+            return RaidBossState.AAUNKNOWN.name();
+        }
+        if(windowEnds.before(new Date())){
+            return RaidBossState.ALIVE.name();
+        } else {
+            if(windowStarts.after(new Date())){
+                return RaidBossState.DEAD.name();
+            }
+            return RaidBossState.ONWINDOW.name();
+        }
     }
 
+    @Override
+    public String toString() {
+        return "Name=" + name +
+                ", level=" + level +
+                ", windowStarts=" + windowStarts +
+                ", windowEnds=" + windowEnds +
+                ", raidBossState=" + raidBossState;
+    }
 }

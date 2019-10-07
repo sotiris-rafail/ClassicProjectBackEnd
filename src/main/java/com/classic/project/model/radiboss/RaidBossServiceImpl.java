@@ -98,8 +98,10 @@ public class RaidBossServiceImpl implements RaidBossService {
     }
 
     @Override
-    public List<RaidBoss> getEpicsAndMinisForDiscord() {
-        return raidBossRepository.findAllByTypeOfRaidBossAndTypeOfRaidBoss(TypeOfRaidBoss.EPIC, TypeOfRaidBoss.MINI);
+    public List<ResponseRaidBoss> getEpicsAndMinisForDiscord() {
+        List<ResponseRaidBoss> responseRaidBosses = new ArrayList<>();
+        raidBossRepository.findAllByTypeOfRaidBossAndTypeOfRaidBoss(TypeOfRaidBoss.EPIC, TypeOfRaidBoss.MINI).forEach(boss -> responseRaidBosses.add(getResponseRaidBoss(boss)));
+        return responseRaidBosses ;
     }
 
     public static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {
