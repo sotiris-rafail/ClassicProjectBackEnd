@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Boolean> verifyUser(String email, String mainChar) {
-        User userFromDb = userRepository.findUserByEmail(email);
+        User userFromDb = userRepository.findUserByEmailLowerCase(email.toLowerCase());
         if (userFromDb == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -193,7 +193,7 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         for (Character chars : userFromDb.getCharacters()) {
-            if (chars.getInGameName().equals(mainChar)) {
+            if (chars.getInGameNameLowerCase().equals(mainChar.toLowerCase())) {
                 return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);

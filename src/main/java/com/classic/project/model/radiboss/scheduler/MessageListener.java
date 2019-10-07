@@ -58,12 +58,12 @@ public class MessageListener extends ListenerAdapter {
 		String[] messages = event.getMessage().getContentRaw().split(" ");
 		if(messages.length < 2) {
 		    TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
-		    textChannel.sendMessage("Raid name is missing").queue();
+		    textChannel.sendMessage("Raid name parameter is missing. !boss <raid_name>").queue();
 		} else {
 		    List<ResponseRaidBoss> bosses = new ArrayList<>();
 		    if (raidBossService.getBossByNameForDiscord(messages[1]) == null ) {
-			TextChannel textChannel = event.getGuild().getTextChannelsByName("raid_boss_spam", true).get(0);
-			textChannel.sendMessage(messages[1] + "does not exist").queue();
+			TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
+			textChannel.sendMessage(messages[1] + " does not exist").queue();
 		    } else {
 			bosses.add(raidBossService.getBossByNameForDiscord(messages[1]));
 			TextChannel textChannel = event.getGuild().getTextChannelsByName("raid_boss_spam", true).get(0);
