@@ -100,10 +100,9 @@ public class ResponseRaidBoss {
 
     @Override
     public String toString() {
-        return "Name=" + name +
-                ", level=" + level +
-                ", windowStarts=" + windowStarts +
-                ", windowEnds=" + windowEnds +
-                ", raidBossState=" + raidBossState;
+        return "Level=" + level +
+                "\n windowStarts=" + windowStarts +
+                "\n windowEnds=" + windowEnds +
+                "\n raidBossState=" + raidBossState;
     }
 }
