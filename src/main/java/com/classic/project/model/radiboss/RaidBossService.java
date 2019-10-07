@@ -16,4 +16,6 @@ public interface RaidBossService {
     void setToUnknown(int raidId);
 
     List<ResponseRaidBoss> getEpicsAndMinisForDiscord();
+
+    ResponseRaidBoss getBossByNameForDiscord(String name);
 }

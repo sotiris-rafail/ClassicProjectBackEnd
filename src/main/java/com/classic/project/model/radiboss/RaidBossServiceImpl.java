@@ -104,6 +104,11 @@ public class RaidBossServiceImpl implements RaidBossService {
         return responseRaidBosses ;
     }
 
+    @Override
+    public ResponseRaidBoss getBossByNameForDiscord(String name) {
+	return raidBossRepository.findByNameLowerCase(name.toLowerCase()).isPresent() ? getResponseRaidBoss(raidBossRepository.findByNameLowerCase(name.toLowerCase()).get()) : null;
+    }
+
     public static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {
         calendar.add(Calendar.DATE, Integer.parseInt(windowStartsTime[0]));
         calendar.add(Calendar.HOUR, Integer.parseInt(windowStartsTime[1]));

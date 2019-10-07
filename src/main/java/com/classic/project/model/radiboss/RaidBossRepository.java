@@ -33,6 +33,8 @@ public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
 
     List<RaidBoss> findAllByTypeOfRaidBoss(TypeOfRaidBoss typeOfRaidBoss);
 
+    Optional<RaidBoss> findByNameLowerCase(String name);
+
     @Query("select raidboss from RaidBoss raidboss where raidboss.typeOfRaidBoss = ?1 or raidboss.typeOfRaidBoss = ?2")
     List<RaidBoss> findAllByTypeOfRaidBossAndTypeOfRaidBoss(TypeOfRaidBoss epics, TypeOfRaidBoss minis);
 }
