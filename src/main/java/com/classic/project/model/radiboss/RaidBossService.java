@@ -14,4 +14,6 @@ public interface RaidBossService {
     ResponseEntity<ResponseRaidBoss> addNewRaid(RaidBoss raidBoss);
 
     void setToUnknown(int raidId);
+
+    List<RaidBoss> getEpicsAndMinisForDiscord();
 }

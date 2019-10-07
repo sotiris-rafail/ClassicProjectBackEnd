@@ -3,6 +3,10 @@ package com.classic.project.model.radiboss;
 import com.classic.project.model.radiboss.exception.RaidBossExistException;
 import com.classic.project.model.radiboss.exception.RaidBossNotFoundException;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +95,11 @@ public class RaidBossServiceImpl implements RaidBossService {
             throw new RaidBossNotFoundException(raidId);
         }
         raidBossRepository.setToUnKnown(raidId);
+    }
+
+    @Override
+    public List<RaidBoss> getEpicsAndMinisForDiscord() {
+        return raidBossRepository.findAllByTypeOfRaidBossAndTypeOfRaidBoss(TypeOfRaidBoss.EPIC, TypeOfRaidBoss.MINI);
     }
 
     public static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {
