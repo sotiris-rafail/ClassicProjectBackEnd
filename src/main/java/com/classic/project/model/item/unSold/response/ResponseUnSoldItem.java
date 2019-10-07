@@ -158,4 +158,14 @@ public class ResponseUnSoldItem {
                 unSoldItem.getExpirationDate(), unSoldItem.getBidStep(), unSoldItem.getCurrentValue(), unSoldItem.getLastBidder(),
                 unSoldItem.getPhotoPath(), unSoldItem.getSaleState().name(), unSoldItem.isEditable());
     }
+
+    @Override
+    public String toString() {
+        return "maxPrice=" + maxPrice +
+                "\nStartingPrice=" + startingPrice +
+                "\nExpirationDate=" + expirationDate +
+                "\nBidStep=" + bidStep +
+                "\nCurrentValue=" + currentValue +
+                "\nLastBidder=" + lastBidder;
+    }
 }
