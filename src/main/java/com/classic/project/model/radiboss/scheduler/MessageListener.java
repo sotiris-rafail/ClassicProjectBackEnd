@@ -88,12 +88,9 @@ public class MessageListener extends ListenerAdapter {
 				String[] split = contentRaw.split("-name");
 				args.setName(split[1].trim());
 				args.setType(split[0].split("-type")[1].trim());
-				args.setCommand(split[0].split("-type")[0].trim());
 			} else if (contentRaw.contains("-type")) {
-				args.setCommand(contentRaw.split("-type")[0].trim());
 				args.setType(contentRaw.split("-type")[1].trim());
 			} else if (contentRaw.contains("-name")) {
-				args.setCommand(contentRaw.split("-name")[0].trim());
 				args.setName(contentRaw.split("-name")[1].trim());
 			}
 		} else if(contentRaw.startsWith("!sales")){
