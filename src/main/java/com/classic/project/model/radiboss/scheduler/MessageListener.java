@@ -8,8 +8,10 @@ import com.classic.project.model.radiboss.response.ResponseRaidBoss;
 import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.internal.entities.DataMessage;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,19 +36,28 @@ public class MessageListener extends ListenerAdapter {
 	private static Logger logger = LoggerFactory.getLogger(MessageListener.class);
 
 	@Override
+	public void onGuildJoin(GuildJoinEvent event) {
+		TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getGuild().getTextChannels().get(0).getName(), true).get(0);
+		textChannel.sendMessage("Hello. I am glad i joined your server. Type !help to start.").queue();
+	}
+
+	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		if(!event.getAuthor().isBot()) {
 			Args args = determineTheArgs(event.getMessage().getContentRaw());
 			if(isCorrectChannel(args, event)) {
 				TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
-				textChannel.sendMessage("Wrong channel. Please switch to #command_channel").queue();
+				if(event.getGuild().getTextChannelsByName("command_channel", true).size() != 0) {
+					textChannel.sendMessage("Wrong channel. Please switch to <#" + event.getGuild().getTextChannelsByName("command_channel", true).get(0).getId() + ">").queue();
+				} else {
+					textChannel.sendMessage("Missing command_channel chanel. Please create it.").queue();
+				}
 				return;
 			}
 			logger.info("LOGGING I RECEIVED THE FOLLOW {} {} {}: {}", event.getGuild().getName(), event.getTextChannel().getName(), Objects.requireNonNull(event.getMember()).getEffectiveName(), event.getMessage().getContentDisplay());
 			if (args.getCommand().equals("raidboss")) {
 				try {
-
-					if(TypeOfRaidBoss.getType(args.getType()) != null) {
+					if(TypeOfRaidBoss.getType(args.getType()) != null || args.getType() == null) {
 						TextChannel textChannel = event.getGuild().getTextChannelsByName("raid_boss_spam", true).get(0);
 						textChannel.sendMessage(buildBossesOutput(sendRaidBossReply(args))).queue();
 					} else {
@@ -65,6 +76,9 @@ public class MessageListener extends ListenerAdapter {
 					TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
 					textChannel.sendMessage(e.getLocalizedMessage()).queue();
 				}
+			} else if (args.getCommand().equalsIgnoreCase("help")) {
+				TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
+				textChannel.sendMessage(buildHelpMessage()).queue();
 			}
 		}
 	}
@@ -93,8 +107,13 @@ public class MessageListener extends ListenerAdapter {
 			args.setCommand("raidboss");
 			if (contentRaw.contains("-type") && contentRaw.contains("-name")) {
 				String[] split = contentRaw.split("-name");
-				args.setName(split[1].trim());
-				args.setType(split[0].split("-type")[1].trim());
+				if(split[1].contains("-type")) {
+					args.setName(split[1].split("-type")[0].trim());
+					args.setType(split[1].split("-type")[1].trim());
+				} else {
+					args.setName(split[1].trim());
+					args.setType(split[0].split("-type")[1].trim());
+				}
 			} else if (contentRaw.contains("-type")) {
 				args.setType(contentRaw.split("-type")[1].trim());
 			} else if (contentRaw.contains("-name")) {
@@ -102,6 +121,8 @@ public class MessageListener extends ListenerAdapter {
 			}
 		} else if(contentRaw.startsWith("!sales")){
 			args.setCommand("sales");
+		} else if(contentRaw.startsWith("!help")) {
+			args.setCommand("help");
 		}
 		return args;
 	}
@@ -122,6 +143,16 @@ public class MessageListener extends ListenerAdapter {
 		}
 		return new MessageEmbed("http://83.212.102.61:4200/auction", "Information Of Auction", "", EmbedType.RICH, OffsetDateTime.now(),
 				Color.DARK_GRAY.getRGB(), null, null, new MessageEmbed.AuthorInfo("ClassicBot", "", "", ""), null, null, null, text);
+	}
+
+	private MessageEmbed buildHelpMessage() {
+		List<MessageEmbed.Field> text = new ArrayList<>();
+		text.add((new MessageEmbed.Field("Raid Boss Command", "!raidboss \nReturn information about bosses based on optional type and name arguments. In case of zero provided arguments information about all bosses will be displayed" +
+				"\nOptions: \n-type <type_of_raid_boss> \n-name <name_of_raid_boss> \ntype_of_boss can be either 'simple', 'mini' or 'epic' \n(eg !raidboss -type mini -name decar)", false)));
+		text.add((new MessageEmbed.Field("Sales Command", "!sales \nYou will get all the items which are on sale right now", false)));
+		text.add((new MessageEmbed.Field("Usage", "In order to use the bot three channels are required.\ncommand_channel is used for commanding the bot\nraid_boss_spam is used for displaying the boss results\nsales_spam is used to display all the items on sale.", false)));
+		return new MessageEmbed("", "Help Information", "", EmbedType.RICH, OffsetDateTime.now(),
+				Color.WHITE.getRGB(), null, null, new MessageEmbed.AuthorInfo("ClassicBot", "", "", ""), null, null, null, text);
 	}
 
 	public class Args {
