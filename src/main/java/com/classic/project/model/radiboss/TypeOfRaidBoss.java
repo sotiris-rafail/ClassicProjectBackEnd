@@ -13,6 +13,6 @@ public enum TypeOfRaidBoss {
                 return typeOfRaidBoss;
             }
         }
-        return SIMPLE;
+        return null;
     }
 }

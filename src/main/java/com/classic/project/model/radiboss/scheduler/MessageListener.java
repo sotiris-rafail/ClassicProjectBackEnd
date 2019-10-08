@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,14 @@ public class MessageListener extends ListenerAdapter {
 			logger.info("LOGGING I RECEIVED THE FOLLOW {} {} {}: {}", event.getGuild().getName(), event.getTextChannel().getName(), Objects.requireNonNull(event.getMember()).getEffectiveName(), event.getMessage().getContentDisplay());
 			if (args.getCommand().equals("raidboss")) {
 				try {
-					TextChannel textChannel = event.getGuild().getTextChannelsByName("raid_boss_spam", true).get(0);
-					textChannel.sendMessage(buildBossesOutput(sendRaidBossReply(args))).queue();
+
+					if(TypeOfRaidBoss.getType(args.getType()) != null) {
+						TextChannel textChannel = event.getGuild().getTextChannelsByName("raid_boss_spam", true).get(0);
+						textChannel.sendMessage(buildBossesOutput(sendRaidBossReply(args))).queue();
+					} else {
+						TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getTextChannel().getName(), true).get(0);
+						textChannel.sendMessage(String.format("-type argument can not be '%s'. mini, simple or epic are allowed" , args.getType())).queue();
+					}
 				} catch (Exception e) {
 					TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
 					textChannel.sendMessage(e.getLocalizedMessage()).queue();
