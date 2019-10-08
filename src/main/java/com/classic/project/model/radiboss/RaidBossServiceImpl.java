@@ -105,8 +105,20 @@ public class RaidBossServiceImpl implements RaidBossService {
     }
 
     @Override
-    public ResponseRaidBoss getBossByNameForDiscord(String name) {
-	return raidBossRepository.findByNameLowerCase(name.toLowerCase()).isPresent() ? getResponseRaidBoss(raidBossRepository.findByNameLowerCase(name.toLowerCase()).get()) : null;
+    public List<ResponseRaidBoss> getBossByNameForDiscord(String name) {
+	return raidBossRepository.findByNameLowerCase(name.toLowerCase()).isPresent() ? Collections.singletonList(getResponseRaidBoss(raidBossRepository.findByNameLowerCase(name.toLowerCase()).get().get(0))) : null;
+    }
+
+    @Override
+    public List<ResponseRaidBoss> getBossByNameAndTypeForDiscord(String name, TypeOfRaidBoss typeOfRaidBoss) {
+        return Collections.singletonList(getResponseRaidBoss(raidBossRepository.findByNameLowerCaseAndTypeOfRaidBoss(name.toLowerCase(), typeOfRaidBoss).get(0)));
+    }
+
+    @Override
+    public List<ResponseRaidBoss> getBossByTypeForDiscord(TypeOfRaidBoss typeOfRaidBoss) {
+        List<ResponseRaidBoss> responseRaidBosses = new ArrayList<>();
+        raidBossRepository.findAllByTypeOfRaidBoss(typeOfRaidBoss).forEach(boss -> responseRaidBosses.add(getResponseRaidBoss(boss)));
+        return responseRaidBosses;
     }
 
     public static Calendar getWindowStarts(Calendar calendar, String[] windowStartsTime) {

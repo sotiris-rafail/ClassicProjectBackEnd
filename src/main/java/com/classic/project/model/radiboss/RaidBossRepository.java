@@ -1,5 +1,6 @@
 package com.classic.project.model.radiboss;
 
+import com.classic.project.model.radiboss.response.ResponseRaidBoss;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,7 +34,9 @@ public interface RaidBossRepository extends JpaRepository<RaidBoss, Integer> {
 
     List<RaidBoss> findAllByTypeOfRaidBoss(TypeOfRaidBoss typeOfRaidBoss);
 
-    Optional<RaidBoss> findByNameLowerCase(String name);
+    List<RaidBoss> findByNameLowerCaseAndTypeOfRaidBoss(String name, TypeOfRaidBoss typeOfRaidBoss);
+
+    Optional<List<RaidBoss>> findByNameLowerCase(String name);
 
     @Query("select raidboss from RaidBoss raidboss where raidboss.typeOfRaidBoss = ?1 or raidboss.typeOfRaidBoss = ?2")
     List<RaidBoss> findAllByTypeOfRaidBossAndTypeOfRaidBoss(TypeOfRaidBoss epics, TypeOfRaidBoss minis);

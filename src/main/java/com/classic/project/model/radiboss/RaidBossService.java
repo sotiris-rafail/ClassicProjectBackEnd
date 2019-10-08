@@ -17,5 +17,9 @@ public interface RaidBossService {
 
     List<ResponseRaidBoss> getEpicsAndMinisForDiscord();
 
-    ResponseRaidBoss getBossByNameForDiscord(String name);
+    List<ResponseRaidBoss> getBossByNameForDiscord(String name);
+
+    List<ResponseRaidBoss> getBossByNameAndTypeForDiscord(String name, TypeOfRaidBoss typeOfRaidBoss);
+
+    List<ResponseRaidBoss> getBossByTypeForDiscord(TypeOfRaidBoss typeOfRaidBoss);
 }
