@@ -35,6 +35,8 @@ public class MessageListener extends ListenerAdapter {
 
 	private static Logger logger = LoggerFactory.getLogger(MessageListener.class);
 
+	private final static String BOT_URL= "https://discordapp.com/api/oauth2/authorize?client_id=580719937119715339&permissions=8&redirect_uri=http%3A%2F%2F83.212.102.61%3A4200%2F&scope=bot";
+
 	@Override
 	public void onGuildJoin(GuildJoinEvent event) {
 		TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getGuild().getTextChannels().get(0).getName(), true).get(0);
@@ -59,7 +61,7 @@ public class MessageListener extends ListenerAdapter {
 				try {
 					if(TypeOfRaidBoss.getType(args.getType()) != null || args.getType() == null) {
 						TextChannel textChannel = event.getGuild().getTextChannelsByName("raid_boss_spam", true).get(0);
-						textChannel.sendMessage(buildBossesOutput(sendRaidBossReply(args))).queue();
+						textChannel.sendMessage(buildBossesOutput(sendRaidBossReply(args), event)).queue();
 					} else {
 						TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getTextChannel().getName(), true).get(0);
 						textChannel.sendMessage(String.format("-type argument can not be '%s'. mini, simple or epic are allowed" , args.getType())).queue();
@@ -71,14 +73,14 @@ public class MessageListener extends ListenerAdapter {
 			} else if (args.getCommand().equals("sales")) {
 				try {
 					TextChannel textChannel = event.getGuild().getTextChannelsByName("sales_spam", true).get(0);
-					textChannel.sendMessage(buildUnsoldItemsOutput(Objects.requireNonNull(unSoldItemService.getUnSoldItems().getBody()))).queue();
+					textChannel.sendMessage(buildUnsoldItemsOutput(Objects.requireNonNull(unSoldItemService.getUnSoldItems().getBody()), event)).queue();
 				} catch (Exception e) {
 					TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
 					textChannel.sendMessage(e.getLocalizedMessage()).queue();
 				}
 			} else if (args.getCommand().equalsIgnoreCase("help")) {
 				TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
-				textChannel.sendMessage(buildHelpMessage()).queue();
+				textChannel.sendMessage(buildHelpMessage(event)).queue();
 			}
 		}
 	}
@@ -127,32 +129,36 @@ public class MessageListener extends ListenerAdapter {
 		return args;
 	}
 
-	private MessageEmbed buildBossesOutput(List<ResponseRaidBoss> bosses) {
+	private MessageEmbed buildBossesOutput(List<ResponseRaidBoss> bosses, MessageReceivedEvent event) {
 		List<MessageEmbed.Field> text = new ArrayList<>();
 		if(!bosses.isEmpty()) {
 			bosses.forEach(boss -> text.add(new MessageEmbed.Field(boss.getName(), boss.toString(), true)));
 		}
 		return new MessageEmbed("http://83.212.102.61:4200/raidboss", "Information Of Epic/Mini Bosses", "", EmbedType.UNKNOWN, OffsetDateTime.now(),
-				Color.DARK_GRAY.getRGB(), null , null, new MessageEmbed.AuthorInfo("ClassicBot", "", "", ""), null, null, null, text);
+				Color.DARK_GRAY.getRGB(), null , new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"), new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
+                new MessageEmbed.Footer(event.getMember() != null ? event.getMember().getEffectiveName() + " asked me about the bosses" : "", event.getMember() != null ? event.getMember().getUser().getAvatarUrl() : "", ""), null, text);
 	}
 
-	private MessageEmbed buildUnsoldItemsOutput(List<ResponseUnSoldItem> unSoldItems) {
+	private MessageEmbed buildUnsoldItemsOutput(List<ResponseUnSoldItem> unSoldItems, MessageReceivedEvent event) {
 		List<MessageEmbed.Field> text = new ArrayList<>();
 		if(!unSoldItems.isEmpty()) {
 			unSoldItems.forEach(unSoldItem -> text.add(new MessageEmbed.Field(unSoldItem.getName(), unSoldItem.toString(), true)));
 		}
 		return new MessageEmbed("http://83.212.102.61:4200/auction", "Information Of Auction", "", EmbedType.RICH, OffsetDateTime.now(),
-				Color.DARK_GRAY.getRGB(), null, null, new MessageEmbed.AuthorInfo("ClassicBot", "", "", ""), null, null, null, text);
+				Color.DARK_GRAY.getRGB(), null, new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"),
+				new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
+                new MessageEmbed.Footer(event.getMember() != null ? event.getMember().getEffectiveName() + " asked me about the sales" : "", event.getMember() != null ? event.getMember().getUser().getAvatarUrl() : "", ""), null, text);
 	}
 
-	private MessageEmbed buildHelpMessage() {
+	private MessageEmbed buildHelpMessage(MessageReceivedEvent event) {
 		List<MessageEmbed.Field> text = new ArrayList<>();
 		text.add((new MessageEmbed.Field("Raid Boss Command", "!raidboss \nReturn information about bosses based on optional type and name arguments. In case of zero provided arguments information about all bosses will be displayed" +
 				"\nOptions: \n-type <type_of_raid_boss> \n-name <name_of_raid_boss> \ntype_of_boss can be either 'simple', 'mini' or 'epic' \n(eg !raidboss -type mini -name decar)", false)));
 		text.add((new MessageEmbed.Field("Sales Command", "!sales \nYou will get all the items which are on sale right now", false)));
 		text.add((new MessageEmbed.Field("Usage", "In order to use the bot three channels are required.\ncommand_channel is used for commanding the bot\nraid_boss_spam is used for displaying the boss results\nsales_spam is used to display all the items on sale.", false)));
 		return new MessageEmbed("", "Help Information", "", EmbedType.RICH, OffsetDateTime.now(),
-				Color.WHITE.getRGB(), null, null, new MessageEmbed.AuthorInfo("ClassicBot", "", "", ""), null, null, null, text);
+				Color.WHITE.getRGB(), null, new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"), new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
+                new MessageEmbed.Footer(event.getMember() != null ? event.getMember().getEffectiveName() + " needed my help." : "", event.getMember() != null ? event.getMember().getUser().getAvatarUrl() : "", ""), null, text);
 	}
 
 	public class Args {
