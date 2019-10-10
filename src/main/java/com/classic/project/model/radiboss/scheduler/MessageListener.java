@@ -5,6 +5,8 @@ import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
 import com.classic.project.model.radiboss.RaidBossService;
 import com.classic.project.model.radiboss.TypeOfRaidBoss;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -20,9 +22,8 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class MessageListener extends ListenerAdapter {
@@ -81,7 +82,10 @@ public class MessageListener extends ListenerAdapter {
 			} else if (args.getCommand().equalsIgnoreCase("help")) {
 				TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
 				textChannel.sendMessage(buildHelpMessage(event)).queue();
-			}
+			} else if (args.getCommand().equalsIgnoreCase("")) {
+                TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
+                textChannel.sendMessage(String.format("Incorrect command %s please use !help command and retry.", event.getMessage().getContentRaw())).queue();
+            }
 		}
 	}
 
@@ -125,14 +129,17 @@ public class MessageListener extends ListenerAdapter {
 			args.setCommand("sales");
 		} else if(contentRaw.startsWith("!help")) {
 			args.setCommand("help");
+		} else {
+			args.setCommand("");
 		}
 		return args;
 	}
 
 	private MessageEmbed buildBossesOutput(List<ResponseRaidBoss> bosses, MessageReceivedEvent event) {
+		bosses.sort(Comparator.comparing(ResponseRaidBoss::getRaidBossState).reversed().thenComparing(ResponseRaidBoss::getWindowStarts));
 		List<MessageEmbed.Field> text = new ArrayList<>();
 		if(!bosses.isEmpty()) {
-			bosses.forEach(boss -> text.add(new MessageEmbed.Field(boss.getName(), boss.toString(), true)));
+			bosses.forEach(boss -> text.add(new MessageEmbed.Field(boss.getName(), boss.toStringForDiscord(), true)));
 		}
 		return new MessageEmbed("http://83.212.102.61:4200/raidboss", "Information Of Epic/Mini Bosses", "", EmbedType.UNKNOWN, OffsetDateTime.now(),
 				Color.DARK_GRAY.getRGB(), null , new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"), new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
@@ -140,9 +147,10 @@ public class MessageListener extends ListenerAdapter {
 	}
 
 	private MessageEmbed buildUnsoldItemsOutput(List<ResponseUnSoldItem> unSoldItems, MessageReceivedEvent event) {
+		unSoldItems.sort(Comparator.comparing(ResponseUnSoldItem::getExpirationDate));
 		List<MessageEmbed.Field> text = new ArrayList<>();
 		if(!unSoldItems.isEmpty()) {
-			unSoldItems.forEach(unSoldItem -> text.add(new MessageEmbed.Field(unSoldItem.getName(), unSoldItem.toString(), true)));
+			unSoldItems.forEach(unSoldItem -> text.add(new MessageEmbed.Field(unSoldItem.getName(), unSoldItem.toStringForDiscord(), true)));
 		}
 		return new MessageEmbed("http://83.212.102.61:4200/auction", "Information Of Auction", "", EmbedType.RICH, OffsetDateTime.now(),
 				Color.DARK_GRAY.getRGB(), null, new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"),

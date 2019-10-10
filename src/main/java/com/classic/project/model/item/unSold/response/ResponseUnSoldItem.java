@@ -2,6 +2,9 @@ package com.classic.project.model.item.unSold.response;
 
 import com.classic.project.model.item.unSold.UnSoldItem;
 
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 public class ResponseUnSoldItem {
@@ -166,6 +169,15 @@ public class ResponseUnSoldItem {
                 "\nExpirationDate=" + expirationDate +
                 "\nBidStep=" + bidStep +
                 "\nCurrentValue=" + currentValue +
+                "\nLastBidder=" + lastBidder;
+    }
+
+    public String toStringForDiscord() {
+        return "MaxPrice=" + NumberFormat.getIntegerInstance().format(maxPrice)+
+                "\nStartingPrice=" + NumberFormat.getIntegerInstance().format(startingPrice) +
+                "\nExpirationDate=" + DateFormat.getDateInstance(2).format(expirationDate) + " " + DateFormat.getTimeInstance(1).format(expirationDate) +
+                "\nBidStep=" + NumberFormat.getIntegerInstance().format(bidStep) +
+                "\nCurrentValue=" + NumberFormat.getIntegerInstance().format(currentValue) +
                 "\nLastBidder=" + lastBidder;
     }
 }
