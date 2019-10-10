@@ -130,6 +130,7 @@ public class MessageListener extends ListenerAdapter {
 				return false;
 			}
 		} catch (InterruptedException | ExecutionException e) {
+			logger.error(e.getLocalizedMessage() == null ? e.getMessage() : e.getLocalizedMessage());
 			return true;
 		}
 		return true;
