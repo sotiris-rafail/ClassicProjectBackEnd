@@ -84,7 +84,7 @@ public class MessageListener extends ListenerAdapter {
 				textChannel.sendMessage(buildHelpMessage(event)).queue();
 			} else if (args.getCommand().equalsIgnoreCase("")) {
                 TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
-                textChannel.sendMessage(String.format("Incorrect command %s please use !help command and retry.", event.getMessage().getContentRaw())).queue();
+                textChannel.sendMessage(String.format("Incorrect command %s. Please use !help command and retry.", event.getMessage().getContentRaw())).queue();
             }
 		}
 	}
