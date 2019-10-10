@@ -46,6 +46,7 @@ public class MessageListener extends ListenerAdapter {
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
+		logger.info("LOGGING I RECEIVED THE FOLLOW {} {} {}: {}", event.getGuild().getName(), event.getTextChannel().getName(), Objects.requireNonNull(event.getMember()).getEffectiveName(), event.getMessage().getContentDisplay());
 		if(!event.getAuthor().isBot()) {
 			Args args = determineTheArgs(event.getMessage().getContentRaw());
 			if(!event.getMessage().getContentRaw().startsWith("!")) {
@@ -60,7 +61,6 @@ public class MessageListener extends ListenerAdapter {
 				}
 				return;
 			}
-			logger.info("LOGGING I RECEIVED THE FOLLOW {} {} {}: {}", event.getGuild().getName(), event.getTextChannel().getName(), Objects.requireNonNull(event.getMember()).getEffectiveName(), event.getMessage().getContentDisplay());
 			if (args.getCommand().equals("raidboss")) {
 				try {
 					if(TypeOfRaidBoss.getType(args.getType()) != null || args.getType() == null) {
