@@ -48,6 +48,9 @@ public class MessageListener extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent event) {
 		if(!event.getAuthor().isBot()) {
 			Args args = determineTheArgs(event.getMessage().getContentRaw());
+			if(!event.getMessage().getContentRaw().startsWith("!")) {
+				return;
+			}
 			if(isCorrectChannel(args, event)) {
 				TextChannel textChannel = event.getGuild().getTextChannelsByName(event.getChannel().getName(), true).get(0);
 				if(event.getGuild().getTextChannelsByName("command_channel", true).size() != 0) {
@@ -90,7 +93,7 @@ public class MessageListener extends ListenerAdapter {
 	}
 
 	private static boolean isCorrectChannel(Args args, MessageReceivedEvent event) {
-		return (args.getCommand().equalsIgnoreCase("raidboss") || args.getCommand().equalsIgnoreCase("sales")) && !event.getChannel().getName().equalsIgnoreCase("command_channel");
+		return args.getCommand() != null && ((args.getCommand().equalsIgnoreCase("raidboss") || args.getCommand().equalsIgnoreCase("sales")) && !event.getChannel().getName().equalsIgnoreCase("command_channel"));
 	}
 
 	private List<ResponseRaidBoss> sendRaidBossReply(Args args) {
@@ -129,7 +132,7 @@ public class MessageListener extends ListenerAdapter {
 			args.setCommand("sales");
 		} else if(contentRaw.startsWith("!help")) {
 			args.setCommand("help");
-		} else {
+		} else if (contentRaw.startsWith("!")) {
 			args.setCommand("");
 		}
 		return args;
