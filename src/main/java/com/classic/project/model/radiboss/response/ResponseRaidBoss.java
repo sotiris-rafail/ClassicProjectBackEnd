@@ -1,10 +1,10 @@
 package com.classic.project.model.radiboss.response;
 
-import com.classic.project.model.radiboss.RaidBoss;
-import com.classic.project.model.radiboss.RaidBossState;
+        import com.classic.project.model.radiboss.RaidBoss;
+        import com.classic.project.model.radiboss.RaidBossState;
 
-import java.text.DateFormat;
-import java.util.Date;
+        import java.text.DateFormat;
+        import java.util.Date;
 
 public class ResponseRaidBoss {
 
@@ -111,6 +111,6 @@ public class ResponseRaidBoss {
         return "Level=" + level +
                 "\nWindowStarts=" + DateFormat.getDateInstance(2).format(windowStarts) + " " + DateFormat.getTimeInstance(1).format(windowStarts) +
                 "\nWindowEnds=" + DateFormat.getDateInstance(2).format(windowEnds) + " " + DateFormat.getTimeInstance(1).format(windowEnds) +
-                "\nRaidBossState=" + raidBossState;
+                "\nRaidBossState=" + RaidBossState.getState(raidBossState);
     }
 }

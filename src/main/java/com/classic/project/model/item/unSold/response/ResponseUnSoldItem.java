@@ -175,9 +175,9 @@ public class ResponseUnSoldItem {
     public String toStringForDiscord() {
         return "MaxPrice=" + NumberFormat.getIntegerInstance().format(maxPrice)+
                 "\nStartingPrice=" + NumberFormat.getIntegerInstance().format(startingPrice) +
-                "\nExpirationDate=" + DateFormat.getDateInstance(2).format(expirationDate) + " " + DateFormat.getTimeInstance(1).format(expirationDate) +
-                "\nBidStep=" + NumberFormat.getIntegerInstance().format(bidStep) +
                 "\nCurrentValue=" + NumberFormat.getIntegerInstance().format(currentValue) +
+                "\nBidStep=" + NumberFormat.getIntegerInstance().format(bidStep) +
+                "\nExpirationDate=" + DateFormat.getDateInstance(2).format(expirationDate) + " " + DateFormat.getTimeInstance(1).format(expirationDate) +
                 "\nLastBidder=" + lastBidder;
     }
 }
