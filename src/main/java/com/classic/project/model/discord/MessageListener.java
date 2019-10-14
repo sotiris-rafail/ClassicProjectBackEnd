@@ -1,12 +1,10 @@
-package com.classic.project.model.radiboss.scheduler;
+package com.classic.project.model.discord;
 
 import com.classic.project.model.item.unSold.UnSoldItemService;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
 import com.classic.project.model.radiboss.RaidBossService;
 import com.classic.project.model.radiboss.TypeOfRaidBoss;
 import com.classic.project.model.radiboss.response.ResponseRaidBoss;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -14,8 +12,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.internal.entities.DataMessage;
-import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +20,8 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.text.DateFormat;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
