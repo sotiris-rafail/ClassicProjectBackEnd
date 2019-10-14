@@ -1,4 +1,4 @@
-package com.classic.project.model.radiboss.exception;
+package com.classic.project.model.raidboss.exception;
 
 public class RaidBossNotFoundException extends  RuntimeException{
     public RaidBossNotFoundException(String name){

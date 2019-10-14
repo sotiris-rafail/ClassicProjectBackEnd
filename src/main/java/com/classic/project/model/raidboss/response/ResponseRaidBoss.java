@@ -1,7 +1,7 @@
-package com.classic.project.model.radiboss.response;
+package com.classic.project.model.raidboss.response;
 
-        import com.classic.project.model.radiboss.RaidBoss;
-        import com.classic.project.model.radiboss.RaidBossState;
+        import com.classic.project.model.raidboss.RaidBoss;
+        import com.classic.project.model.raidboss.RaidBossState;
 
         import java.text.DateFormat;
         import java.util.Date;

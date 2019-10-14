@@ -1,8 +1,7 @@
-package com.classic.project.model.radiboss.scheduler;
+package com.classic.project.model.raidboss.scheduler;
 
-import com.classic.project.model.item.unSold.UnSoldItemServiceImpl;
-import com.classic.project.model.radiboss.*;
-import com.classic.project.model.radiboss.response.ResponseRaidBoss;
+import com.classic.project.model.raidboss.*;
+import com.classic.project.model.raidboss.response.ResponseRaidBoss;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

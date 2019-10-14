@@ -67,7 +67,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         renewItems.forEach(item -> {
             item.setRegisterDate(trimToZero(new Date()));
             item.setExpirationDate(getExpirationDate(item.getRegisterDate(), item.getDaysToStayUnSold()));
-            logger.info("READDING UN_SOLD ITEM" + item.toString());
+            logger.info("READING UN_SOLD ITEM" + item.toString());
         });
         unSoldItemRepository.saveAll(renewItems);
     }
