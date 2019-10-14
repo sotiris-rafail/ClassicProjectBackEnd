@@ -1,4 +1,4 @@
-package com.classic.project.model.radiboss;
+package com.classic.project.model.raidboss;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;

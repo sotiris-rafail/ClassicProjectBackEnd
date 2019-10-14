@@ -1,6 +1,5 @@
-package com.classic.project.model.radiboss;
+package com.classic.project.model.raidboss;
 
-import com.classic.project.model.radiboss.response.ResponseRaidBoss;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

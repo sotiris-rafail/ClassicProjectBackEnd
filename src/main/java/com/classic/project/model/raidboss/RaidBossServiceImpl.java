@@ -1,12 +1,8 @@
-package com.classic.project.model.radiboss;
+package com.classic.project.model.raidboss;
 
-import com.classic.project.model.radiboss.exception.RaidBossExistException;
-import com.classic.project.model.radiboss.exception.RaidBossNotFoundException;
-import com.classic.project.model.radiboss.response.ResponseRaidBoss;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.hooks.SubscribeEvent;
+import com.classic.project.model.raidboss.exception.RaidBossExistException;
+import com.classic.project.model.raidboss.exception.RaidBossNotFoundException;
+import com.classic.project.model.raidboss.response.ResponseRaidBoss;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

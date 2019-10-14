@@ -2,9 +2,9 @@ package com.classic.project.model.discord;
 
 import com.classic.project.model.item.unSold.UnSoldItemService;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
-import com.classic.project.model.radiboss.RaidBossService;
-import com.classic.project.model.radiboss.TypeOfRaidBoss;
-import com.classic.project.model.radiboss.response.ResponseRaidBoss;
+import com.classic.project.model.raidboss.RaidBossService;
+import com.classic.project.model.raidboss.TypeOfRaidBoss;
+import com.classic.project.model.raidboss.response.ResponseRaidBoss;
 import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;

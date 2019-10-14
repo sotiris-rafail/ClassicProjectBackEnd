@@ -68,5 +68,4 @@ fabric.properties
 src/test/test.iml
 build/*
 logging/*
-src/main/resources/application.properties
-src/main/resources/credentials.json
+src/main/resources/*

@@ -1,6 +1,6 @@
-package com.classic.project.model.radiboss;
+package com.classic.project.model.raidboss;
 
-import com.classic.project.model.radiboss.response.ResponseRaidBoss;
+import com.classic.project.model.raidboss.response.ResponseRaidBoss;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
