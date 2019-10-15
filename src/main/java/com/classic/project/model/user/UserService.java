@@ -50,4 +50,6 @@ public interface UserService {
     String findEmailByCharacterName(String whoBoughtIt);
 
     User findUserByCharacterName(String whoBoughtIt);
+
+    List<String> getUsersEmailWithSendNewItemOptionEnable();
 }

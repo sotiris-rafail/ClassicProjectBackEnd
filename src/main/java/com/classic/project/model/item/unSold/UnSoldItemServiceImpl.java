@@ -1,7 +1,6 @@
 package com.classic.project.model.item.unSold;
 
 import com.classic.project.model.character.Character;
-import com.classic.project.model.character.CharacterRepository;
 import com.classic.project.model.character.CharacterService;
 import com.classic.project.model.character.TypeOfCharacter;
 import com.classic.project.model.item.StateOfItem;
@@ -9,16 +8,24 @@ import com.classic.project.model.item.unSold.exception.UnSoldItemsNotFoundExcept
 import com.classic.project.model.item.unSold.response.EditUnSoldItem;
 import com.classic.project.model.item.unSold.response.NewUnSoldItem;
 import com.classic.project.model.item.unSold.response.ResponseUnSoldItem;
+import com.classic.project.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 @Component
@@ -31,34 +38,53 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
     private CharacterService characterService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private JavaMailSender javaMailSender;
 
     private static final String PHOTO_PATH = "../../assets/itemPhoto/";
+
+    private static final String PHOTO_PATH_FOR_MAIL = "/../ClassicProjectFrontEnd/src/";
 
     private static final String JPG = ".jpg";
 
     @Value("${send.email.new.items}")
     private boolean notifyForEachNewItem;
 
-    private static Logger logger = LoggerFactory.getLogger(UnSoldItemServiceImpl.class);
+    @Value("${auction.link}")
+    private String auctionLink;
+
+    @Autowired
+    private Environment environment;
+
+    private static final Logger logger = LoggerFactory.getLogger(UnSoldItemServiceImpl.class);
+
+    private String getPathForMail() {
+        return environment.getProperty("user.dir") + PHOTO_PATH_FOR_MAIL;
+    }
 
     @Override
-    public void addNewItemForSale(NewUnSoldItem newUnSoldItem, int amountOfItem) {
-        for (int i = 0; i < amountOfItem; i++) {
-            UnSoldItem unSoldItem = NewUnSoldItem.convertToUnSoldItem(newUnSoldItem);
-            unSoldItem.setRegisterDate(trimToZero(new Date()));
-            unSoldItem.setExpirationDate(getExpirationDate(unSoldItem.getRegisterDate(), unSoldItem.getDaysToStayUnSold()));
-            unSoldItem.setMaxPrice(calculatePrices(unSoldItem.getMaxPrice()));
-            unSoldItem.setBidStep(calculatePrices(unSoldItem.getBidStep()));
-            unSoldItem.setCurrentValue(calculatePrices(unSoldItem.getCurrentValue()));
-            unSoldItem.setStartingPrice(calculatePrices(unSoldItem.getStartingPrice()));
-            unSoldItem.setPhotoPath(createPhotoPath(unSoldItem.getItemName()));
-            unSoldItemRepository.save(unSoldItem);
-            logger.info("ADDING UN_SOLD ITEM" + unSoldItem.toString());
-            unSoldItemRepository.flush();
+    public void addNewItemForSale(List<NewUnSoldItem> unSoldItems) {
+        logger.info("ADDING NEW UNSOLD ITEMS");
+        List<UnSoldItem> unSoldItemListForTheMail = new ArrayList<>();
+        for(NewUnSoldItem newUnSoldItem : unSoldItems ) {
+            for (int i = 0; i < newUnSoldItem.getAmount(); i++) {
+                UnSoldItem unSoldItem = NewUnSoldItem.convertToUnSoldItem(newUnSoldItem);
+                unSoldItem.setRegisterDate(trimToZero(new Date()));
+                unSoldItem.setExpirationDate(getExpirationDate(unSoldItem.getRegisterDate(), unSoldItem.getDaysToStayUnSold()));
+                unSoldItem.setMaxPrice(calculatePrices(unSoldItem.getMaxPrice()));
+                unSoldItem.setBidStep(calculatePrices(unSoldItem.getBidStep()));
+                unSoldItem.setCurrentValue(calculatePrices(unSoldItem.getCurrentValue()));
+                unSoldItem.setStartingPrice(calculatePrices(unSoldItem.getStartingPrice()));
+                unSoldItem.setPhotoPath(createPhotoPath(unSoldItem.getItemName()));
+                unSoldItemListForTheMail.add(unSoldItemRepository.save(unSoldItem));
+                logger.info("ADDING UN_SOLD ITEM" + unSoldItem.toString());
+                unSoldItemRepository.flush();
+            }
         }
-        if (notifyForEachNewItem) {
-            sendMail(newUnSoldItem);
+        if (notifyForEachNewItem && !unSoldItemListForTheMail.isEmpty()) {
+            sendMail(unSoldItemListForTheMail);
         }
     }
 
@@ -72,14 +98,104 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         unSoldItemRepository.saveAll(renewItems);
     }
 
-    private void sendMail(NewUnSoldItem newUnSoldItem) {
-        SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo("allianceinquisition@googlegroups.com");
-        mail.setText(newUnSoldItem.getName() + " is added on auction with starting price " + calculatePrices(newUnSoldItem.getStartingPrice()) + " adena");
-        mail.setSubject("New item on auction");
-        mail.setFrom("inquisitionAlliance@gmail.com");
-        mail.setSentDate(new Date());
-        javaMailSender.send(mail);
+    private void sendMail(List<UnSoldItem> unSoldItemListForTheMail) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper mail = new MimeMessageHelper(message, true);
+            mail.setTo(userService.getUsersEmailWithSendNewItemOptionEnable().toArray(new String[0]));
+            mail.setText(getMailBody(unSoldItemListForTheMail), true);
+            mail.setSubject("New item(s) on auction");
+            addAttachments(mail, unSoldItemListForTheMail);
+            mail.setFrom("inquisitionAlliance@gmail.com");
+            mail.setSentDate(new Date());
+            javaMailSender.send(mail.getMimeMessage());
+        } catch (MessagingException e) {
+            logger.error("EMAIL FOR ADDING UNSOLD ITEMS FAILED. DID NOT SEND");
+            logger.error(e.getMessage());
+        }
+    }
+
+    private void addAttachments(MimeMessageHelper mail, List<UnSoldItem> unSoldItemListForTheMail) {
+        try {
+            for (UnSoldItem unSoldItem : unSoldItemListForTheMail) {
+                if(new File(Paths.get(getPathForMail() + unSoldItem.getPhotoPath().replace("../../", "")).toString()).exists()) {
+                    mail.addInline(unSoldItem.getPhotoPath().replace("../../assets/itemPhoto/", ""), getFile(unSoldItem));
+                }
+            }
+        } catch (MessagingException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    private File getFile(UnSoldItem unSoldItem) {
+        return  new File(Paths.get(getPathForMail() + unSoldItem.getPhotoPath().replace("../../", "")).toString());
+    }
+
+    private String getMailBody(List<UnSoldItem> unSoldItemListForTheMail) {
+        int x = 0;
+        String simpleTD = "<td class=\"td\">";
+        String coloredTDFirst = "<td class=\"td color first\">";
+        String coloredTD = "<td class=\"td color\">";
+        String coloredTDLast = "<td class=\"td color last\">";
+        StringBuilder text = new StringBuilder();
+        text.append("<html>");
+        text.append("<head><style>");
+        text.append(".table{font-family: arial, sans-serif; border-collapse: collapse; width: 100%}");
+        text.append(".td, .th, .span{text-align: left; padding: 10px;}");
+        text.append(".color {background-color: lightblue;}");
+        text.append(".color-th{ background-color: DodgerBlue;}");
+        text.append(".first {border-radius: 12px 0 0 12px;}");
+        text.append(".last {border-radius: 0 12px 12px 0;}");
+        text.append(".a, .span {font-family: arial, sans-serif; font-weight:bold;text-decoration:none;}");
+        text.append("</style></head>");
+        text.append("<table class=\"table\">");
+        text.append("<body>");
+        text.append("<tr class=\"tr\">");
+        text.append("<th class=\"th color-th first\">Item</th><th class=\"th color-th\">Grade</th><th class=\"th color-th\">Type</th><th class=\"th color-th\">Starting Price</th>" +
+                "<th class=\"th color-th\">Bid Step</th><th class=\"th color-th last\">Duration</th>");
+        text.append("</tr>");
+        for(UnSoldItem unSoldItem : unSoldItemListForTheMail) {
+            text.append("<tr class=\"tr\">");
+            if(getFile(unSoldItem).exists()) {
+                if(x % 2 == 0) {
+                    text.append(simpleTD).append("<img src=\"").append("cid:").append(unSoldItem.getPhotoPath().replace(PHOTO_PATH, "")).append("\" alt=\"").append(unSoldItem.getItemName()).append("\"/>").append("</td>")
+                            .append(simpleTD).append(unSoldItem.getGrade()).append("</td>")
+                            .append(simpleTD).append(unSoldItem.getItemType().getType()).append("</td>")
+                            .append(simpleTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(simpleTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(simpleTD).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
+
+                } else {
+                    text.append(coloredTDFirst).append("<img src=\"").append("cid:").append(unSoldItem.getPhotoPath().replace(PHOTO_PATH, "")).append("\" alt=\"").append(unSoldItem.getItemName()).append("\"/>").append("</td>")
+                            .append(coloredTD).append(unSoldItem.getGrade()).append("</td>")
+                            .append(coloredTD).append(unSoldItem.getItemType().getType()).append("</td>")
+                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(coloredTDLast).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
+
+                }
+            } else {
+                if(x % 2 == 0) {
+                    text.append(simpleTD).append("<span>").append(unSoldItem.getItemName()).append("</span>").append(coloredTD).append(unSoldItem.getGrade()).append("</td>")
+                            .append(coloredTD).append(unSoldItem.getItemType().getType()).append("</td>")
+                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(coloredTDLast).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
+                } else {
+                    text.append(coloredTDFirst).append("<span>").append(unSoldItem.getItemName()).append("</span>").append(coloredTD).append(unSoldItem.getGrade()).append("</td>")
+                            .append(coloredTD).append(unSoldItem.getItemType().getType()).append("</td>")
+                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                            .append(coloredTDLast).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
+                }
+            }
+            text.append("</tr>");
+            x++;
+        }
+        text.append("</table>");
+        text.append("<span class=\"span\">More information can be found in the <a class=\"a\" href=").append(auctionLink).append(">auction</a> system</span>");
+        text.append("</body></html>");
+        return text.toString();
     }
 
     @Override

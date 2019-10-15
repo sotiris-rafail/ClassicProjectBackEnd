@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface UnSoldItemService {
-    void addNewItemForSale(NewUnSoldItem raidBoss, int amountOfItem);
+    void addNewItemForSale(List<NewUnSoldItem> unSoldItems);
 
     void addNewItemForSaleAgain(List<UnSoldItem> renewItems);
 

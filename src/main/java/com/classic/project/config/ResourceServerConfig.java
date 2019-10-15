@@ -29,7 +29,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	    	.antMatchers("/user/verification**").permitAll()
                 .antMatchers("/user/verify/{**}").permitAll()
                 .antMatchers("/user/update/password").permitAll()
-                .antMatchers("/user/option/getConfigOptions").permitAll()
                 .anyRequest().access("#oauth2.hasScope('read')");
     }
 

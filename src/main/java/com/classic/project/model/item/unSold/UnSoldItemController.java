@@ -24,8 +24,8 @@ public class UnSoldItemController {
 
     @RequestMapping(path = "/add", method = RequestMethod.POST, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public void addNewUnSoldItem(@RequestBody NewUnSoldItem unSoldItem, @PathParam("amountOfItem") int amountOfItem) {
-        unSoldItemService.addNewItemForSale(unSoldItem, amountOfItem);
+    public void addNewUnSoldItem(@RequestBody List<NewUnSoldItem> unSoldItems) {
+        unSoldItemService.addNewItemForSale(unSoldItems);
     }
 
     @RequestMapping(path = "/getUnSoldItems", method = RequestMethod.GET, produces = "application/json")

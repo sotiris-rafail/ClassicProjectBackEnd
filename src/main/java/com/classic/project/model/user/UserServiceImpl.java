@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     private JavaMailSender javaMailSender;
 
     private static String verificationURL;
-    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Value("${verification.url.email}")
     private void setVerificationURl(String url) {
@@ -350,6 +350,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByCharacterName(String whoBoughtIt) {
         return characterService.findByCharacterName(whoBoughtIt).getUser();
+    }
+
+    @Override
+    public List<String> getUsersEmailWithSendNewItemOptionEnable() {
+        return userRepository.getUsersEmailWithSendNewItemOptionEnable();
     }
 
     private static boolean verifyCodeEquality(String code, User user) {

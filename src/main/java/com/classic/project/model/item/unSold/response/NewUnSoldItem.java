@@ -19,6 +19,7 @@ public class NewUnSoldItem {
     private String name;
     private String stateOfItem;
     private int numberOfDays;
+    private int amount;
 
     public int getItemdId() {
         return itemdId;
@@ -66,6 +67,14 @@ public class NewUnSoldItem {
 
     public int getNumberOfDays() {
 	return numberOfDays;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public static UnSoldItem convertToUnSoldItem(NewUnSoldItem newUnSoldItem){
