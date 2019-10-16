@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 @RestController
@@ -75,7 +74,6 @@ public class UserController {
     public void deleteUser(@RequestParam(name = "userId") int userId) {
         userService.deleteUser(userId);
     }
-
 
     @RequestMapping(value = "/verification", method = RequestMethod.GET, produces = "application/json")
     @ResponseStatus(HttpStatus.FOUND)

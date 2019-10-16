@@ -9,6 +9,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+import java.util.regex.Pattern;
+
 @Configuration
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -16,6 +18,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired
     private TokenStore tokenStore;
+
+    private static final Pattern UNAUTHENTICATED_ROUTES = Pattern.compile("/user/verification\\?email=\\S+@\\S+\\.\\S+&mainChar=.*");
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -26,7 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/user/register").permitAll()
-	    	.antMatchers("/user/verification**").permitAll()
+	    	    .regexMatchers(UNAUTHENTICATED_ROUTES.pattern()).permitAll()
                 .antMatchers("/user/verify/{**}").permitAll()
                 .antMatchers("/user/update/password").permitAll()
                 .anyRequest().access("#oauth2.hasScope('read')");
