@@ -1,5 +1,6 @@
 package com.classic.project.model.item.scheduler;
 
+import com.classic.project.model.item.Item;
 import com.classic.project.model.item.SaleState;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.sold.SoldItem;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,6 +93,7 @@ public class CleanUnSoldItems {
 			MimeMessageHelper simpleMailMessage = new MimeMessageHelper(message, true);
 			simpleMailMessage.setFrom("inquisitionalliance@gmail.com");
 			simpleMailMessage.setTo(superUserEmails());
+			addAttachments(simpleMailMessage, soldItems);
 			simpleMailMessage.setSubject("Item(s) to be delivered");
 			simpleMailMessage.setText(getText(soldItems, false), true);
 			simpleMailMessage.setSentDate(new Date());
@@ -108,6 +112,7 @@ public class CleanUnSoldItems {
 				MimeMessageHelper simpleMailMessage = new MimeMessageHelper(message, true);
 				simpleMailMessage.setFrom("inquisitionalliance@gmail.com");
 				simpleMailMessage.setTo(userService.findEmailByCharacterName(buyer));
+				addAttachments(simpleMailMessage, soldItems.stream().filter(soldItem -> soldItem.getWhoBoughtIt().equals(buyer)).collect(Collectors.toList()));
 				simpleMailMessage.setSubject("Item(s) bought from auction");
 				simpleMailMessage.setText(getText(soldItems.stream().filter(soldItem -> soldItem.getWhoBoughtIt().equals(buyer)).collect(Collectors.toList()), true), true);
 				simpleMailMessage.setSentDate(new Date());
@@ -145,19 +150,22 @@ public class CleanUnSoldItems {
 		}
 		text.append("</tr>");
 		for (SoldItem soldItem : soldItems) {
+			boolean photo = unSoldItemService.getFile(soldItem).exists();
 			text.append("<tr class=\"tr\">");
 			if(singleMail) {
 				if (x % 2 != 0) {
-					text.append(coloredTDFirst).append(soldItem.getItemName()).append("</td>").append(coloredTDLast).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
+					text.append(coloredTDFirst)
+					.append(photo ? unSoldItemService.addImage(soldItem) : soldItem.getItemName())
+					.append("</td>").append(coloredTDLast).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
 				} else {
-					text.append(simpleTD).append(soldItem.getItemName()).append("</td>").append(simpleTD).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
+					text.append(simpleTD).append(photo ? unSoldItemService.addImage(soldItem) : soldItem.getItemName()).append("</td>").append(simpleTD).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
 				}
 			} else {
 				if (x % 2 != 0) {
-					text.append(coloredTDFirst).append(soldItem.getItemName()).append("</td>").append(coloredTD).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
+					text.append(coloredTDFirst).append(photo ? unSoldItemService.addImage(soldItem) : soldItem.getItemName()).append("</td>").append(coloredTD).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
 					text.append(coloredTDLast).append(soldItem.getWhoBoughtIt()).append("</td>");
 				} else {
-					text.append(simpleTD).append(soldItem.getItemName()).append("</td>").append(simpleTD).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
+					text.append(simpleTD).append(photo ? unSoldItemService.addImage(soldItem) : soldItem.getItemName()).append("</td>").append(simpleTD).append(NumberFormat.getIntegerInstance().format(soldItem.getBoughtPrice())).append("</td>");
 					text.append(simpleTD).append(soldItem.getWhoBoughtIt()).append("</td>");
 				}
 			}
@@ -168,6 +176,18 @@ public class CleanUnSoldItems {
 		text.append("<span class=\"span\">More information can be found in the <a class=\"a\" href=").append(auctionLink).append(">auction</a> system</span>");
 		text.append("</body></html>");
 		return text.toString();
+	}
+
+	private void addAttachments(MimeMessageHelper mail, List<SoldItem> soldItems) {
+		try {
+			for (SoldItem soldItem : soldItems) {
+				if(new File(Paths.get(unSoldItemService.getPathForMail() + soldItem.getPhotoPath().replace("../../", "")).toString()).exists()) {
+					mail.addInline(soldItem.getPhotoPath().replace("../../assets/itemPhoto/", ""), unSoldItemService.getFile(soldItem));
+				}
+			}
+		} catch (MessagingException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	private SoldItem registerUnSoldItemsAsSoldItems(UnSoldItem unSoldItem) {

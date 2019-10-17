@@ -3,6 +3,7 @@ package com.classic.project.model.item.unSold;
 import com.classic.project.model.character.Character;
 import com.classic.project.model.character.CharacterService;
 import com.classic.project.model.character.TypeOfCharacter;
+import com.classic.project.model.item.Item;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.unSold.exception.UnSoldItemsNotFoundException;
 import com.classic.project.model.item.unSold.response.EditUnSoldItem;
@@ -60,7 +61,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
 
     private static final Logger logger = LoggerFactory.getLogger(UnSoldItemServiceImpl.class);
 
-    private String getPathForMail() {
+    public String getPathForMail() {
         return environment.getProperty("user.dir") + PHOTO_PATH_FOR_MAIL;
     }
 
@@ -127,7 +128,7 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         }
     }
 
-    private File getFile(UnSoldItem unSoldItem) {
+    public File getFile(Item unSoldItem) {
         return  new File(Paths.get(getPathForMail() + unSoldItem.getPhotoPath().replace("../../", "")).toString());
     }
 
@@ -137,6 +138,8 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         String coloredTDFirst = "<td class=\"td color first\">";
         String coloredTD = "<td class=\"td color\">";
         String coloredTDLast = "<td class=\"td color last\">";
+        String whichOne;
+        String last;
         StringBuilder text = new StringBuilder();
         text.append("<html>");
         text.append("<head><style>");
@@ -154,42 +157,24 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         text.append("<th class=\"th color-th first\">Item</th><th class=\"th color-th\">Grade</th><th class=\"th color-th\">Type</th><th class=\"th color-th\">Starting Price</th>" +
                 "<th class=\"th color-th\">Bid Step</th><th class=\"th color-th last\">Duration</th>");
         text.append("</tr>");
-        for(UnSoldItem unSoldItem : unSoldItemListForTheMail) {
+        for (UnSoldItem unSoldItem : unSoldItemListForTheMail) {
+            boolean photo = getFile(unSoldItem).exists();
             text.append("<tr class=\"tr\">");
-            if(getFile(unSoldItem).exists()) {
-                if(x % 2 == 0) {
-                    text.append(simpleTD).append("<img src=\"").append("cid:").append(unSoldItem.getPhotoPath().replace(PHOTO_PATH, "")).append("\" alt=\"").append(unSoldItem.getItemName()).append("\"/>").append("</td>")
-                            .append(simpleTD).append(unSoldItem.getGrade()).append("</td>")
-                            .append(simpleTD).append(unSoldItem.getItemType().getType()).append("</td>")
-                            .append(simpleTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(simpleTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(simpleTD).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
-
-                } else {
-                    text.append(coloredTDFirst).append("<img src=\"").append("cid:").append(unSoldItem.getPhotoPath().replace(PHOTO_PATH, "")).append("\" alt=\"").append(unSoldItem.getItemName()).append("\"/>").append("</td>")
-                            .append(coloredTD).append(unSoldItem.getGrade()).append("</td>")
-                            .append(coloredTD).append(unSoldItem.getItemType().getType()).append("</td>")
-                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(coloredTDLast).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
-
-                }
+            if (x % 2 == 0) {
+                whichOne = last = simpleTD;
+                text.append(simpleTD).append(photo ? addImage(unSoldItem) : unSoldItem.getItemName()).append("</td>");
             } else {
-                if(x % 2 == 0) {
-                    text.append(simpleTD).append("<span>").append(unSoldItem.getItemName()).append("</span>").append(coloredTD).append(unSoldItem.getGrade()).append("</td>")
-                            .append(coloredTD).append(unSoldItem.getItemType().getType()).append("</td>")
-                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(coloredTDLast).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
-                } else {
-                    text.append(coloredTDFirst).append("<span>").append(unSoldItem.getItemName()).append("</span>").append(coloredTD).append(unSoldItem.getGrade()).append("</td>")
-                            .append(coloredTD).append(unSoldItem.getItemType().getType()).append("</td>")
-                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(coloredTD).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
-                            .append(coloredTDLast).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ").append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>");
-                }
+                text.append(coloredTDFirst).append(photo ? addImage(unSoldItem) : unSoldItem.getItemName()).append("</td>");
+                whichOne = coloredTD;
+                last = coloredTDLast;
             }
-            text.append("</tr>");
+            text.append(whichOne).append(unSoldItem.getGrade()).append("</td>")
+                    .append(whichOne).append(unSoldItem.getItemType().getType()).append("</td>")
+                    .append(whichOne).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                    .append(whichOne).append(NumberFormat.getIntegerInstance().format(unSoldItem.getStartingPrice())).append("</td>")
+                    .append(last).append(DateFormat.getDateInstance(2).format(unSoldItem.getExpirationDate())).append(" ")
+                    .append(DateFormat.getTimeInstance(1).format(unSoldItem.getExpirationDate())).append("</td>")
+                    .append("</tr>");
             x++;
         }
         text.append("</table>");
@@ -197,6 +182,11 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         text.append("</body></html>");
         return text.toString();
     }
+
+    public String addImage(Item soldItem) {
+        return "<img src=\" cid:"+ soldItem.getPhotoPath().replace(PHOTO_PATH, "") +"\" alt=\""+soldItem.getItemName()+"\"/>";
+    }
+
 
     @Override
     public ResponseEntity<List<ResponseUnSoldItem>> getUnSoldItems() {
