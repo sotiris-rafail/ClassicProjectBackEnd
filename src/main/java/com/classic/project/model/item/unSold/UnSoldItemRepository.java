@@ -1,5 +1,6 @@
 package com.classic.project.model.item.unSold;
 
+import com.classic.project.model.item.Item;
 import com.classic.project.model.item.StateOfItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UnSoldItemRepository extends JpaRepository<UnSoldItem, Integer> {
 
@@ -33,4 +35,7 @@ public interface UnSoldItemRepository extends JpaRepository<UnSoldItem, Integer>
     void deleteCleanUpUnSoldItems(int itemId);
 
     int countUnSoldItemByStateOfItem(StateOfItem stateOfItem);
+
+    @Query("select distinct new com.classic.project.model.item.Item(unSolditem.itemName, unSolditem.photoPath) from UnSoldItem unSolditem")
+    List<Item> getDistinctItemNames();
 }

@@ -187,6 +187,11 @@ public class UnSoldItemServiceImpl implements UnSoldItemService {
         return "<img src=\" cid:"+ soldItem.getPhotoPath().replace(PHOTO_PATH, "") +"\" alt=\""+soldItem.getItemName()+"\"/>";
     }
 
+    @Override
+    public List<Item> getDistinctItemNames() {
+        return unSoldItemRepository.getDistinctItemNames();
+    }
+
 
     @Override
     public ResponseEntity<List<ResponseUnSoldItem>> getUnSoldItems() {

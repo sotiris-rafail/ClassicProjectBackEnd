@@ -1,5 +1,6 @@
 package com.classic.project.model.item.sold;
 
+import com.classic.project.model.item.Item;
 import com.classic.project.model.item.SaleState;
 import com.classic.project.model.item.StateOfItem;
 import com.classic.project.model.item.sold.exception.SoldItemNotFoundException;
@@ -14,10 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.util.*;
 
 @Component
 public class SoldItemServiceImpl implements SoldItemService {
@@ -81,5 +80,25 @@ public class SoldItemServiceImpl implements SoldItemService {
                 }
             }
         });
+    }
+
+    @Override
+    public String getPathForMail() {
+        return null;
+    }
+
+    @Override
+    public File getFile(Item unSoldItem) {
+        return null;
+    }
+
+    @Override
+    public String addImage(Item soldItem) {
+        return null;
+    }
+
+    @Override
+    public List<Item> getDistinctItemNames() {
+        return soldItemRepository.getDistinctItemNames();
     }
 }

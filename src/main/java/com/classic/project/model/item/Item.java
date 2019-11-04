@@ -61,6 +61,11 @@ public class Item {
         this.saleState = saleState;
     }
 
+    public Item(String itemName, String photoPath) {
+        this.itemName = itemName;
+        this.photoPath = photoPath;
+    }
+
     public Item() {
     }
 
