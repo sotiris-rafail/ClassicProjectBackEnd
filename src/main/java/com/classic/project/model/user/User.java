@@ -24,6 +24,7 @@ public class User {
     @Column
     private int userId;
     @Column
+    @Email
     private String email;
     @Column
     @Email
