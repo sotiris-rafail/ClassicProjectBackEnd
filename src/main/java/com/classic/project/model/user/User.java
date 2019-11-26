@@ -24,7 +24,6 @@ public class User {
     @Column
     private int userId;
     @Column
-    @Email(regexp = "\\S+@\\S+\\.\\S")
     private String email;
     @Column
     @Email
