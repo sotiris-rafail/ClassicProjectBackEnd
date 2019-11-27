@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import javax.websocket.OnError;
 import java.util.List;
 
 @RestController
@@ -23,7 +27,7 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody @Valid User user) {
 	return userService.registerUser(user);
     }
 
@@ -82,7 +86,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update/password", method = RequestMethod.POST, produces = "application/json")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(value = HttpStatus.FOUND)
     public ResponseEntity<Boolean> updatePassword(@RequestBody String[] params) {
         return userService.updatePassword(params);
     }

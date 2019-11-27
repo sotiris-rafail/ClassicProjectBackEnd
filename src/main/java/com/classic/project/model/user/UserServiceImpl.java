@@ -15,6 +15,7 @@ import com.classic.project.model.user.verification.*;
 import com.classic.project.security.UserAuthConfirm;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -87,7 +90,7 @@ public class UserServiceImpl implements UserService {
             optionService.saveOptionsOnRegister(userFromDb);
             verificationService.saveVerification(userFromDb);
         } else {
-            throw new UserExistException(user.getEmail());
+            throw new UserExistException(user);
         }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(linkTo(User.class).slash("user").slash(userFromDb.getUserId()).toUri());
@@ -181,19 +184,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Boolean> verifyUser(String email, String mainChar) {
-        logger.info("EMAIL FOR VERIFICATION {}, CHARACTER FOR VERIFICATION {}", email, mainChar);
+        logger.info("EMAIL FOR VERIFICATION {}, CHARACTER FOR VERIFICATION {}. Password resetting", email, mainChar);
         User userFromDb = userRepository.findUserByEmailLowerCase(email.toLowerCase());
         if (userFromDb == null) {
             logger.info("User from Database is null {}", email);
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
         if (userFromDb.getCharacters().isEmpty()) {
-            logger.info("User from Database has got no chars");
+            logger.info("{} from Database has got no chars", userFromDb.getEmail());
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
         for (Character chars : userFromDb.getCharacters()) {
             if (chars.getInGameNameLowerCase().equals(mainChar.toLowerCase())) {
-		logger.info("SEARCHING FOR THE MAIN {}", chars.getInGameNameLowerCase());
+		        logger.info("SEARCHING FOR THE MAIN {}", chars.getInGameNameLowerCase());
                 return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
@@ -203,10 +206,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Boolean> updatePassword(String[] params) {
-        User userFromDb = userRepository.findUserByEmail(params[0]);
-        if (userFromDb == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Boolean> updatePassword(@NotNull(value = "Table is null") String[] params) {
+        if(params.length != 2) {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+        User userFromDb = userRepository.findUserByEmailLowerCase(params[0].toLowerCase());
+        if (userFromDb == null || params[1] == null) {
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
         userFromDb.setPassword(passwordEncoder.encode(params[1]));
         userRepository.save(userFromDb);

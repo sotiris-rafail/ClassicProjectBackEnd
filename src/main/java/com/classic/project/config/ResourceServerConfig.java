@@ -19,7 +19,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private TokenStore tokenStore;
 
-    private static final Pattern UNAUTHENTICATED_ROUTES = Pattern.compile("/user/verification\\?email=\\S+@\\S+\\.\\S+&mainChar=.*");
+    private static final Pattern UNAUTHENTICATED_ROUTES = Pattern.compile("/user/verification\\?email=\\S+@\\S+\\.\\S+&mainChar=.*");//reset password end-point
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {

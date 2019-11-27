@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,14 +25,16 @@ public class User {
     @Column
     private int userId;
     @Column
-    @Email
+    @Email(message = "Email should be like 'email@domain.com'")
     private String email;
     @Column
     @Email
     private String emailLowerCase;
     @Column
+    @NotNull(message = "Password cannot be null value")
     private String password;
     @Column
+    @NotNull(message = "Type of user cannot be null value")
     private TypeOfUser typeOfUser;
     @Column
     @CreationTimestamp
@@ -83,7 +86,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NotNull String password) {
         this.password = password;
     }
 
