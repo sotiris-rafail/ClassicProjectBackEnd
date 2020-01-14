@@ -242,7 +242,6 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
-        userFromDb.setVerification(new Verification());
         userFromDb.getVerification().setCode(VerificationServiceImpl.generateCode(userFromDb.getEmail(), userFromDb.getRegistrationDate()));
         userFromDb.getVerification().setRegistrationDate(new Date());
         userFromDb.getVerification().setExpirationDate(getExpirationVerificationDate());
