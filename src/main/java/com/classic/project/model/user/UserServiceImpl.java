@@ -226,6 +226,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<VerificationStatus> sendVerificationEmailToUser(String email) {
+	logger.info("SENDING VERIFICATION CODE TO  {}", email);
         User userFromDb = userRepository.findUserByEmail(email);
         if (userFromDb == null) {
             throw new UserNotFoundException(email);
@@ -241,11 +242,13 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
+        userFromDb.setVerification(new Verification());
         userFromDb.getVerification().setCode(VerificationServiceImpl.generateCode(userFromDb.getEmail(), userFromDb.getRegistrationDate()));
         userFromDb.getVerification().setRegistrationDate(new Date());
         userFromDb.getVerification().setExpirationDate(getExpirationVerificationDate());
         userFromDb.getVerification().setStatus(VerificationStatus.PENDING);
         Verification verification = verificationService.save(userFromDb.getVerification());
+	logger.info("SENDING VERIFICATION CODE TO {} WAS SUCCESFULLY INSERTED TO DB", email);
         return new ResponseEntity<>(sendVerificationMail(verification, userFromDb.getEmail()), HttpStatus.OK);
     }
 
