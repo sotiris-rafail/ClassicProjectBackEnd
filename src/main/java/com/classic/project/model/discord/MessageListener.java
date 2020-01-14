@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -41,6 +42,15 @@ public class MessageListener extends ListenerAdapter {
     private final static String BOT_URL = "https://discordapp.com/api/oauth2/authorize?client_id=580719937119715339&permissions=8&redirect_uri=http%3A%2F%2F83.212.102.61%3A4200%2F&scope=bot";
 
     private List<Message> retrievedHistory = new ArrayList<>();
+
+    @Value("${auction.link}")
+    private String auctionLink;
+
+    @Value("${raidboss.link}")
+    private String raidbossLink;
+
+    @Value("${website.url}")
+    private String websiteUrl;
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
@@ -200,8 +210,8 @@ public class MessageListener extends ListenerAdapter {
         if (!bosses.isEmpty()) {
             bosses.forEach(boss -> text.add(new MessageEmbed.Field(boss.getName(), boss.toStringForDiscord(), true)));
         }
-        return new MessageEmbed("http://83.212.102.61:4200/raidboss", "Information Of Epic/Mini Bosses", "", EmbedType.UNKNOWN, OffsetDateTime.now(),
-                Color.DARK_GRAY.getRGB(), null, new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"), new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
+        return new MessageEmbed(raidbossLink, "Information Of Epic/Mini Bosses", "", EmbedType.UNKNOWN, OffsetDateTime.now(),
+                Color.DARK_GRAY.getRGB(), null, new MessageEmbed.Provider("HiddenPandas Website", websiteUrl), new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
                 new MessageEmbed.Footer(event.getMember() != null ? event.getMember().getEffectiveName() + " asked me about the bosses" : "", event.getMember() != null ? event.getMember().getUser().getAvatarUrl() : "", ""), null, text);
     }
 
@@ -211,8 +221,8 @@ public class MessageListener extends ListenerAdapter {
         if (!unSoldItems.isEmpty()) {
             unSoldItems.forEach(unSoldItem -> text.add(new MessageEmbed.Field(unSoldItem.getName(), unSoldItem.toStringForDiscord(), true)));
         }
-        return new MessageEmbed("http://83.212.102.61:4200/auction", "Information Of Auction", "", EmbedType.RICH, OffsetDateTime.now(),
-                Color.DARK_GRAY.getRGB(), null, new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"),
+        return new MessageEmbed(auctionLink, "Information Of Auction", "", EmbedType.RICH, OffsetDateTime.now(),
+                Color.DARK_GRAY.getRGB(), null, new MessageEmbed.Provider("HiddenPandas Website", websiteUrl),
                 new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
                 new MessageEmbed.Footer(event.getMember() != null ? event.getMember().getEffectiveName() + " asked me about the sales" : "", event.getMember() != null ? event.getMember().getUser().getAvatarUrl() : "", ""), null, text);
     }
@@ -224,7 +234,7 @@ public class MessageListener extends ListenerAdapter {
         text.add((new MessageEmbed.Field("Sales Command", "!sales \nYou will get all the items which are on sale right now", false)));
         text.add((new MessageEmbed.Field("Usage", "In order to use the bot three channels are required.\ncommand_channel is used for commanding the bot\nraid_boss_spam is used for displaying the boss results\nsales_spam is used to display all the items on sale.", false)));
         return new MessageEmbed("", "Help Information", "", EmbedType.RICH, OffsetDateTime.now(),
-                Color.WHITE.getRGB(), null, new MessageEmbed.Provider("Crusaders Website", "http://83.212.102.61:4200/"), new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
+                Color.WHITE.getRGB(), null, new MessageEmbed.Provider("HiddenPandas Website", websiteUrl), new MessageEmbed.AuthorInfo(event.getJDA().getUserById(580719937119715339L).getName(), BOT_URL, event.getJDA().getUserById(580719937119715339L).getAvatarUrl(), ""), null,
                 new MessageEmbed.Footer(event.getMember() != null ? event.getMember().getEffectiveName() + " needed my help." : "", event.getMember() != null ? event.getMember().getUser().getAvatarUrl() : "", ""), null, text);
     }
 
