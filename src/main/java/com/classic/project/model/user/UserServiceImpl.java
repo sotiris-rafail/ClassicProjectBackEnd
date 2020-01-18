@@ -365,4 +365,8 @@ public class UserServiceImpl implements UserService {
         return code.equals(VerificationServiceImpl.generateCode(user.getEmail(), user.getRegistrationDate()));
     }
 
+    @Override
+    public List<String> getUsersWithSendRaidBossOptionEnable() {
+	return userRepository.getUsersWithSendRaidBossOptionEnable();
+    }
 }

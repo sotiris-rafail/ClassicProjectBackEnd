@@ -52,4 +52,6 @@ public interface UserService {
     User findUserByCharacterName(String whoBoughtIt);
 
     List<String> getUsersEmailWithSendNewItemOptionEnable();
+
+    List<String> getUsersWithSendRaidBossOptionEnable();
 }

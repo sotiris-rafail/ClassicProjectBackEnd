@@ -2,6 +2,7 @@ package com.classic.project.model.raidboss.scheduler;
 
 import com.classic.project.model.raidboss.*;
 import com.classic.project.model.raidboss.response.ResponseRaidBoss;
+import com.classic.project.model.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class RaidBossScheduler {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${send.email.raid.boss.epics.on.window}")
     private boolean notifyEpicsOnWindow;
@@ -50,10 +54,10 @@ public class RaidBossScheduler {
             }
         }
         if (sendEmail(bossesOnWindow)) {
-            sendMail(bossesOnWindow);
             for (RaidBoss raidBoss : bossesOnWindow) {
                 raidBossRepository.updateDeathTimerNotification(raidBoss.getRaidBossId());
             }
+	    sendMail(bossesOnWindow);
         }
     }
 
@@ -62,15 +66,17 @@ public class RaidBossScheduler {
     }
 
     private void sendMail(List<RaidBoss> bossesOnWindow) {
-        SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo(bossesNotificationEmail);
-        mail.setText(getText(bossesOnWindow));
-        mail.setSubject("Bosses On Window");
-        mail.setFrom("inquisitionAlliance@gmail.com");
-        mail.setSentDate(new Date());
-        javaMailSender.send(mail);
+        List<String> verifiedEmails = userService.getUsersWithSendRaidBossOptionEnable();
+        for(String verifiedEmail : verifiedEmails) {
+	    SimpleMailMessage mail = new SimpleMailMessage();
+	    mail.setTo(verifiedEmail);
+	    mail.setText(getText(bossesOnWindow));
+	    mail.setSubject("Bosses On Window");
+	    mail.setFrom("inquisitionAlliance@gmail.com");
+	    mail.setSentDate(new Date());
+	    javaMailSender.send(mail);
+	}
     }
-
 
     private String getText(List<RaidBoss> bossesOnWindow) {
         StringBuilder text = new StringBuilder();

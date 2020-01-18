@@ -60,4 +60,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("select user.email from User user, Option options where user.userId = options.userOption.userId and options.newItemOption = true")
     List<String> getUsersEmailWithSendNewItemOptionEnable();
+
+    @Query("select user.email from User user, Option options where user.userId = options.userOption.userId and options.bossesOption = true")
+    List<String> getUsersWithSendRaidBossOptionEnable();
 }
